@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zero Past — Film Score · Naphat Sudjai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    [data-theme="dark"] {
+      --bg:     #080808;
+      --bg-alt: #111111;
+      --fg:     #f2f2f2;
+      --accent: #d4d4d4;
+      --muted:  #888888;
+      --border: rgba(255,255,255,0.1);
+    }
+    [data-theme="light"] {
+      --bg:     #f5f5f5;
+      --bg-alt: #ebebeb;
+      --fg:     #0f0f0f;
+      --accent: #333333;
+      --muted:  #777777;
+      --border: rgba(0,0,0,0.1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.8;
+      cursor: none;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    /* ── CURSOR ── */
+    .cursor {
+      width: 10px; height: 10px;
+      background: var(--fg);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, background 0.4s, border 0.3s;
+    }
+    .cursor.hovering {
+      width: 36px; height: 36px;
+      background: transparent;
+      border: 1px solid var(--fg);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 56px;
+      background: var(--bg);
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+    nav.scrolled { border-bottom: 1px solid var(--border); }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--fg); text-decoration: none;
+      letter-spacing: 0.04em; transition: color 0.4s;
+    }
+    .nav-right { display: flex; align-items: center; gap: 24px; }
+    .back-btn {
+      display: flex; align-items: center; gap: 8px;
+      color: var(--muted); text-decoration: none;
+      font-size: 11px; letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .back-btn:hover { color: var(--fg); }
+    .back-btn svg { transition: transform 0.3s; }
+    .back-btn:hover svg { transform: translateX(-4px); }
+
+    /* ── THEME TOGGLE ── */
+    .theme-toggle {
+      display: flex; align-items: center; gap: 8px;
+      background: none; border: 1px solid var(--border);
+      border-radius: 999px; padding: 6px 14px;
+      cursor: none; color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.3s, border-color 0.4s;
+    }
+    .theme-toggle:hover { color: var(--fg); border-color: var(--fg); }
+    .toggle-track {
+      width: 32px; height: 18px;
+      background: var(--border); border-radius: 999px;
+      position: relative; transition: background 0.4s;
+    }
+    [data-theme="light"] .toggle-track { background: var(--accent); }
+    .toggle-knob {
+      position: absolute; top: 3px; left: 3px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--fg);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.4s;
+    }
+    [data-theme="light"] .toggle-knob { transform: translateX(14px); }
+    .toggle-label-dark  { display: inline; }
+    .toggle-label-light { display: none; }
+    [data-theme="light"] .toggle-label-dark  { display: none; }
+    [data-theme="light"] .toggle-label-light { display: inline; }
+
+    /* ── HERO ── */
+    .project-hero {
+      min-height: 60vh;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 160px 56px 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .project-label {
+      font-size: 11px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .project-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 700; line-height: 0.95;
+      letter-spacing: -0.02em; color: var(--fg);
+      transition: color 0.4s;
+    }
+    .project-title em { font-style: italic; color: var(--muted); }
+    .project-meta {
+      display: flex; gap: 48px; margin-top: 48px;
+      padding-top: 40px; border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .meta-item {}
+    .meta-label {
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .meta-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem; font-weight: 600; color: var(--fg);
+      transition: color 0.4s;
+    }
+
+    /* ── CONTENT ── */
+    .project-content {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      padding: 80px 56px;
+      align-items: start;
+    }
+    .content-left { position: sticky; top: 120px; }
+    .content-left h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem; font-weight: 600;
+      color: var(--fg); margin-bottom: 20px;
+      transition: color 0.4s;
+    }
+    .content-left p { color: var(--muted); font-size: 14px; line-height: 2; }
+
+    /* ── TRACKS ── */
+    .tracks-section { }
+    .tracks-label {
+      font-size: 10px; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 32px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .track {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      transition: border-color 0.4s;
+    }
+    .track:last-child { border-bottom: 1px solid var(--border); }
+
+    .track-header {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .track-info {}
+    .track-num {
+      font-size: 11px; color: var(--muted);
+      letter-spacing: 0.1em; margin-bottom: 4px;
+    }
+    .track-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem; font-weight: 600;
+      color: var(--fg); transition: color 0.4s;
+    }
+
+    /* ── CUSTOM AUDIO PLAYER ── */
+    .audio-player {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 20px 24px;
+      transition: background 0.4s, border-color 0.4s;
+    }
+    .player-controls {
+      display: flex; align-items: center; gap: 16px;
+    }
+    .play-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid var(--border);
+      background: none; cursor: none;
+      color: var(--fg); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .play-btn:hover { border-color: var(--fg); background: var(--fg); color: var(--bg); }
+    .player-progress { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .progress-bar-wrap {
+      width: 100%; height: 2px;
+      background: var(--border); border-radius: 1px;
+      cursor: pointer; position: relative;
+    }
+    .progress-bar-fill {
+      height: 100%; background: var(--fg);
+      border-radius: 1px; width: 0%;
+      transition: background 0.4s;
+      pointer-events: none;
+    }
+    .progress-bar-wrap:hover .progress-bar-fill { background: var(--fg); }
+    .time-row {
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: var(--muted); letter-spacing: 0.05em;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 56px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      color: var(--muted); font-size: 11px; letter-spacing: 0.1em;
+      transition: border-color 0.4s;
+    }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0; transform: translateY(36px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .theme-toggle .toggle-label-dark,
+      .theme-toggle .toggle-label-light { display: none; }
+      .project-hero { padding: 140px 24px 60px; }
+      .project-meta { gap: 24px; }
+      .project-content { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px; }
+      .content-left { position: static; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+
+  <!-- Nav -->
+  <nav id="mainNav">
+    <a href="index.html" class="nav-logo">NS.</a>
+    <div class="nav-right">
+      <a href="index.html#works" class="back-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M11 7H3M6 4L3 7l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back to Works
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <div class="toggle-track"><div class="toggle-knob"></div></div>
+        <span class="toggle-label-dark">Night</span>
+        <span class="toggle-label-light">Day</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="project-hero">
+    <div class="project-label">02 — Film Score · Composer</div>
+    <h1 class="project-title">Zero<br><em>Past</em></h1>
+    <div class="project-meta">
+      <div class="meta-item">
+        <div class="meta-label">Type</div>
+        <div class="meta-value">Film Score</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Production</div>
+        <div class="meta-value">Retroframe</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Role</div>
+        <div class="meta-value">Composer</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Date</div>
+        <div class="meta-value">Nov 2024</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Tools</div>
+        <div class="meta-value">Ableton Live</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="project-content">
+    <div class="content-left reveal">
+      <h2>About the project</h2>
+      <p>Composed and produced the original score for Retroframe's short film <em>"Zero Past"</em>. The music was crafted to support the film's narrative and emotional arc — building thematic motifs that guide the audience through each scene.</p>
+      <br>
+      <p>All three tracks were produced in Ableton Live, balancing cinematic texture with emotional intimacy.</p>
+    </div>
+
+    <div class="tracks-section reveal">
+      <div class="tracks-label">Music Score — 3 Tracks</div>
+
+      <!-- Track 1 -->
+      <div class="track">
+        <div class="track-header">
+          <div class="track-info">
+            <div class="track-num">01</div>
+            <div class="track-name">Fragments of Us</div>
+          </div>
+        </div>
+        <div class="audio-player">
+          <div class="player-controls">
+            <button class="play-btn" data-src="audio/zero-past/1. Fragments of Us.mp3" aria-label="Play">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+                <polygon points="3,1 13,7 3,13" class="icon-play"/>
+              </svg>
+            </button>
+            <div class="player-progress">
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill"></div>
+              </div>
+              <div class="time-row">
+                <span class="time-current">0:00</span>
+                <span class="time-total">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Track 2 -->
+      <div class="track">
+        <div class="track-header">
+          <div class="track-info">
+            <div class="track-num">02</div>
+            <div class="track-name">Only You, Only Pain</div>
+          </div>
+        </div>
+        <div class="audio-player">
+          <div class="player-controls">
+            <button class="play-btn" data-src="audio/zero-past/2. Only You, Only Pain.mp3" aria-label="Play">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+                <polygon points="3,1 13,7 3,13" class="icon-play"/>
+              </svg>
+            </button>
+            <div class="player-progress">
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill"></div>
+              </div>
+              <div class="time-row">
+                <span class="time-current">0:00</span>
+                <span class="time-total">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Track 3 -->
+      <div class="track">
+        <div class="track-header">
+          <div class="track-info">
+            <div class="track-num">03</div>
+            <div class="track-name">Love on Replay</div>
+          </div>
+        </div>
+        <div class="audio-player">
+          <div class="player-controls">
+            <button class="play-btn" data-src="audio/zero-past/3. Love on Replay.mp3" aria-label="Play">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+                <polygon points="3,1 13,7 3,13" class="icon-play"/>
+              </svg>
+            </button>
+            <div class="player-progress">
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill"></div>
+              </div>
+              <div class="time-row">
+                <span class="time-current">0:00</span>
+                <span class="time-total">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>© 2025 Naphat Sudjai — Music Producer</span>
+    <span>Retroframe · Zero Past · Film Score</span>
+  </footer>
+
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+    });
+
+    // Theme toggle
+    const html      = document.documentElement;
+    const toggleBtn = document.getElementById('themeToggle');
+    const saved     = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', saved);
+    toggleBtn.addEventListener('click', () => {
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+
+    // Nav scroll
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Audio Player
+    let currentAudio = null;
+    let currentBtn   = null;
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return `${m}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    document.querySelectorAll('.play-btn').forEach(btn => {
+      const player    = btn.closest('.audio-player');
+      const fill      = player.querySelector('.progress-bar-fill');
+      const barWrap   = player.querySelector('.progress-bar-wrap');
+      const timeCur   = player.querySelector('.time-current');
+      const timeTotal = player.querySelector('.time-total');
+
+      const audio = new Audio(btn.dataset.src);
+
+      audio.addEventListener('loadedmetadata', () => {
+        timeTotal.textContent = formatTime(audio.duration);
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        const pct = (audio.currentTime / audio.duration) * 100;
+        fill.style.width = pct + '%';
+        timeCur.textContent = formatTime(audio.currentTime);
+      });
+
+      audio.addEventListener('ended', () => {
+        fill.style.width = '0%';
+        timeCur.textContent = '0:00';
+        btn.innerHTML = playIcon;
+        currentAudio = null; currentBtn = null;
+      });
+
+      barWrap.addEventListener('click', e => {
+        const rect = barWrap.getBoundingClientRect();
+        const pct  = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = pct * audio.duration;
+      });
+
+      const playIcon = `<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><polygon points="3,1 13,7 3,13"/></svg>`;
+      const pauseIcon = `<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><rect x="2" y="1" width="4" height="12" rx="1"/><rect x="8" y="1" width="4" height="12" rx="1"/></svg>`;
+
+      btn.addEventListener('click', () => {
+        if (currentAudio && currentAudio !== audio) {
+          currentAudio.pause();
+          currentBtn.innerHTML = playIcon;
+        }
+        if (audio.paused) {
+          audio.play();
+          btn.innerHTML = pauseIcon;
+          currentAudio = audio; currentBtn = btn;
+        } else {
+          audio.pause();
+          btn.innerHTML = playIcon;
+          currentAudio = null; currentBtn = null;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
