@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Naphat Sudjai — Music Producer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    [data-theme="dark"] {
+      --bg:        #080808;
+      --bg-alt:    #111111;
+      --fg:        #f2f2f2;
+      --accent:    #d4d4d4;
+      --muted:     #888888;
+      --border:    rgba(255,255,255,0.1);
+    }
+    [data-theme="light"] {
+      --bg:        #f5f5f5;
+      --bg-alt:    #ebebeb;
+      --fg:        #0f0f0f;
+      --accent:    #333333;
+      --muted:     #777777;
+      --border:    rgba(0,0,0,0.1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.8;
+      cursor: none;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    /* ── CURSOR ── */
+    .cursor {
+      width: 10px; height: 10px;
+      background: var(--fg);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, background 0.4s, border 0.3s;
+    }
+    .cursor.hovering {
+      width: 36px; height: 36px;
+      background: transparent;
+      border: 1px solid var(--fg);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 56px;
+      background: var(--bg);
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+    nav.scrolled { border-bottom: 1px solid var(--border); }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.4s;
+    }
+    .nav-right { display: flex; align-items: center; gap: 36px; }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--fg); }
+
+    /* ── THEME TOGGLE ── */
+    .theme-toggle {
+      display: flex; align-items: center; gap: 8px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      cursor: none;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.3s, border-color 0.4s;
+    }
+    .theme-toggle:hover { color: var(--fg); border-color: var(--fg); }
+    .toggle-track {
+      width: 32px; height: 18px;
+      background: var(--border);
+      border-radius: 999px;
+      position: relative;
+      transition: background 0.4s;
+    }
+    [data-theme="light"] .toggle-track { background: var(--accent); }
+    .toggle-knob {
+      position: absolute; top: 3px; left: 3px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: var(--fg);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.4s;
+    }
+    [data-theme="light"] .toggle-knob { transform: translateX(14px); }
+    .toggle-label-dark  { display: inline; }
+    .toggle-label-light { display: none;   }
+    [data-theme="light"] .toggle-label-dark  { display: none;   }
+    [data-theme="light"] .toggle-label-light { display: inline; }
+
+    /* ── SECTIONS ── */
+    section { padding: 120px 56px; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 80px;
+      position: relative; overflow: hidden;
+    }
+    .hero-label {
+      font-size: 11px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 24px;
+      opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3.5rem, 10vw, 9rem);
+      font-weight: 700; line-height: 0.92;
+      letter-spacing: -0.02em; color: var(--fg);
+      opacity: 0; animation: fadeUp 1s ease 0.4s forwards;
+      transition: color 0.4s;
+    }
+    .hero-name em { font-style: italic; color: var(--muted); }
+    .hero-tagline {
+      margin-top: 40px; max-width: 400px;
+      color: var(--muted); font-size: 13px; line-height: 2;
+      opacity: 0; animation: fadeUp 1s ease 0.7s forwards;
+    }
+    .hero-scroll {
+      position: absolute; right: 56px; bottom: 80px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      opacity: 0; animation: fadeIn 1s ease 1.2s forwards;
+    }
+    .hero-scroll span {
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted);
+      writing-mode: vertical-rl;
+    }
+    .hero-scroll-line {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, var(--fg), transparent);
+      animation: pulse 2s ease-in-out infinite;
+      transition: background 0.4s;
+    }
+    .hero-wave {
+      position: absolute; top: 50%; right: 0;
+      transform: translateY(-50%);
+      width: 45%; opacity: 0.05; pointer-events: none;
+    }
+    .wave-bar {
+      display: inline-block; width: 3px; margin: 0 2px;
+      background: var(--fg); border-radius: 2px;
+      vertical-align: middle;
+      animation: wavePulse 1.4s ease-in-out infinite alternate;
+      transition: background 0.4s;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 0 56px; transition: border-color 0.4s;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 10px; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 20px;
+    }
+
+    /* ── ABOUT ── */
+    #about { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .about-left .section-label { margin-bottom: 32px; }
+    .about-left h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 600; line-height: 1.1;
+      color: var(--fg); transition: color 0.4s;
+    }
+    .about-left h2 em { font-style: italic; color: var(--muted); }
+    .about-right { padding-top: 64px; }
+    .about-right p { color: var(--muted); font-size: 15px; line-height: 2; margin-bottom: 20px; }
+    .about-right p strong { color: var(--fg); font-weight: 500; transition: color 0.4s; }
+
+    /* ── WORKS ── */
+    .works-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 64px; }
+    .works-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 600; line-height: 1.1; color: var(--fg); transition: color 0.4s;
+    }
+    .works-count { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
+    .work-item {
+      display: grid; grid-template-columns: 80px 1fr auto;
+      align-items: center; gap: 32px; padding: 28px 0;
+      border-top: 1px solid var(--border);
+      text-decoration: none; color: var(--fg);
+      position: relative; transition: border-color 0.4s, color 0.4s;
+    }
+    .work-item::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+      height: 1px; background: var(--fg);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s, background 0.4s;
+    }
+    .work-item:hover::after { transform: scaleX(1); }
+    .work-item:hover .work-title { color: var(--muted); }
+    .work-item:hover .work-arrow { transform: translate(4px,-4px); color: var(--fg); }
+    .work-item:last-child { border-bottom: 1px solid var(--border); }
+    .work-num { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
+    .work-title {
+      font-family: 'Syne', sans-serif; font-size: 1.2rem;
+      font-weight: 600; margin-bottom: 4px;
+      color: var(--fg); transition: color 0.3s;
+    }
+    .work-meta { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
+    .work-arrow { font-size: 18px; color: var(--muted); transition: transform 0.3s, color 0.3s; }
+
+    /* ── SKILLS ── */
+    #skills {
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.4s, border-color 0.4s;
+    }
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 48px; margin-top: 60px; }
+    .skill-group h3 {
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 20px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border); transition: border-color 0.4s;
+    }
+    .skill-group ul { list-style: none; }
+    .skill-group ul li {
+      font-size: 14px; color: var(--muted); padding: 6px 0;
+      display: flex; align-items: center; gap: 10px; transition: color 0.3s;
+    }
+    .skill-group ul li::before {
+      content: ''; display: inline-block; width: 4px; height: 4px;
+      background: var(--border); border-radius: 50%; flex-shrink: 0; transition: background 0.3s;
+    }
+    .skill-group ul li:hover { color: var(--fg); }
+    .skill-group ul li:hover::before { background: var(--fg); }
+
+    /* ── RESUME ── */
+    #resume {
+      display: grid; grid-template-columns: 1fr 2fr; gap: 80px; align-items: start;
+    }
+    .resume-left { position: sticky; top: 120px; }
+    .resume-left h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 600; line-height: 1.1;
+      color: var(--fg); margin-bottom: 24px; transition: color 0.4s;
+    }
+    .resume-left h2 em { font-style: italic; color: var(--muted); }
+    .resume-left p { color: var(--muted); font-size: 14px; line-height: 1.9; margin-bottom: 32px; }
+
+    .download-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 28px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase;
+      position: relative; overflow: hidden;
+      transition: color 0.4s, border-color 0.4s;
+    }
+    .download-btn::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--fg); transform: scaleX(0);
+      transform-origin: left; transition: transform 0.4s; z-index: 0;
+    }
+    .download-btn span { position: relative; z-index: 1; }
+    .download-btn svg { position: relative; z-index: 1; transition: transform 0.3s; }
+    .download-btn:hover { color: var(--bg); border-color: var(--fg); }
+    .download-btn:hover::before { transform: scaleX(1); }
+    .download-btn:hover svg { transform: translateY(3px); }
+
+    /* Resume entries */
+    .resume-right {}
+    .resume-block { margin-bottom: 56px; }
+    .resume-block:last-child { margin-bottom: 0; }
+    .resume-block-title {
+      font-size: 10px; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 24px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      transition: border-color 0.4s;
+    }
+
+    .resume-entry {
+      display: grid; grid-template-columns: 140px 1fr;
+      gap: 24px; padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      transition: border-color 0.4s;
+    }
+    .resume-entry:last-child { border-bottom: none; }
+    .resume-year {
+      font-size: 12px; color: var(--muted);
+      letter-spacing: 0.05em; padding-top: 3px;
+    }
+    .resume-detail h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 600;
+      color: var(--fg); margin-bottom: 4px; transition: color 0.4s;
+    }
+    .resume-detail p {
+      font-size: 13px; color: var(--muted); line-height: 1.7;
+    }
+    .resume-tag {
+      display: inline-block; margin-top: 8px; margin-right: 6px;
+      padding: 3px 10px;
+      border: 1px solid var(--border);
+      font-size: 10px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      border-radius: 999px;
+      transition: border-color 0.4s, color 0.3s;
+    }
+    .resume-tag:hover { color: var(--fg); border-color: var(--fg); }
+
+    /* ── CONTACT ── */
+    #contact { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .contact-left h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 600; line-height: 1.1;
+      margin-bottom: 24px; color: var(--fg); transition: color 0.4s;
+    }
+    .contact-left h2 em { color: var(--muted); font-style: italic; }
+    .contact-left p { color: var(--muted); font-size: 15px; line-height: 2; max-width: 320px; }
+    .contact-right { padding-top: 16px; }
+    .contact-links { list-style: none; }
+    .contact-links a {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 0; border-top: 1px solid var(--border);
+      text-decoration: none; color: var(--muted);
+      font-size: 14px; letter-spacing: 0.04em;
+      transition: color 0.3s, padding-left 0.3s, border-color 0.4s;
+    }
+    .contact-links li:last-child a { border-bottom: 1px solid var(--border); }
+    .contact-links a:hover { color: var(--fg); padding-left: 8px; }
+    .contact-links a span { font-size: 18px; }
+
+    .email-btn {
+      display: inline-block; margin-top: 40px; padding: 16px 40px;
+      border: 1px solid var(--accent); color: var(--accent);
+      text-decoration: none; font-size: 11px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      position: relative; overflow: hidden;
+      transition: color 0.4s, border-color 0.4s;
+    }
+    .email-btn::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--fg); transform: scaleX(0);
+      transform-origin: left; transition: transform 0.4s; z-index: 0;
+    }
+    .email-btn .btn-text { position: relative; z-index: 1; }
+    .email-btn:hover { color: var(--bg); border-color: var(--fg); }
+    .email-btn:hover::before { transform: scaleX(1); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 56px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      color: var(--muted); font-size: 11px; letter-spacing: 0.1em;
+      transition: border-color 0.4s;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+    @keyframes wavePulse {
+      from { transform: scaleY(0.4); } to { transform: scaleY(1); }
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0; transform: translateY(36px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+      .theme-toggle .toggle-label-dark,
+      .theme-toggle .toggle-label-light { display: none; }
+      section { padding: 80px 24px; }
+      .divider { margin: 0 24px; }
+      #about, #contact, #resume { grid-template-columns: 1fr; gap: 40px; }
+      .about-right { padding-top: 0; }
+      .contact-right { padding-top: 0; }
+      .resume-left { position: static; }
+      .resume-entry { grid-template-columns: 1fr; gap: 6px; }
+      .works-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .work-item { grid-template-columns: 48px 1fr auto; gap: 16px; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+      .hero-wave, .hero-scroll { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+
+  <!-- Nav -->
+  <nav id="mainNav">
+    <a href="#hero" class="nav-logo">NS.</a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#works">Works</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#resume">Resume</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <div class="toggle-track"><div class="toggle-knob"></div></div>
+        <span class="toggle-label-dark">Night</span>
+        <span class="toggle-label-light">Day</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section id="hero">
+    <div class="hero-wave" id="heroWave"></div>
+    <div class="hero-label">Music Producer · Available for Internship</div>
+    <h1 class="hero-name">Naphat<br><em>Sudjai</em></h1>
+    <p class="hero-tagline">
+      Crafting sonic landscapes from raw emotion.<br>
+      Based in Pathum Thani, Thailand — open to studios worldwide.
+    </p>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- About -->
+  <section id="about">
+    <div class="about-left reveal">
+      <div class="section-label">01 — About</div>
+      <h2>Sound is my<br><em>language</em></h2>
+    </div>
+    <div class="about-right reveal">
+      <p>I'm <strong>Naphat Sudjai</strong>, a music producer with a deep passion for building immersive sonic experiences. From beat construction to full-track arrangement, I bring a meticulous ear and a creative instinct to every session.</p>
+      <p>Currently seeking an <strong>internship at a music & record studio</strong>, I'm eager to work alongside industry professionals, contribute to real productions, and push my craft to the next level.</p>
+      <p>My work spans <strong>Hip-Hop, Trap, R&B, and Cinematic</strong> music — always searching for that sound that makes people feel something. My primary tools are <strong>Ableton Live</strong> and <strong>Pro Tools</strong>.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Works -->
+  <section id="works">
+    <div class="works-header reveal">
+      <div>
+        <div class="section-label">02 — Works</div>
+        <h2>Selected<br>Projects</h2>
+      </div>
+      <div class="works-count">04 projects</div>
+    </div>
+    <div class="works-list">
+      <a href="#" class="work-item reveal">
+        <span class="work-num">01</span>
+        <div class="work-info">
+          <div class="work-title">Project Title One</div>
+          <div class="work-meta">Beat Production · Hip-Hop / Trap · 2024</div>
+        </div>
+        <span class="work-arrow">↗</span>
+      </a>
+      <a href="#" class="work-item reveal">
+        <span class="work-num">02</span>
+        <div class="work-info">
+          <div class="work-title">Project Title Two</div>
+          <div class="work-meta">Full Production · R&amp;B / Soul · 2024</div>
+        </div>
+        <span class="work-arrow">↗</span>
+      </a>
+      <a href="#" class="work-item reveal">
+        <span class="work-num">03</span>
+        <div class="work-info">
+          <div class="work-title">Project Title Three</div>
+          <div class="work-meta">Soundtrack · Cinematic / Score · 2023</div>
+        </div>
+        <span class="work-arrow">↗</span>
+      </a>
+      <a href="#" class="work-item reveal">
+        <span class="work-num">04</span>
+        <div class="work-info">
+          <div class="work-title">Project Title Four</div>
+          <div class="work-meta">Mixing &amp; Mastering · Hip-Hop · 2023</div>
+        </div>
+        <span class="work-arrow">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Skills -->
+  <section id="skills">
+    <div class="reveal">
+      <div class="section-label">03 — Skills</div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:600;line-height:1.1;color:var(--fg);transition:color 0.4s;">The toolkit</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-group reveal">
+        <h3>Production</h3>
+        <ul>
+          <li>Beat Making</li>
+          <li>Arrangement</li>
+          <li>Sound Design</li>
+          <li>Sampling</li>
+          <li>Composition</li>
+        </ul>
+      </div>
+      <div class="skill-group reveal">
+        <h3>Software</h3>
+        <ul>
+          <li>Ableton Live</li>
+          <li>Pro Tools</li>
+          <li>Native Instruments</li>
+          <li>Splice / Serum</li>
+          <li>iZotope Suite</li>
+        </ul>
+      </div>
+      <div class="skill-group reveal">
+        <h3>Engineering</h3>
+        <ul>
+          <li>Mixing</li>
+          <li>Mastering</li>
+          <li>Vocal Production</li>
+          <li>Audio Restoration</li>
+          <li>Signal Flow</li>
+        </ul>
+      </div>
+      <div class="skill-group reveal">
+        <h3>Genres</h3>
+        <ul>
+          <li>Hip-Hop / Trap</li>
+          <li>R&amp;B / Soul</li>
+          <li>Cinematic / Score</li>
+          <li>Electronic</li>
+          <li>Experimental</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Resume -->
+  <section id="resume">
+    <div class="resume-left reveal">
+      <div class="section-label">05 — Resume</div>
+      <h2>Experience &amp;<br><em>Education</em></h2>
+      <p>A snapshot of my journey in music production — from studies to studio work.</p>
+      <!-- Replace href with your actual PDF path when ready -->
+      <a href="resume.pdf" download class="download-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Download CV</span>
+      </a>
+    </div>
+
+    <div class="resume-right reveal">
+
+      <!-- Education -->
+      <div class="resume-block">
+        <div class="resume-block-title">Education</div>
+
+        <div class="resume-entry">
+          <div class="resume-year">2022 — Present</div>
+          <div class="resume-detail">
+            <h4>Bachelor's Degree — [Your Major]</h4>
+            <p>[Your University Name], Pathum Thani, Thailand</p>
+            <span class="resume-tag">Music Production</span>
+            <span class="resume-tag">Sound Engineering</span>
+          </div>
+        </div>
+
+        <div class="resume-entry">
+          <div class="resume-year">2019 — 2022</div>
+          <div class="resume-detail">
+            <h4>High School Diploma</h4>
+            <p>[Your High School Name], Thailand</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Experience -->
+      <div class="resume-block">
+        <div class="resume-block-title">Experience</div>
+
+        <div class="resume-entry">
+          <div class="resume-year">2024</div>
+          <div class="resume-detail">
+            <h4>Freelance Music Producer</h4>
+            <p>Produced beats and full arrangements for independent artists. Specialized in Hip-Hop, Trap, and R&amp;B across Ableton Live and Pro Tools.</p>
+            <span class="resume-tag">Ableton Live</span>
+            <span class="resume-tag">Pro Tools</span>
+            <span class="resume-tag">Mixing</span>
+          </div>
+        </div>
+
+        <div class="resume-entry">
+          <div class="resume-year">2023</div>
+          <div class="resume-detail">
+            <h4>Music Production — Personal Projects</h4>
+            <p>Developed a personal catalogue of cinematic and instrumental tracks, focusing on sound design and arrangement techniques.</p>
+            <span class="resume-tag">Sound Design</span>
+            <span class="resume-tag">Composition</span>
+            <span class="resume-tag">Cinematic</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certifications / Extra -->
+      <div class="resume-block">
+        <div class="resume-block-title">Certifications &amp; Skills</div>
+        <div class="resume-entry">
+          <div class="resume-year">Tools</div>
+          <div class="resume-detail">
+            <h4>Digital Audio Workstations</h4>
+            <p>Ableton Live · Pro Tools · Native Instruments · iZotope Suite · Splice / Serum</p>
+          </div>
+        </div>
+        <div class="resume-entry">
+          <div class="resume-year">Languages</div>
+          <div class="resume-detail">
+            <h4>Thai &amp; English</h4>
+            <p>Native Thai speaker · Conversational English</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="contact-left reveal">
+      <div class="section-label">06 — Contact</div>
+      <h2>Let's make<br>something<br><em>great</em></h2>
+      <p>Open to internships, collaborations, and studio sessions. Let's connect and create something memorable.</p>
+      <a href="mailto:your@email.com" class="email-btn"><span class="btn-text">Send a message</span></a>
+    </div>
+    <div class="contact-right reveal">
+      <ul class="contact-links">
+        <li><a href="#">SoundCloud <span>↗</span></a></li>
+        <li><a href="#">Instagram <span>↗</span></a></li>
+        <li><a href="#">YouTube <span>↗</span></a></li>
+        <li><a href="#">LinkedIn <span>↗</span></a></li>
+        <li><a href="#">Spotify <span>↗</span></a></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2025 Naphat Sudjai — Music Producer</span>
+    <span>Pathum Thani, Thailand</span>
+  </footer>
+
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+    });
+
+    // Theme toggle
+    const html      = document.documentElement;
+    const toggleBtn = document.getElementById('themeToggle');
+    const saved     = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', saved);
+    toggleBtn.addEventListener('click', () => {
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+
+    // Nav scroll
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Waveform
+    const waveEl = document.getElementById('heroWave');
+    if (waveEl) {
+      const heights = [20,35,55,80,60,90,45,70,30,50,85,40,65,25,75,50,90,30,60,45,80,35,55,70,25,85,40,60,30,75];
+      waveEl.innerHTML = heights.map((h, i) =>
+        `<span class="wave-bar" style="height:${h}px;animation-delay:${(i*0.08).toFixed(2)}s"></span>`
+      ).join('');
+    }
+
+    // Scroll reveal with stagger
+    document.querySelectorAll('section').forEach(sec => {
+      sec.querySelectorAll('.reveal').forEach((el, i) => {
+        el.style.transitionDelay = `${i * 0.1}s`;
+      });
+    });
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
