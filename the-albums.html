@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Albums — Naphat Sudjai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    [data-theme="dark"] { --bg:#080808;--bg-alt:#111111;--fg:#f2f2f2;--accent:#d4d4d4;--muted:#888888;--border:rgba(255,255,255,0.1);--active:rgba(255,255,255,0.06); }
+    [data-theme="light"] { --bg:#f5f5f5;--bg-alt:#ebebeb;--fg:#0f0f0f;--accent:#333333;--muted:#777777;--border:rgba(0,0,0,0.1);--active:rgba(0,0,0,0.06); }
+    html { scroll-behavior: smooth; }
+    body { background:var(--bg);color:var(--fg);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.8;cursor:none;transition:background 0.4s,color 0.4s; }
+    .cursor { width:10px;height:10px;background:var(--fg);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s,background 0.4s,border 0.3s; }
+    .cursor.hovering { width:36px;height:36px;background:transparent;border:1px solid var(--fg); }
+    nav { position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:28px 56px;background:var(--bg);transition:background 0.4s,border-color 0.4s; }
+    nav.scrolled { border-bottom:1px solid var(--border); }
+    .nav-logo { font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--fg);text-decoration:none;letter-spacing:0.04em;transition:color 0.4s; }
+    .nav-right { display:flex;align-items:center;gap:24px; }
+    .back-btn { display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.3s; }
+    .back-btn:hover { color:var(--fg); }
+    .back-btn svg { transition:transform 0.3s; }
+    .back-btn:hover svg { transform:translateX(-4px); }
+    .theme-toggle { display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--border);border-radius:999px;padding:6px 14px;cursor:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;transition:color 0.3s,border-color 0.4s; }
+    .theme-toggle:hover { color:var(--fg);border-color:var(--fg); }
+    .toggle-track { width:32px;height:18px;background:var(--border);border-radius:999px;position:relative;transition:background 0.4s; }
+    [data-theme="light"] .toggle-track { background:var(--accent); }
+    .toggle-knob { position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:var(--fg);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),background 0.4s; }
+    [data-theme="light"] .toggle-knob { transform:translateX(14px); }
+    .toggle-label-dark{display:inline;}.toggle-label-light{display:none;}
+    [data-theme="light"] .toggle-label-dark{display:none;}[data-theme="light"] .toggle-label-light{display:inline;}
+
+    /* HERO */
+    .project-hero { min-height:60vh;display:flex;flex-direction:column;justify-content:flex-end;padding:160px 56px 80px;border-bottom:1px solid var(--border); }
+    .project-label { font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:24px; }
+    .project-title { font-family:'Syne',sans-serif;font-size:clamp(3rem,8vw,7rem);font-weight:700;line-height:0.95;letter-spacing:-0.02em;color:var(--fg);transition:color 0.4s; }
+    .project-title em { font-style:italic;color:var(--muted); }
+    .project-meta { display:flex;gap:48px;margin-top:48px;padding-top:40px;border-top:1px solid var(--border);flex-wrap:wrap; }
+    .meta-label { font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:6px; }
+    .meta-value { font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:600;color:var(--fg);transition:color 0.4s; }
+
+    /* ALBUM BLOCK */
+    .album-block { border-bottom:1px solid var(--border); }
+    .album-header { display:grid;grid-template-columns:1fr 1fr;gap:80px;padding:80px 56px 48px; }
+    .album-left h2 { font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:700;line-height:1.05;color:var(--fg);margin-bottom:8px;transition:color 0.4s; }
+    .album-left h2 em { font-style:italic;color:var(--muted); }
+    .album-subtitle { font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px; }
+    .role-tags { display:flex;flex-wrap:wrap;gap:8px;margin-top:20px; }
+    .role-tag { padding:4px 12px;border:1px solid var(--border);border-radius:999px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);transition:color 0.3s,border-color 0.3s; }
+    .role-tag:hover { color:var(--fg);border-color:var(--fg); }
+    .album-right { display:flex;flex-direction:column;justify-content:center; }
+    .album-right p { color:var(--muted);font-size:14px;line-height:2;margin-bottom:12px; }
+    .album-right p strong { color:var(--fg);font-weight:500; }
+
+    /* PLAYLIST */
+    .playlist-wrap { padding:0 56px 80px; }
+    .now-playing { background:var(--bg-alt);border:1px solid var(--border);padding:20px 24px;margin-bottom:24px;border-radius:4px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;transition:background 0.4s,border-color 0.4s; }
+    .np-controls { display:flex;align-items:center;gap:10px;flex-shrink:0; }
+    .np-btn { width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:none;cursor:none;color:var(--fg);display:flex;align-items:center;justify-content:center;transition:border-color 0.3s,background 0.3s,color 0.3s; }
+    .np-btn:hover { border-color:var(--fg);background:var(--fg);color:var(--bg); }
+    .np-btn.main-play { width:48px;height:48px; }
+    .np-info { flex:1;min-width:0; }
+    .np-title { font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:600;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color 0.4s; }
+    .np-artist { font-size:11px;color:var(--muted);margin-top:2px; }
+    .np-progress { flex:2;min-width:180px; }
+    .progress-bar-wrap { width:100%;height:2px;background:var(--border);border-radius:1px;cursor:pointer;margin-bottom:6px; }
+    .progress-bar-fill { height:100%;background:var(--fg);border-radius:1px;width:0%;pointer-events:none; }
+    .time-row { display:flex;justify-content:space-between;font-size:11px;color:var(--muted); }
+    .track-list { border-top:1px solid var(--border); }
+    .track-row { display:grid;grid-template-columns:40px 1fr 60px;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.2s,padding 0.2s;border-radius:2px; }
+    .track-row:hover,.track-row.active { background:var(--active);padding-left:8px;padding-right:8px; }
+    .track-row-num { font-size:11px;color:var(--muted);letter-spacing:0.08em;text-align:center; }
+    .track-row.active .track-row-num,.track-row.active .track-row-name { color:var(--fg); }
+    .track-row-name { font-size:14px;color:var(--muted);transition:color 0.2s; }
+    .track-row-name .feat { font-size:12px;opacity:0.7; }
+    .track-row:hover .track-row-name { color:var(--fg); }
+    .track-row-dur { font-size:11px;color:var(--muted);text-align:right;letter-spacing:0.05em; }
+
+    footer { padding:32px 56px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px;letter-spacing:0.1em;transition:border-color 0.4s; }
+    .reveal { opacity:0;transform:translateY(36px);transition:opacity 0.8s ease,transform 0.8s ease; }
+    .reveal.visible { opacity:1;transform:translateY(0); }
+
+    @media(max-width:768px){
+      nav{padding:20px 24px;}.theme-toggle .toggle-label-dark,.theme-toggle .toggle-label-light{display:none;}
+      .project-hero{padding:140px 24px 60px;}.project-meta{gap:24px;}
+      .album-header{grid-template-columns:1fr;gap:32px;padding:60px 24px 40px;}
+      .playlist-wrap{padding:0 24px 60px;}
+      .now-playing{flex-wrap:wrap;gap:16px;}.np-progress{flex:1 1 100%;}
+      footer{flex-direction:column;gap:12px;text-align:center;padding:24px;}
+    }
+  </style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<nav id="mainNav">
+  <a href="index.html" class="nav-logo">NS.</a>
+  <div class="nav-right">
+    <a href="index.html#works" class="back-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11 7H3M6 4L3 7l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Works
+    </a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <div class="toggle-track"><div class="toggle-knob"></div></div>
+      <span class="toggle-label-dark">Night</span><span class="toggle-label-light">Day</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="project-hero">
+  <div class="project-label">04 — Producer · Mix &amp; Master</div>
+  <h1 class="project-title">The<br><em>Albums</em></h1>
+  <div class="project-meta">
+    <div class="meta-item"><div class="meta-label">Projects</div><div class="meta-value">3 Albums</div></div>
+    <div class="meta-item"><div class="meta-label">Total Tracks</div><div class="meta-value">19 Songs</div></div>
+    <div class="meta-item"><div class="meta-label">Role</div><div class="meta-value">Producer · Mix &amp; Master</div></div>
+    <div class="meta-item"><div class="meta-label">Artists</div><div class="meta-value">Azmo · Devilheart</div></div>
+  </div>
+</div>
+
+<!-- ── ALBUM 1: AZMO ANTHEM ── -->
+<div class="album-block">
+  <div class="album-header">
+    <div class="album-left reveal">
+      <div class="album-subtitle">Album · 10 Tracks</div>
+      <h2>Azmo<br><em>Anthem</em></h2>
+      <div class="role-tags">
+        <span class="role-tag">Producer</span>
+        <span class="role-tag">Mix &amp; Master</span>
+        <span class="role-tag">Arrangement</span>
+      </div>
+    </div>
+    <div class="album-right reveal">
+      <p><strong>Azmo Anthem</strong> is the debut album by artist Azmo — fully produced and mixed &amp; mastered by Naphat Sudjai (Devilheart). 10 tracks spanning Hip-Hop and Trap, with guest appearances from Devilheart and Zeetusx on tracks 5–8.</p>
+      <p>Every beat was built in <strong>Ableton Live</strong>, with final mix and master handled in <strong>Pro Tools</strong>.</p>
+    </div>
+  </div>
+  <div class="playlist-wrap">
+    <div class="now-playing reveal" id="np-azmo">
+      <div class="np-controls">
+        <button class="np-btn" data-album="azmo" data-action="prev"><svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor"><path d="M2 2h1.5v10H2zM4.5 7L12 2v10z"/></svg></button>
+        <button class="np-btn main-play" data-album="azmo" data-action="play"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" id="icon-azmo"><polygon points="4,2 14,8 4,14"/></svg></button>
+        <button class="np-btn" data-album="azmo" data-action="next"><svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor"><path d="M12 2h-1.5v10H12zM9.5 7L2 2v10z"/></svg></button>
+      </div>
+      <div class="np-info"><div class="np-title" id="title-azmo">Select a track</div><div class="np-artist">Azmo · Prod. by Devilheart</div></div>
+      <div class="np-progress">
+        <div class="progress-bar-wrap" data-album="azmo"><div class="progress-bar-fill" id="fill-azmo"></div></div>
+        <div class="time-row"><span id="cur-azmo">0:00</span><span id="tot-azmo">—</span></div>
+      </div>
+    </div>
+    <div class="track-list reveal" id="list-azmo"></div>
+  </div>
+</div>
+
+<!-- ── ALBUM 2: STORY BOOK ── -->
+<div class="album-block">
+  <div class="album-header">
+    <div class="album-left reveal">
+      <div class="album-subtitle">Mixtape · 6 Chapters</div>
+      <h2>Story<br><em>Book</em></h2>
+      <div class="role-tags">
+        <span class="role-tag">Producer</span>
+        <span class="role-tag">Songwriter</span>
+        <span class="role-tag">Composer</span>
+        <span class="role-tag">Mix &amp; Master</span>
+      </div>
+    </div>
+    <div class="album-right reveal">
+      <p><strong>Devilheart's Story Book</strong> is a 6-chapter mixtape structured like a book — opening with a Prologue and unfolding through five pages, each carrying its own emotional weight.</p>
+      <p>Written, composed, produced, arranged, mixed and mastered entirely by <strong>Naphat Sudjai</strong>. No features, no outside production.</p>
+    </div>
+  </div>
+  <div class="playlist-wrap">
+    <div class="now-playing reveal" id="np-story">
+      <div class="np-controls">
+        <button class="np-btn" data-album="story" data-action="prev"><svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor"><path d="M2 2h1.5v10H2zM4.5 7L12 2v10z"/></svg></button>
+        <button class="np-btn main-play" data-album="story" data-action="play"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" id="icon-story"><polygon points="4,2 14,8 4,14"/></svg></button>
+        <button class="np-btn" data-album="story" data-action="next"><svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor"><path d="M12 2h-1.5v10H12zM9.5 7L2 2v10z"/></svg></button>
+      </div>
+      <div class="np-info"><div class="np-title" id="title-story">Select a track</div><div class="np-artist">Devilheart · Story Book</div></div>
+      <div class="np-progress">
+        <div class="progress-bar-wrap" data-album="story"><div class="progress-bar-fill" id="fill-story"></div></div>
+        <div class="time-row"><span id="cur-story">0:00</span><span id="tot-story">—</span></div>
+      </div>
+    </div>
+    <div class="track-list reveal" id="list-story"></div>
+  </div>
+</div>
+
+<!-- ── ALBUM 3: EP ME ── -->
+<div class="album-block">
+  <div class="album-header">
+    <div class="album-left reveal">
+      <div class="album-subtitle">EP · 3 Tracks</div>
+      <h2>EP:<br><em>ME</em></h2>
+      <div class="role-tags">
+        <span class="role-tag">Producer</span>
+        <span class="role-tag">Songwriter</span>
+        <span class="role-tag">Composer</span>
+        <span class="role-tag">Mix &amp; Master</span>
+      </div>
+    </div>
+    <div class="album-right reveal">
+      <p><strong>EP: ME</strong> is the most personal release under the Devilheart name — a 3-track extended play exploring escape, pain, and the end. Written, composed, produced, and mastered entirely alone.</p>
+      <p>No features. No outside production. Just three tracks that <strong>had to exist.</strong></p>
+    </div>
+  </div>
+  <div class="playlist-wrap">
+    <div class="now-playing reveal" id="np-ep">
+      <div class="np-controls">
+        <button class="np-btn" data-album="ep" data-action="prev"><svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor"><path d="M2 2h1.5v10H2zM4.5 7L12 2v10z"/></svg></button>
+        <button class="np-btn main-play" data-album="ep" data-action="play"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" id="icon-ep"><polygon points="4,2 14,8 4,14"/></svg></button>
+        <button class="np-btn" data-album="ep" data-action="next"><svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor"><path d="M12 2h-1.5v10H12zM9.5 7L2 2v10z"/></svg></button>
+      </div>
+      <div class="np-info"><div class="np-title" id="title-ep">Select a track</div><div class="np-artist">Devilheart · EP: ME</div></div>
+      <div class="np-progress">
+        <div class="progress-bar-wrap" data-album="ep"><div class="progress-bar-fill" id="fill-ep"></div></div>
+        <div class="time-row"><span id="cur-ep">0:00</span><span id="tot-ep">—</span></div>
+      </div>
+    </div>
+    <div class="track-list reveal" id="list-ep"></div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 Naphat Sudjai — Music Producer</span>
+  <span>The Albums · Prod. by Devilheart</span>
+</footer>
+
+<script>
+  const cursor=document.getElementById('cursor');
+  document.addEventListener('mousemove',e=>{cursor.style.left=e.clientX+'px';cursor.style.top=e.clientY+'px';});
+  document.querySelectorAll('a,button').forEach(el=>{el.addEventListener('mouseenter',()=>cursor.classList.add('hovering'));el.addEventListener('mouseleave',()=>cursor.classList.remove('hovering'));});
+  const html=document.documentElement;
+  html.setAttribute('data-theme',localStorage.getItem('theme')||'dark');
+  document.getElementById('themeToggle').addEventListener('click',()=>{const n=html.getAttribute('data-theme')==='dark'?'light':'dark';html.setAttribute('data-theme',n);localStorage.setItem('theme',n);});
+  window.addEventListener('scroll',()=>document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>20));
+  const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revObs.unobserve(e.target);}});},{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+  const PLAY='<polygon points="4,2 14,8 4,14"/>';
+  const PAUSE='<rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/>';
+  function fmt(s){if(isNaN(s))return'0:00';return`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;}
+
+  const albums = {
+    azmo: {
+      tracks:[
+        {title:"For My Self (Intro)", feat:"",                          src:"audio/azmo-anthem/1. Azmo - For My Self (intro)_Mastered.mp3"},
+        {title:"Fosho",               feat:"",                          src:"audio/azmo-anthem/2. Azmo - Fosho_Mastered.mp3"},
+        {title:"Trouble Child",       feat:"",                          src:"audio/azmo-anthem/3. Azmo - Trouble Child_Mastered.mp3"},
+        {title:"Yessir",              feat:"feat. Zeetusx",             src:"audio/azmo-anthem/4. Azmo - Yessir (feat. Zeetusx)_Mastered.mp3"},
+        {title:"Wake Up",             feat:"feat. Devilheart",          src:"audio/azmo-anthem/5. Azmo - Wake Up (feat. Devilheart)_Mastered.mp3"},
+        {title:"2Sea",                feat:"feat. Devilheart, Zeetusx", src:"audio/azmo-anthem/6. Azmo - 2Sea feat.(Devilheart, Zetusx)_Mastered.mp3"},
+        {title:"Warrior PT.2",        feat:"feat. Devilheart",          src:"audio/azmo-anthem/7. Azmo - Warrior PT.2 (feat. Devilheart)_Mastered.mp3"},
+        {title:"Far Away",            feat:"feat. Devilheart, Zeetusx", src:"audio/azmo-anthem/8. Azmo - Far Away feat.(Devilheart, Zetusx)_Mastered.mp3"},
+        {title:"Swear to the Lord",   feat:"",                          src:"audio/azmo-anthem/9. Azmo - Swear to the lord_Mastered.mp3"},
+        {title:"Wildin'",             feat:"",                          src:"audio/azmo-anthem/10. Azmo - Wildin'_Mastered.mp3"},
+      ],
+      currentIndex:-1, audio:new Audio(), isPlaying:false
+    },
+    story: {
+      tracks:[
+        {title:"PROLOGUE", feat:"", src:"audio/story-book/1.First Track.mp3"},
+        {title:"PAGE I",   feat:"", src:"audio/story-book/2.Second Track.mp3"},
+        {title:"PAGE II",  feat:"", src:"audio/story-book/3.Third Track.mp3"},
+        {title:"PAGE III", feat:"", src:"audio/story-book/4.Fourth Track.mp3"},
+        {title:"PAGE IV",  feat:"", src:"audio/story-book/5.Fifth Track.mp3"},
+        {title:"PAGE V",   feat:"", src:"audio/story-book/6.Sixth Track.mp3"},
+      ],
+      currentIndex:-1, audio:new Audio(), isPlaying:false
+    },
+    ep: {
+      tracks:[
+        {title:"Escaped",              feat:"", src:"audio/ep-me/Devilheart - Escaped.mp3"},
+        {title:"Hurt Myself",          feat:"", src:"audio/ep-me/Devilheart - Hurt Myself.mp3"},
+        {title:"The Last Day Of Life", feat:"", src:"audio/ep-me/Devilheart - The Last Day Of Life.mp3"},
+      ],
+      currentIndex:-1, audio:new Audio(), isPlaying:false
+    }
+  };
+
+  // Active album tracker (only one plays at a time)
+  let activeAlbum = null;
+
+  function stopAll(except) {
+    Object.keys(albums).forEach(key => {
+      if (key !== except) {
+        const a = albums[key];
+        if (a.isPlaying) { a.audio.pause(); a.isPlaying=false; }
+        document.getElementById(`icon-${key}`).innerHTML = PLAY;
+        document.querySelectorAll(`#list-${key} .track-row`).forEach((r,j)=>{
+          r.querySelector('.track-row-num').textContent=String(j+1).padStart(2,'0');
+          r.classList.remove('active');
+        });
+      }
+    });
+  }
+
+  function setActive(key, i) {
+    document.querySelectorAll(`#list-${key} .track-row`).forEach((r,j)=>{
+      r.classList.toggle('active',j===i);
+      r.querySelector('.track-row-num').textContent = j===i&&albums[key].isPlaying ? '▶' : String(j+1).padStart(2,'0');
+    });
+  }
+
+  function playTrack(key, i) {
+    stopAll(key);
+    const a = albums[key];
+    const t = a.tracks[i];
+    a.currentIndex = i;
+    a.audio.src = t.src;
+    document.getElementById(`title-${key}`).textContent = t.title + (t.feat ? ' · '+t.feat : '');
+    document.getElementById(`fill-${key}`).style.width = '0%';
+    document.getElementById(`cur-${key}`).textContent = '0:00';
+    document.getElementById(`tot-${key}`).textContent = '—';
+    a.audio.play();
+    a.isPlaying = true;
+    document.getElementById(`icon-${key}`).innerHTML = PAUSE;
+    setActive(key, i);
+    activeAlbum = key;
+  }
+
+  Object.keys(albums).forEach(key => {
+    const a = albums[key];
+
+    a.audio.addEventListener('timeupdate', () => {
+      if (!a.audio.duration) return;
+      document.getElementById(`fill-${key}`).style.width = (a.audio.currentTime/a.audio.duration*100)+'%';
+      document.getElementById(`cur-${key}`).textContent = fmt(a.audio.currentTime);
+    });
+    a.audio.addEventListener('loadedmetadata', () => {
+      document.getElementById(`tot-${key}`).textContent = fmt(a.audio.duration);
+    });
+    a.audio.addEventListener('ended', () => {
+      if (a.currentIndex < a.tracks.length-1) playTrack(key, a.currentIndex+1);
+      else { a.isPlaying=false; document.getElementById(`icon-${key}`).innerHTML=PLAY; setActive(key,-1); }
+    });
+
+    // Progress bar click
+    document.querySelector(`.progress-bar-wrap[data-album="${key}"]`).addEventListener('click', e => {
+      if (!a.audio.duration) return;
+      const r = e.currentTarget.getBoundingClientRect();
+      a.audio.currentTime = ((e.clientX-r.left)/r.width)*a.audio.duration;
+    });
+
+    // Control buttons
+    document.querySelectorAll(`button[data-album="${key}"]`).forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+        if (action==='play') {
+          if (a.currentIndex===-1) { playTrack(key,0); return; }
+          if (a.isPlaying) { a.audio.pause(); a.isPlaying=false; document.getElementById(`icon-${key}`).innerHTML=PLAY; setActive(key,a.currentIndex); }
+          else { stopAll(key); a.audio.play(); a.isPlaying=true; document.getElementById(`icon-${key}`).innerHTML=PAUSE; setActive(key,a.currentIndex); }
+        } else if (action==='prev') {
+          if (a.currentIndex>0) playTrack(key, a.currentIndex-1);
+        } else if (action==='next') {
+          if (a.currentIndex<a.tracks.length-1) playTrack(key, a.currentIndex+1);
+        }
+      });
+    });
+
+    // Build track list
+    const list = document.getElementById(`list-${key}`);
+    a.tracks.forEach((t,i) => {
+      const row = document.createElement('div');
+      row.className='track-row';
+      row.innerHTML=`<div class="track-row-num">${String(i+1).padStart(2,'0')}</div><div class="track-row-info"><div class="track-row-name">${t.title}${t.feat?` <span class="feat">· ${t.feat}</span>`:''}</div></div><div class="track-row-dur" id="dur-${key}-${i}">—</div>`;
+      row.addEventListener('click',()=>playTrack(key,i));
+      list.appendChild(row);
+      row.addEventListener('mouseenter',()=>cursor.classList.add('hovering'));
+      row.addEventListener('mouseleave',()=>cursor.classList.remove('hovering'));
+      const tmp=new Audio(t.src);
+      tmp.addEventListener('loadedmetadata',()=>{const el=document.getElementById(`dur-${key}-${i}`);if(el)el.textContent=fmt(tmp.duration);});
+    });
+  });
+</script>
+</body>
+</html>
