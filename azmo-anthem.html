@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Azmo Anthem — Naphat Sudjai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    [data-theme="dark"] { --bg:#080808;--bg-alt:#111111;--bg-card:#161616;--fg:#f2f2f2;--accent:#d4d4d4;--muted:#888888;--border:rgba(255,255,255,0.1);--active:rgba(255,255,255,0.06); }
+    [data-theme="light"] { --bg:#f5f5f5;--bg-alt:#ebebeb;--bg-card:#e4e4e4;--fg:#0f0f0f;--accent:#333333;--muted:#777777;--border:rgba(0,0,0,0.1);--active:rgba(0,0,0,0.06); }
+    html { scroll-behavior: smooth; }
+    body { background:var(--bg);color:var(--fg);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.8;cursor:none;transition:background 0.4s,color 0.4s; }
+    .cursor { width:10px;height:10px;background:var(--fg);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s,background 0.4s,border 0.3s; }
+    .cursor.hovering { width:36px;height:36px;background:transparent;border:1px solid var(--fg); }
+    nav { position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:28px 56px;background:var(--bg);transition:background 0.4s,border-color 0.4s; }
+    nav.scrolled { border-bottom:1px solid var(--border); }
+    .nav-logo { font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--fg);text-decoration:none;letter-spacing:0.04em;transition:color 0.4s; }
+    .nav-right { display:flex;align-items:center;gap:24px; }
+    .back-btn { display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;transition:color 0.3s; }
+    .back-btn:hover { color:var(--fg); }
+    .back-btn svg { transition:transform 0.3s; }
+    .back-btn:hover svg { transform:translateX(-4px); }
+    .theme-toggle { display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--border);border-radius:999px;padding:6px 14px;cursor:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;transition:color 0.3s,border-color 0.4s; }
+    .theme-toggle:hover { color:var(--fg);border-color:var(--fg); }
+    .toggle-track { width:32px;height:18px;background:var(--border);border-radius:999px;position:relative;transition:background 0.4s; }
+    [data-theme="light"] .toggle-track { background:var(--accent); }
+    .toggle-knob { position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:var(--fg);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),background 0.4s; }
+    [data-theme="light"] .toggle-knob { transform:translateX(14px); }
+    .toggle-label-dark { display:inline; } .toggle-label-light { display:none; }
+    [data-theme="light"] .toggle-label-dark { display:none; } [data-theme="light"] .toggle-label-light { display:inline; }
+
+    .project-hero { min-height:60vh;display:flex;flex-direction:column;justify-content:flex-end;padding:160px 56px 80px;border-bottom:1px solid var(--border); }
+    .project-label { font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:24px; }
+    .project-title { font-family:'Syne',sans-serif;font-size:clamp(3rem,8vw,7rem);font-weight:700;line-height:0.95;letter-spacing:-0.02em;color:var(--fg);transition:color 0.4s; }
+    .project-title em { font-style:italic;color:var(--muted); }
+    .project-meta { display:flex;gap:48px;margin-top:48px;padding-top:40px;border-top:1px solid var(--border);flex-wrap:wrap; }
+    .meta-label { font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:6px; }
+    .meta-value { font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:600;color:var(--fg);transition:color 0.4s; }
+
+    .about-section { display:grid;grid-template-columns:1fr 1fr;gap:80px;padding:80px 56px;border-bottom:1px solid var(--border); }
+    .about-left h2 { font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;line-height:1.1;color:var(--fg);margin-bottom:24px;transition:color 0.4s; }
+    .about-left h2 em { font-style:italic;color:var(--muted); }
+    .about-right p { color:var(--muted);font-size:14px;line-height:2;margin-bottom:16px; }
+    .about-right p strong { color:var(--fg);font-weight:500; }
+    .role-tags { display:flex;flex-wrap:wrap;gap:8px;margin-top:24px; }
+    .role-tag { padding:5px 14px;border:1px solid var(--border);border-radius:999px;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);transition:color 0.3s,border-color 0.3s; }
+    .role-tag:hover { color:var(--fg);border-color:var(--fg); }
+
+    .playlist-section { padding:80px 56px; }
+    .section-header { margin-bottom:48px; }
+    .section-label { font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:16px; }
+    .section-header h2 { font-family:'Syne',sans-serif;font-size:clamp(1.8rem,3vw,2.4rem);font-weight:600;color:var(--fg);transition:color 0.4s; }
+
+    .now-playing { background:var(--bg-alt);border:1px solid var(--border);padding:24px 28px;margin-bottom:32px;border-radius:4px;display:flex;align-items:center;gap:24px;transition:background 0.4s,border-color 0.4s; }
+    .np-controls { display:flex;align-items:center;gap:12px;flex-shrink:0; }
+    .np-btn { width:44px;height:44px;border-radius:50%;border:1px solid var(--border);background:none;cursor:none;color:var(--fg);display:flex;align-items:center;justify-content:center;transition:border-color 0.3s,background 0.3s,color 0.3s; }
+    .np-btn:hover { border-color:var(--fg);background:var(--fg);color:var(--bg); }
+    .np-btn.main-play { width:52px;height:52px; }
+    .np-info { flex:1;min-width:0; }
+    .np-title { font-family:'Syne',sans-serif;font-size:1rem;font-weight:600;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color 0.4s; }
+    .np-artist { font-size:12px;color:var(--muted);margin-top:2px; }
+    .np-progress { flex:2; }
+    .progress-bar-wrap { width:100%;height:2px;background:var(--border);border-radius:1px;cursor:pointer;margin-bottom:8px; }
+    .progress-bar-fill { height:100%;background:var(--fg);border-radius:1px;width:0%;transition:background 0.4s;pointer-events:none; }
+    .time-row { display:flex;justify-content:space-between;font-size:11px;color:var(--muted); }
+
+    .track-list { border-top:1px solid var(--border); }
+    .track-row { display:grid;grid-template-columns:40px 1fr 60px;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.2s,padding 0.2s;border-radius:2px; }
+    .track-row:hover,.track-row.active { background:var(--active);padding-left:8px;padding-right:8px; }
+    .track-row-num { font-size:11px;color:var(--muted);letter-spacing:0.08em;text-align:center; }
+    .track-row.active .track-row-num,.track-row.active .track-row-name { color:var(--fg); }
+    .track-row-name { font-size:14px;color:var(--muted);transition:color 0.2s; }
+    .track-row-name .feat { font-size:12px;color:var(--muted);opacity:0.7; }
+    .track-row:hover .track-row-name { color:var(--fg); }
+    .track-row-dur { font-size:11px;color:var(--muted);text-align:right;letter-spacing:0.05em; }
+
+    footer { padding:32px 56px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px;letter-spacing:0.1em;transition:border-color 0.4s; }
+    .reveal { opacity:0;transform:translateY(36px);transition:opacity 0.8s ease,transform 0.8s ease; }
+    .reveal.visible { opacity:1;transform:translateY(0); }
+
+    @media(max-width:768px){
+      nav{padding:20px 24px;} .theme-toggle .toggle-label-dark,.theme-toggle .toggle-label-light{display:none;}
+      .project-hero{padding:140px 24px 60px;} .project-meta{gap:24px;}
+      .about-section{grid-template-columns:1fr;gap:40px;padding:60px 24px;}
+      .playlist-section{padding:60px 24px;}
+      .now-playing{flex-wrap:wrap;gap:16px;} .np-progress{flex:1 1 100%;}
+      footer{flex-direction:column;gap:12px;text-align:center;padding:24px;}
+    }
+  </style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<nav id="mainNav">
+  <a href="index.html" class="nav-logo">NS.</a>
+  <div class="nav-right">
+    <a href="index.html#works" class="back-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11 7H3M6 4L3 7l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Works
+    </a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <div class="toggle-track"><div class="toggle-knob"></div></div>
+      <span class="toggle-label-dark">Night</span><span class="toggle-label-light">Day</span>
+    </button>
+  </div>
+</nav>
+
+<div class="project-hero">
+  <div class="project-label">05 — Album · Producer &amp; Mix Master</div>
+  <h1 class="project-title">Azmo<br><em>Anthem</em></h1>
+  <div class="project-meta">
+    <div class="meta-item"><div class="meta-label">Artist</div><div class="meta-value">Azmo</div></div>
+    <div class="meta-item"><div class="meta-label">Produced by</div><div class="meta-value">Devilheart</div></div>
+    <div class="meta-item"><div class="meta-label">Tracks</div><div class="meta-value">10 Songs</div></div>
+    <div class="meta-item"><div class="meta-label">Role</div><div class="meta-value">Producer · Mix &amp; Master</div></div>
+    <div class="meta-item"><div class="meta-label">Tools</div><div class="meta-value">Ableton Live · Pro Tools</div></div>
+  </div>
+</div>
+
+<div class="about-section">
+  <div class="about-left reveal">
+    <h2>Azmo <em>Anthem</em></h2>
+    <div class="role-tags">
+      <span class="role-tag">Producer</span>
+      <span class="role-tag">Mix &amp; Master</span>
+      <span class="role-tag">Sound Design</span>
+      <span class="role-tag">Arrangement</span>
+    </div>
+  </div>
+  <div class="about-right reveal">
+    <p><strong>Azmo Anthem</strong> is the debut album by artist Azmo — fully produced and mixed &amp; mastered by Naphat Sudjai (Devilheart). The project spans 10 tracks across Hip-Hop and Trap, with several featuring collaborative performances from Devilheart and Zeetusx.</p>
+    <p>Every instrumental was built from the ground up in <strong>Ableton Live</strong>, with final mix and master handled in <strong>Pro Tools</strong>. The album showcases a cohesive sonic identity — heavy low-end, sharp hi-hats, and cinematic textures woven throughout.</p>
+    <p>Tracks 5, 6, 7, and 8 feature <strong>Devilheart</strong> as a guest artist alongside Azmo, making this a true collaborative body of work.</p>
+  </div>
+</div>
+
+<div class="playlist-section">
+  <div class="section-header reveal">
+    <div class="section-label">Full Album</div>
+    <h2>10 Tracks</h2>
+  </div>
+  <div class="now-playing reveal">
+    <div class="np-controls">
+      <button class="np-btn" id="prevBtn"><svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M2 2h1.5v10H2zM4.5 7L12 2v10z"/></svg></button>
+      <button class="np-btn main-play" id="mainPlayBtn"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" id="mainPlayIcon"><polygon points="4,2 14,8 4,14"/></svg></button>
+      <button class="np-btn" id="nextBtn"><svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M12 2h-1.5v10H12zM9.5 7L2 2v10z"/></svg></button>
+    </div>
+    <div class="np-info">
+      <div class="np-title" id="npTitle">Select a track</div>
+      <div class="np-artist">Azmo · Prod. by Devilheart</div>
+    </div>
+    <div class="np-progress">
+      <div class="progress-bar-wrap" id="progressWrap"><div class="progress-bar-fill" id="progressFill"></div></div>
+      <div class="time-row"><span id="timeCurrent">0:00</span><span id="timeTotal">—</span></div>
+    </div>
+  </div>
+  <div class="track-list reveal" id="trackList"></div>
+</div>
+
+<footer>
+  <span>© 2025 Naphat Sudjai — Music Producer</span>
+  <span>Azmo Anthem · Prod. by Devilheart</span>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => { cursor.style.left=e.clientX+'px'; cursor.style.top=e.clientY+'px'; });
+  document.querySelectorAll('a,button').forEach(el => { el.addEventListener('mouseenter',()=>cursor.classList.add('hovering')); el.addEventListener('mouseleave',()=>cursor.classList.remove('hovering')); });
+  const html = document.documentElement;
+  html.setAttribute('data-theme', localStorage.getItem('theme')||'dark');
+  document.getElementById('themeToggle').addEventListener('click',()=>{ const n=html.getAttribute('data-theme')==='dark'?'light':'dark'; html.setAttribute('data-theme',n); localStorage.setItem('theme',n); });
+  const nav=document.getElementById('mainNav');
+  window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>20));
+  const revObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revObs.unobserve(e.target);}});},{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+  const tracks = [
+    {title:"For My Self (Intro)", feat:"",                          src:"audio/azmo-anthem/1. Azmo - For My Self (intro)_Mastered.mp3"},
+    {title:"Fosho",               feat:"",                          src:"audio/azmo-anthem/2. Azmo - Fosho_Mastered.mp3"},
+    {title:"Trouble Child",       feat:"",                          src:"audio/azmo-anthem/3. Azmo - Trouble Child_Mastered.mp3"},
+    {title:"Yessir",              feat:"feat. Zeetusx",             src:"audio/azmo-anthem/4. Azmo - Yessir (feat. Zeetusx)_Mastered.mp3"},
+    {title:"Wake Up",             feat:"feat. Devilheart",          src:"audio/azmo-anthem/5. Azmo - Wake Up (feat. Devilheart)_Mastered.mp3"},
+    {title:"2Sea",                feat:"feat. Devilheart, Zeetusx", src:"audio/azmo-anthem/6. Azmo - 2Sea feat.(Devilheart, Zetusx)_Mastered.mp3"},
+    {title:"Warrior PT.2",        feat:"feat. Devilheart",          src:"audio/azmo-anthem/7. Azmo - Warrior PT.2 (feat. Devilheart)_Mastered.mp3"},
+    {title:"Far Away",            feat:"feat. Devilheart, Zeetusx", src:"audio/azmo-anthem/8. Azmo - Far Away feat.(Devilheart, Zetusx)_Mastered.mp3"},
+    {title:"Swear to the Lord",   feat:"",                          src:"audio/azmo-anthem/9. Azmo - Swear to the lord_Mastered.mp3"},
+    {title:"Wildin'",             feat:"",                          src:"audio/azmo-anthem/10. Azmo - Wildin'_Mastered.mp3"},
+  ];
+
+  let currentIndex=-1, audio=new Audio(), isPlaying=false;
+  const playIcon='<polygon points="4,2 14,8 4,14"/>', pauseIcon='<rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/>';
+  function fmt(s){if(isNaN(s))return'0:00';return`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;}
+  function updatePlayIcon(){document.getElementById('mainPlayIcon').innerHTML=isPlaying?pauseIcon:playIcon;}
+  function setActive(i){document.querySelectorAll('.track-row').forEach((r,j)=>{r.classList.toggle('active',j===i);r.querySelector('.track-row-num').textContent=j===i&&isPlaying?'▶':String(j+1).padStart(2,'0');});}
+  function playTrack(i){currentIndex=i;const t=tracks[i];audio.src=t.src;document.getElementById('npTitle').textContent=t.title+(t.feat?' · '+t.feat:'');document.getElementById('progressFill').style.width='0%';document.getElementById('timeCurrent').textContent='0:00';document.getElementById('timeTotal').textContent='—';audio.play();isPlaying=true;updatePlayIcon();setActive(i);}
+  audio.addEventListener('timeupdate',()=>{if(!audio.duration)return;document.getElementById('progressFill').style.width=(audio.currentTime/audio.duration*100)+'%';document.getElementById('timeCurrent').textContent=fmt(audio.currentTime);});
+  audio.addEventListener('loadedmetadata',()=>{document.getElementById('timeTotal').textContent=fmt(audio.duration);});
+  audio.addEventListener('ended',()=>{if(currentIndex<tracks.length-1)playTrack(currentIndex+1);else{isPlaying=false;updatePlayIcon();setActive(-1);}});
+  document.getElementById('progressWrap').addEventListener('click',e=>{if(!audio.duration)return;const r=e.currentTarget.getBoundingClientRect();audio.currentTime=((e.clientX-r.left)/r.width)*audio.duration;});
+  document.getElementById('mainPlayBtn').addEventListener('click',()=>{if(currentIndex===-1){playTrack(0);return;}if(isPlaying){audio.pause();isPlaying=false;}else{audio.play();isPlaying=true;}updatePlayIcon();setActive(currentIndex);});
+  document.getElementById('prevBtn').addEventListener('click',()=>{if(currentIndex>0)playTrack(currentIndex-1);});
+  document.getElementById('nextBtn').addEventListener('click',()=>{if(currentIndex<tracks.length-1)playTrack(currentIndex+1);});
+
+  const list=document.getElementById('trackList');
+  tracks.forEach((t,i)=>{
+    const row=document.createElement('div');row.className='track-row';
+    row.innerHTML=`<div class="track-row-num">${String(i+1).padStart(2,'0')}</div><div class="track-row-info"><div class="track-row-name">${t.title}${t.feat?` <span class="feat">· ${t.feat}</span>`:''}</div></div><div class="track-row-dur" id="dur-${i}">—</div>`;
+    row.addEventListener('click',()=>playTrack(i));
+    list.appendChild(row);
+    const tmp=new Audio(t.src);
+    tmp.addEventListener('loadedmetadata',()=>{const el=document.getElementById(`dur-${i}`);if(el)el.textContent=fmt(tmp.duration);});
+  });
+  document.querySelectorAll('.track-row').forEach(el=>{el.addEventListener('mouseenter',()=>cursor.classList.add('hovering'));el.addEventListener('mouseleave',()=>cursor.classList.remove('hovering'));});
+</script>
+</body>
+</html>
