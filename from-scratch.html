@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>From Scratch — Devilheart · Naphat Sudjai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    [data-theme="dark"] {
+      --bg: #080808; --bg-alt: #111111; --bg-card: #161616;
+      --fg: #f2f2f2; --accent: #d4d4d4; --muted: #888888;
+      --border: rgba(255,255,255,0.1); --active: rgba(255,255,255,0.06);
+    }
+    [data-theme="light"] {
+      --bg: #f5f5f5; --bg-alt: #ebebeb; --bg-card: #e4e4e4;
+      --fg: #0f0f0f; --accent: #333333; --muted: #777777;
+      --border: rgba(0,0,0,0.1); --active: rgba(0,0,0,0.06);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--fg);
+      font-family: 'DM Sans', sans-serif; font-size: 15px;
+      line-height: 1.8; cursor: none;
+      transition: background 0.4s, color 0.4s;
+    }
+
+    /* CURSOR */
+    .cursor {
+      width: 10px; height: 10px; background: var(--fg); border-radius: 50%;
+      position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width 0.3s, height 0.3s, background 0.4s, border 0.3s;
+    }
+    .cursor.hovering { width: 36px; height: 36px; background: transparent; border: 1px solid var(--fg); }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 28px 56px; background: var(--bg);
+      transition: background 0.4s, border-color 0.4s;
+    }
+    nav.scrolled { border-bottom: 1px solid var(--border); }
+    .nav-logo {
+      font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700;
+      color: var(--fg); text-decoration: none; letter-spacing: 0.04em; transition: color 0.4s;
+    }
+    .nav-right { display: flex; align-items: center; gap: 24px; }
+    .back-btn {
+      display: flex; align-items: center; gap: 8px; color: var(--muted);
+      text-decoration: none; font-size: 11px; letter-spacing: 0.15em;
+      text-transform: uppercase; transition: color 0.3s;
+    }
+    .back-btn:hover { color: var(--fg); }
+    .back-btn svg { transition: transform 0.3s; }
+    .back-btn:hover svg { transform: translateX(-4px); }
+    .theme-toggle {
+      display: flex; align-items: center; gap: 8px; background: none;
+      border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px;
+      cursor: none; color: var(--muted); font-family: 'DM Sans', sans-serif;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      transition: color 0.3s, border-color 0.4s;
+    }
+    .theme-toggle:hover { color: var(--fg); border-color: var(--fg); }
+    .toggle-track { width: 32px; height: 18px; background: var(--border); border-radius: 999px; position: relative; transition: background 0.4s; }
+    [data-theme="light"] .toggle-track { background: var(--accent); }
+    .toggle-knob { position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: var(--fg); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.4s; }
+    [data-theme="light"] .toggle-knob { transform: translateX(14px); }
+    .toggle-label-dark { display: inline; } .toggle-label-light { display: none; }
+    [data-theme="light"] .toggle-label-dark { display: none; }
+    [data-theme="light"] .toggle-label-light { display: inline; }
+
+    /* HERO */
+    .project-hero {
+      min-height: 60vh; display: flex; flex-direction: column;
+      justify-content: flex-end; padding: 160px 56px 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .project-label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; }
+    .project-title {
+      font-family: 'Syne', sans-serif; font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 700; line-height: 0.95; letter-spacing: -0.02em;
+      color: var(--fg); transition: color 0.4s;
+    }
+    .project-title em { font-style: italic; color: var(--muted); }
+    .project-meta { display: flex; gap: 48px; margin-top: 48px; padding-top: 40px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+    .meta-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .meta-value { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--fg); transition: color 0.4s; }
+
+    /* ARTIST CARD */
+    .artist-section {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+      padding: 80px 56px; border-bottom: 1px solid var(--border);
+    }
+    .artist-left h2 {
+      font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700; line-height: 1.1; color: var(--fg);
+      margin-bottom: 8px; transition: color 0.4s;
+    }
+    .artist-left h2 em { font-style: italic; color: var(--muted); }
+    .artist-alias {
+      font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 32px;
+    }
+    .artist-roles { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+    .role-tag {
+      padding: 5px 14px; border: 1px solid var(--border); border-radius: 999px;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); transition: color 0.3s, border-color 0.3s;
+    }
+    .role-tag:hover { color: var(--fg); border-color: var(--fg); }
+    .artist-right { display: flex; flex-direction: column; justify-content: center; }
+    .artist-right p { color: var(--muted); font-size: 14px; line-height: 2; margin-bottom: 16px; }
+    .artist-right p strong { color: var(--fg); font-weight: 500; }
+    .artist-links { display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
+    .artist-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 20px; border: 1px solid var(--border);
+      color: var(--muted); text-decoration: none;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .artist-link:hover { color: var(--fg); border-color: var(--fg); }
+
+    /* PLAYLIST */
+    .playlist-section { padding: 80px 56px; border-bottom: 1px solid var(--border); }
+    .section-header { margin-bottom: 48px; }
+    .section-header .section-label { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+    .section-header h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 600; color: var(--fg); transition: color 0.4s; }
+
+    /* NOW PLAYING BAR */
+    .now-playing {
+      background: var(--bg-alt); border: 1px solid var(--border);
+      padding: 24px 28px; margin-bottom: 32px; border-radius: 4px;
+      display: flex; align-items: center; gap: 24px;
+      transition: background 0.4s, border-color 0.4s;
+    }
+    .np-controls { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+    .np-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 1px solid var(--border); background: none;
+      cursor: none; color: var(--fg);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.3s, background 0.3s, color 0.3s;
+    }
+    .np-btn:hover { border-color: var(--fg); background: var(--fg); color: var(--bg); }
+    .np-btn.main-play { width: 52px; height: 52px; }
+    .np-info { flex: 1; min-width: 0; }
+    .np-title {
+      font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 600;
+      color: var(--fg); white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis; transition: color 0.4s;
+    }
+    .np-artist { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .np-progress { flex: 2; }
+    .progress-bar-wrap {
+      width: 100%; height: 2px; background: var(--border);
+      border-radius: 1px; cursor: pointer; margin-bottom: 8px;
+    }
+    .progress-bar-fill { height: 100%; background: var(--fg); border-radius: 1px; width: 0%; transition: background 0.4s; pointer-events: none; }
+    .time-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
+
+    /* TRACK LIST */
+    .track-list { border-top: 1px solid var(--border); }
+    .track-row {
+      display: grid; grid-template-columns: 40px 1fr 60px;
+      align-items: center; gap: 16px; padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer; transition: background 0.2s;
+      border-radius: 2px;
+    }
+    .track-row:hover { background: var(--active); padding-left: 8px; padding-right: 8px; }
+    .track-row.active { background: var(--active); padding-left: 8px; padding-right: 8px; }
+    .track-row.active .track-row-num { color: var(--fg); }
+    .track-row.active .track-row-name { color: var(--fg); }
+    .track-row-num { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-align: center; }
+    .track-row-info {}
+    .track-row-name { font-size: 14px; color: var(--muted); transition: color 0.2s; }
+    .track-row-name .feat { font-size: 12px; color: var(--muted); opacity: 0.7; }
+    .track-row-dur { font-size: 11px; color: var(--muted); text-align: right; letter-spacing: 0.05em; }
+    .track-row:hover .track-row-name { color: var(--fg); }
+
+    /* SHOWCASE */
+    .showcase-section { padding: 80px 56px; }
+    .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px; }
+    .video-card {}
+    .video-embed {
+      position: relative; width: 100%; padding-bottom: 56.25%;
+      height: 0; overflow: hidden; background: var(--bg-alt);
+      border: 1px solid var(--border); border-radius: 2px; margin-bottom: 20px;
+    }
+    .video-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    .video-card-num { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 6px; }
+    .video-card-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--fg); margin-bottom: 8px; transition: color 0.4s; }
+    .video-card-desc { font-size: 13px; color: var(--muted); line-height: 1.9; }
+
+    /* FOOTER */
+    footer {
+      padding: 32px 56px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      color: var(--muted); font-size: 11px; letter-spacing: 0.1em;
+      transition: border-color 0.4s;
+    }
+
+    /* REVEAL */
+    .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .theme-toggle .toggle-label-dark, .theme-toggle .toggle-label-light { display: none; }
+      .project-hero { padding: 140px 24px 60px; }
+      .project-meta { gap: 24px; }
+      .artist-section { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px; }
+      .playlist-section { padding: 60px 24px; }
+      .showcase-section { padding: 60px 24px; }
+      .video-grid { grid-template-columns: 1fr; gap: 40px; }
+      .now-playing { flex-wrap: wrap; gap: 16px; }
+      .np-progress { flex: 1 1 100%; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- Nav -->
+<nav id="mainNav">
+  <a href="index.html" class="nav-logo">NS.</a>
+  <div class="nav-right">
+    <a href="index.html#works" class="back-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M11 7H3M6 4L3 7l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Back to Works
+    </a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+      <div class="toggle-track"><div class="toggle-knob"></div></div>
+      <span class="toggle-label-dark">Night</span>
+      <span class="toggle-label-light">Day</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="project-hero">
+  <div class="project-label">03 — Solo Artist · Devilheart</div>
+  <h1 class="project-title">From<br><em>Scratch</em></h1>
+  <div class="project-meta">
+    <div class="meta-item"><div class="meta-label">Artist</div><div class="meta-value">Devilheart</div></div>
+    <div class="meta-item"><div class="meta-label">Tracks</div><div class="meta-value">27 Songs</div></div>
+    <div class="meta-item"><div class="meta-label">Role</div><div class="meta-value">Everything</div></div>
+    <div class="meta-item"><div class="meta-label">Showcases</div><div class="meta-value">4 Videos</div></div>
+    <div class="meta-item"><div class="meta-label">Tools</div><div class="meta-value">Ableton Live</div></div>
+  </div>
+</div>
+
+<!-- Artist Card -->
+<div class="artist-section">
+  <div class="artist-left reveal">
+    <div class="artist-alias">Artist Alias</div>
+    <h2>Devil<em>heart</em></h2>
+    <div class="artist-roles">
+      <span class="role-tag">Producer</span>
+      <span class="role-tag">Composer</span>
+      <span class="role-tag">Arranger</span>
+      <span class="role-tag">Songwriter</span>
+      <span class="role-tag">Mix &amp; Master</span>
+      <span class="role-tag">Director</span>
+    </div>
+    <div class="artist-links" style="margin-top:32px;">
+      <a href="https://open.spotify.com/artist/0TXHF723AcTCl1cNp4dCoO" target="_blank" rel="noopener" class="artist-link">Spotify ↗</a>
+      <a href="https://www.youtube.com/@ihatedevilheart" target="_blank" rel="noopener" class="artist-link">YouTube ↗</a>
+      <a href="https://www.instagram.com/ihatedevilheart/" target="_blank" rel="noopener" class="artist-link">Instagram ↗</a>
+    </div>
+  </div>
+  <div class="artist-right reveal">
+    <p><strong>Devilheart</strong> is the solo artist alias of Naphat Sudjai — a space where full creative ownership is non-negotiable. Every track released under this name is built entirely from the ground up: no templates, no outside producers, no shortcuts.</p>
+    <p>From the first chord to the final master, every decision is made by one person. <strong>Composing the melody, writing the lyrics, arranging the structure, producing the beat, recording vocals, mixing the layers, and mastering the output</strong> — all of it, alone.</p>
+    <p>The sound spans <strong>Hip-Hop, Trap, R&amp;B, and Cinematic</strong> — but the constant across every release is intentionality. Each song is a direct expression of a specific moment, emotion, or story that demanded to exist.</p>
+  </div>
+</div>
+
+<!-- Playlist -->
+<div class="playlist-section">
+  <div class="section-header reveal">
+    <div class="section-label">Music</div>
+    <h2>Full Catalogue — 27 Tracks</h2>
+  </div>
+
+  <!-- Now Playing Bar -->
+  <div class="now-playing reveal">
+    <div class="np-controls">
+      <button class="np-btn" id="prevBtn" title="Previous">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M2 2h1.5v10H2zM4.5 7L12 2v10z"/></svg>
+      </button>
+      <button class="np-btn main-play" id="mainPlayBtn" title="Play">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" id="mainPlayIcon"><polygon points="4,2 14,8 4,14"/></svg>
+      </button>
+      <button class="np-btn" id="nextBtn" title="Next">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><path d="M12 2h-1.5v10H12zM9.5 7L2 2v10z"/></svg>
+      </button>
+    </div>
+    <div class="np-info">
+      <div class="np-title" id="npTitle">Select a track</div>
+      <div class="np-artist">Devilheart</div>
+    </div>
+    <div class="np-progress">
+      <div class="progress-bar-wrap" id="progressWrap">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+      <div class="time-row">
+        <span id="timeCurrent">0:00</span>
+        <span id="timeTotal">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Track List -->
+  <div class="track-list reveal" id="trackList"></div>
+</div>
+
+<!-- Showcase Videos -->
+<div class="showcase-section">
+  <div class="section-header reveal">
+    <div class="section-label">Showcase</div>
+    <h2>Project Clips</h2>
+  </div>
+  <div class="video-grid">
+
+    <div class="video-card reveal">
+      <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/AaOrzmnTC1M" title="Wake Up Project by Devilheart"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-card-num">01</div>
+      <div class="video-card-title">Wake Up Project</div>
+      <div class="video-card-desc">A full production showcase — composed, arranged, mixed and mastered by Devilheart.</div>
+    </div>
+
+    <div class="video-card reveal">
+      <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/UhdrO6ec8DY" title="R&B Project by Devilheart"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-card-num">02</div>
+      <div class="video-card-title">R&amp;B Project</div>
+      <div class="video-card-desc">An R&B production built from scratch — smooth arrangement, vocal layering, and full mix & master.</div>
+    </div>
+
+    <div class="video-card reveal">
+      <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/XlXca-8y9Nc" title="Opor Project by Devilheart"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-card-num">03</div>
+      <div class="video-card-title">Opor Project</div>
+      <div class="video-card-desc">A cinematic-leaning production demonstrating sound design, composition, and mastering craft.</div>
+    </div>
+
+    <div class="video-card reveal">
+      <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/i8g1gUnfnNM" title="Dreaming Project by Devilheart"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="video-card-num">04</div>
+      <div class="video-card-title">Dreaming Project</div>
+      <div class="video-card-desc">Atmospheric production exploring emotional depth — beat, arrangement, mix and master by Devilheart.</div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <span>© 2025 Naphat Sudjai — Music Producer</span>
+  <span>Devilheart · From Scratch</span>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+
+  // Theme
+  const html = document.documentElement;
+  const saved = localStorage.getItem('theme') || 'dark';
+  html.setAttribute('data-theme', saved);
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  // Nav scroll
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
+
+  // Scroll reveal
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // ── PLAYLIST ──
+  const tracks = [
+    { title: "03.56 am Freestyle [Mixtape]", feat: "prod. Zoowe",         src: "audio/from-scratch/Devilheart - 03.56 am Freestyle [Mixtape] (prod. Zoowe).mp3" },
+    { title: "Back To Hometown",              feat: "",                    src: "audio/from-scratch/Devilheart - Back To Hometown.mp3" },
+    { title: "DarkNight PT.2",                feat: "",                    src: "audio/from-scratch/Devilheart - DarkNight PT.2.mp3" },
+    { title: "Fallin' Love",                  feat: "",                    src: "audio/from-scratch/Devilheart - Fallin' Love.mp3" },
+    { title: "From The Dirt",                 feat: "feat. Zeetusx, Azmo", src: "audio/from-scratch/Devilheart - From The Dirt Feat. Zeetusx, Azmo.mp3" },
+    { title: "Get High Freestyle",            feat: "feat. Azmo",          src: "audio/from-scratch/Devilheart - Get High Freestyle Feat. Azmo.mp3" },
+    { title: "My Fault",                      feat: "",                    src: "audio/from-scratch/Devilheart - My Fault.mp3" },
+    { title: "My Rose",                       feat: "",                    src: "audio/from-scratch/Devilheart - My Rose.mp3" },
+    { title: "My Way",                        feat: "feat. Zeetusx",       src: "audio/from-scratch/Devilheart - My Way feat. Zeetusx.mp3" },
+    { title: "Ready2Die [Mixtape]",           feat: "Prod. loverboybeatz", src: "audio/from-scratch/Devilheart - Ready2Die [mixtape] (Prod. By loverboybeatz).mp3" },
+    { title: "Ring of Life",                  feat: "feat. Zeetusx, Azmo", src: "audio/from-scratch/Devilheart - RIng of Life Feat. Zeetusx, Azmo.mp3" },
+    { title: "Rose [Remastered]",             feat: "",                    src: "audio/from-scratch/Devilheart - Rose [Remastered].mp3" },
+    { title: "Sex & Cash",                    feat: "feat. DekGoCrazy!",   src: "audio/from-scratch/Devilheart - Sex & Cash Feat. DekGoCrazy!.mp3" },
+    { title: "Silence",                       feat: "",                    src: "audio/from-scratch/Devilheart - Slience.mp3" },
+    { title: "Sorry Mom",                     feat: "feat. LIELIFE",       src: "audio/from-scratch/Devilheart - Sorry Mom Feat. LIELIFE.mp3" },
+    { title: "Talk to Myself",                feat: "",                    src: "audio/from-scratch/Devilheart - Talk to Myself.mp3" },
+    { title: "Vent My Emotions (Freestyle)",  feat: "",                    src: "audio/from-scratch/Devilheart - Vent My Emotions (Freestyle).mp3" },
+    { title: "What is Love?",                 feat: "",                    src: "audio/from-scratch/Devilheart - What is Love?.mp3" },
+    { title: "Drive Alone",                   feat: "feat. DekGoCrazy!",   src: "audio/from-scratch/Devilheart x NY Jame - Drive Alone (Feat. DekGoCrazy!).mp3" },
+    { title: "Protection",                    feat: "feat. Azmo",          src: "audio/from-scratch/Devilheart x NY Jame - Protection (Feat. Azmo).mp3" },
+    { title: "Vibe",                          feat: "with NY Jame",        src: "audio/from-scratch/Devilheart x NY Jame - Vibe.mp3" },
+    { title: "What's Next?",                  feat: "with NY Jame",        src: "audio/from-scratch/Devilheart x NY Jame - What's Next?.mp3" },
+    { title: "Go Get It!",                    feat: "feat. Zeetusx",       src: "audio/from-scratch/Devilheart x Sxnnityboy - Go Get It! Feat. Zeetusx.mp3" },
+    { title: "Going Up!",                     feat: "feat. Azmo",          src: "audio/from-scratch/Devilheart x Sxnnityboy - Going Up! Feat. Azmo.mp3" },
+    { title: "gang Lost Files",               feat: "with TOTO",           src: "audio/from-scratch/Devilheart x TOTO - gang Lost Files.mp3" },
+    { title: "Fool",                          feat: "with WE1R",           src: "audio/from-scratch/Devilheart x WE1R - Fool .mp3" },
+    { title: "Ring of Life [Remastered]",     feat: "feat. Zeetusx, Azmo", src: "audio/from-scratch/Devilheart x Zeetusx x Azmo - Ring of Life [Remastered].mp3" },
+  ];
+
+  let currentIndex = -1;
+  let audio = new Audio();
+  let isPlaying = false;
+
+  const playIcon  = `<polygon points="4,2 14,8 4,14"/>`;
+  const pauseIcon = `<rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/>`;
+
+  function fmt(s) {
+    if (isNaN(s)) return '0:00';
+    return `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+  }
+
+  function updatePlayIcon() {
+    document.getElementById('mainPlayIcon').innerHTML = isPlaying ? pauseIcon : playIcon;
+  }
+
+  function setActive(index) {
+    document.querySelectorAll('.track-row').forEach((r, i) => {
+      r.classList.toggle('active', i === index);
+      r.querySelector('.track-row-num').textContent = i === index && isPlaying ? '▶' : String(i+1).padStart(2,'0');
+    });
+  }
+
+  function loadTrack(index) {
+    const t = tracks[index];
+    currentIndex = index;
+    audio.src = t.src;
+    document.getElementById('npTitle').textContent = t.title + (t.feat ? ' · ' + t.feat : '');
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('timeCurrent').textContent = '0:00';
+    document.getElementById('timeTotal').textContent = '—';
+    setActive(index);
+  }
+
+  function playTrack(index) {
+    loadTrack(index);
+    audio.play();
+    isPlaying = true;
+    updatePlayIcon();
+  }
+
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration) return;
+    document.getElementById('progressFill').style.width = (audio.currentTime / audio.duration * 100) + '%';
+    document.getElementById('timeCurrent').textContent = fmt(audio.currentTime);
+  });
+  audio.addEventListener('loadedmetadata', () => {
+    document.getElementById('timeTotal').textContent = fmt(audio.duration);
+  });
+  audio.addEventListener('ended', () => {
+    if (currentIndex < tracks.length - 1) { playTrack(currentIndex + 1); }
+    else { isPlaying = false; updatePlayIcon(); setActive(-1); }
+  });
+
+  document.getElementById('progressWrap').addEventListener('click', e => {
+    if (!audio.duration) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
+  });
+
+  document.getElementById('mainPlayBtn').addEventListener('click', () => {
+    if (currentIndex === -1) { playTrack(0); return; }
+    if (isPlaying) { audio.pause(); isPlaying = false; }
+    else { audio.play(); isPlaying = true; }
+    updatePlayIcon();
+    setActive(currentIndex);
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if (currentIndex > 0) playTrack(currentIndex - 1);
+  });
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if (currentIndex < tracks.length - 1) playTrack(currentIndex + 1);
+  });
+
+  // Build track list
+  const list = document.getElementById('trackList');
+  tracks.forEach((t, i) => {
+    const row = document.createElement('div');
+    row.className = 'track-row';
+    row.innerHTML = `
+      <div class="track-row-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="track-row-info">
+        <div class="track-row-name">${t.title}${t.feat ? ` <span class="feat">· ${t.feat}</span>` : ''}</div>
+      </div>
+      <div class="track-row-dur" id="dur-${i}">—</div>`;
+    row.addEventListener('click', () => playTrack(i));
+    list.appendChild(row);
+
+    // Load duration
+    const tmp = new Audio(t.src);
+    tmp.addEventListener('loadedmetadata', () => {
+      const el = document.getElementById(`dur-${i}`);
+      if (el) el.textContent = fmt(tmp.duration);
+    });
+  });
+
+  // Hook cursor on dynamic elements
+  document.querySelectorAll('.track-row, .artist-link').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+</script>
+</body>
+</html>
