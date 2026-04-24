@@ -195,33 +195,64 @@
     }
     .hero-btn-secondary:hover { color: var(--fg); border-color: var(--fg); }
 
-    /* Hero image */
+    /* Hero slideshow */
     .hero-right {
-      display: flex; align-items: flex-end; justify-content: flex-end;
+      display: flex; align-items: center; justify-content: flex-end;
       opacity: 0; animation: fadeIn 1s ease 0.6s forwards;
     }
-    .hero-photo-wrap {
-      width: 100%; max-width: 420px;
-      aspect-ratio: 3/4;
-      border: 1px solid var(--border);
+    .hero-slideshow {
+      width: 100%;
+      aspect-ratio: 16/9;
       position: relative; overflow: hidden;
+      border: 1px solid var(--border);
       background: var(--bg-alt);
       transition: border-color 0.4s, background 0.4s;
     }
-    .hero-photo-wrap img {
+    .hero-slide-track {
+      display: flex;
+      width: 500%; /* 5 slides × 100% */
+      height: 100%;
+      transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-slide {
+      width: 20%; /* 1/5 of track = 100% of viewport */
+      height: 100%;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-slide img {
       width: 100%; height: 100%;
       object-fit: cover; display: block;
     }
-    .hero-photo-placeholder {
+    /* Placeholder shown when no img src is set */
+    .hero-slide-placeholder {
       position: absolute; inset: 0;
       display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 12px;
-      color: var(--muted); font-size: 11px;
+      align-items: center; justify-content: center; gap: 10px;
+      color: var(--muted); font-size: 10px;
       letter-spacing: 0.15em; text-transform: uppercase;
       border: 1px dashed var(--border);
-      margin: 16px;
+      margin: 12px;
+      pointer-events: none;
     }
-    .hero-photo-placeholder svg { opacity: 0.4; }
+    .hero-slide-placeholder svg { opacity: 0.35; }
+    /* Dot indicators */
+    .hero-slide-dots {
+      position: absolute; bottom: 14px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 2;
+    }
+    .hero-slide-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--muted); opacity: 0.4;
+      cursor: pointer;
+      transition: opacity 0.3s, background 0.3s, transform 0.3s;
+      border: none; padding: 0;
+    }
+    .hero-slide-dot.active {
+      opacity: 1; background: var(--fg); transform: scale(1.3);
+    }
 
     .hero-scroll {
       position: absolute; right: 56px; bottom: 80px;
@@ -506,7 +537,7 @@
       .hero-wave, .hero-scroll { display: none; }
       #hero { grid-template-columns: 1fr; padding: 120px 24px 60px; gap: 40px; }
       .hero-right { justify-content: center; }
-      .hero-photo-wrap { max-width: 280px; }
+      .hero-slideshow { border-radius: 0; }
       .hero-btns { gap: 12px; }
       .hero-btn-primary, .hero-btn-secondary { padding: 14px 24px; }
     }
@@ -554,19 +585,69 @@
       </div>
     </div>
 
-    <!-- Right: Photo -->
+    <!-- Right: Image Slideshow (16:9, 5 slides, auto-advances every 10s) -->
     <div class="hero-right">
-      <div class="hero-photo-wrap">
-        <!-- Replace src with your photo path e.g. src="images/photo.jpg" -->
-        <!-- <img src="images/photo.jpg" alt="Naphat Sudjai"> -->
-        <div class="hero-photo-placeholder">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M4 28c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          Add Your Photo
+      <div class="hero-slideshow" id="heroSlideshow">
+
+        <div class="hero-slide-track" id="heroSlideTrack">
+
+          <!-- ═══ SLIDE 1 ═══ Replace src below with your image path, e.g. src="images/slide1.jpg" -->
+          <div class="hero-slide">
+            <!-- <img src="images/slide1.jpg" alt="Slide 1"> -->
+            <div class="hero-slide-placeholder">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="5" width="24" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 20l6-5 4 4 4-5 10 9" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              Image 1
+            </div>
+          </div>
+
+          <!-- ═══ SLIDE 2 ═══ Replace src below with your image path, e.g. src="images/slide2.jpg" -->
+          <div class="hero-slide">
+            <!-- <img src="images/slide2.jpg" alt="Slide 2"> -->
+            <div class="hero-slide-placeholder">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="5" width="24" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 20l6-5 4 4 4-5 10 9" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              Image 2
+            </div>
+          </div>
+
+          <!-- ═══ SLIDE 3 ═══ Replace src below with your image path, e.g. src="images/slide3.jpg" -->
+          <div class="hero-slide">
+            <!-- <img src="images/slide3.jpg" alt="Slide 3"> -->
+            <div class="hero-slide-placeholder">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="5" width="24" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 20l6-5 4 4 4-5 10 9" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              Image 3
+            </div>
+          </div>
+
+          <!-- ═══ SLIDE 4 ═══ Replace src below with your image path, e.g. src="images/slide4.jpg" -->
+          <div class="hero-slide">
+            <!-- <img src="images/slide4.jpg" alt="Slide 4"> -->
+            <div class="hero-slide-placeholder">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="5" width="24" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 20l6-5 4 4 4-5 10 9" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              Image 4
+            </div>
+          </div>
+
+          <!-- ═══ SLIDE 5 ═══ Replace src below with your image path, e.g. src="images/slide5.jpg" -->
+          <div class="hero-slide">
+            <!-- <img src="images/slide5.jpg" alt="Slide 5"> -->
+            <div class="hero-slide-placeholder">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="2" y="5" width="24" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="11" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 20l6-5 4 4 4-5 10 9" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              Image 5
+            </div>
+          </div>
+
+        </div><!-- /hero-slide-track -->
+
+        <!-- Navigation dots -->
+        <div class="hero-slide-dots" id="heroSlideDots">
+          <button class="hero-slide-dot active" data-index="0" aria-label="Slide 1"></button>
+          <button class="hero-slide-dot" data-index="1" aria-label="Slide 2"></button>
+          <button class="hero-slide-dot" data-index="2" aria-label="Slide 3"></button>
+          <button class="hero-slide-dot" data-index="3" aria-label="Slide 4"></button>
+          <button class="hero-slide-dot" data-index="4" aria-label="Slide 5"></button>
         </div>
-      </div>
+
+      </div><!-- /hero-slideshow -->
     </div>
 
     <div class="hero-scroll">
@@ -922,6 +1003,47 @@
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ── Hero Slideshow ──
+    (function () {
+      const track  = document.getElementById('heroSlideTrack');
+      const dots   = document.querySelectorAll('#heroSlideDots .hero-slide-dot');
+      const total  = 5;
+      let current  = 0;
+      let timer;
+
+      function goTo(index) {
+        current = (index + total) % total;
+        // Each slide is 20% of the track width (track = 500% of container)
+        // To show slide N we shift the track by -(N * 20%)
+        track.style.transform = `translateX(-${current * 20}%)`;
+        dots.forEach((d, i) => d.classList.toggle('active', i === current));
+      }
+
+      function next() { goTo(current + 1); }
+
+      function startTimer() {
+        clearInterval(timer);
+        timer = setInterval(next, 10000); // advance every 10 seconds
+      }
+
+      // Dot click — jump to slide & restart timer
+      dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          goTo(parseInt(dot.dataset.index, 10));
+          startTimer();
+        });
+      });
+
+      // Pause on hover, resume on leave
+      const slideshow = document.getElementById('heroSlideshow');
+      slideshow.addEventListener('mouseenter', () => clearInterval(timer));
+      slideshow.addEventListener('mouseleave', startTimer);
+
+      // Kick off
+      goTo(0);
+      startTimer();
+    })();
   </script>
 </body>
 </html>
