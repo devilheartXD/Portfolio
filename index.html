@@ -135,11 +135,14 @@
     /* ── HERO ── */
     #hero {
       min-height: 100vh;
-      display: flex; flex-direction: column;
-      justify-content: flex-end;
-      padding-bottom: 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      padding: 120px 56px 80px;
       position: relative; overflow: hidden;
+      gap: 60px;
     }
+    .hero-left { display: flex; flex-direction: column; justify-content: flex-end; }
     .hero-label {
       font-size: 11px; letter-spacing: 0.2em;
       text-transform: uppercase; color: var(--muted);
@@ -148,7 +151,7 @@
     }
     .hero-name {
       font-family: 'Syne', sans-serif;
-      font-size: clamp(3.5rem, 10vw, 9rem);
+      font-size: clamp(3.5rem, 8vw, 9rem);
       font-weight: 700; line-height: 0.92;
       letter-spacing: -0.02em; color: var(--fg);
       opacity: 0; animation: fadeUp 1s ease 0.4s forwards;
@@ -156,10 +159,63 @@
     }
     .hero-name em { font-style: italic; color: var(--muted); }
     .hero-tagline {
-      margin-top: 40px; max-width: 400px;
+      margin-top: 32px; max-width: 400px;
       color: var(--muted); font-size: 13px; line-height: 2;
       opacity: 0; animation: fadeUp 1s ease 0.7s forwards;
     }
+    .hero-btns {
+      display: flex; gap: 16px; margin-top: 40px; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 1s ease 0.9s forwards;
+    }
+    .hero-btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 36px;
+      background: var(--fg); color: var(--bg);
+      text-decoration: none; font-size: 11px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.3s;
+    }
+    .hero-btn-primary:hover { opacity: 0.85; }
+    .hero-btn-secondary {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 36px;
+      border: 1px solid var(--border); color: var(--muted);
+      text-decoration: none; font-size: 11px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      font-family: 'DM Sans', sans-serif;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .hero-btn-secondary:hover { color: var(--fg); border-color: var(--fg); }
+
+    /* Hero image */
+    .hero-right {
+      display: flex; align-items: flex-end; justify-content: flex-end;
+      opacity: 0; animation: fadeIn 1s ease 0.6s forwards;
+    }
+    .hero-photo-wrap {
+      width: 100%; max-width: 420px;
+      aspect-ratio: 3/4;
+      border: 1px solid var(--border);
+      position: relative; overflow: hidden;
+      background: var(--bg-alt);
+      transition: border-color 0.4s, background 0.4s;
+    }
+    .hero-photo-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+    .hero-photo-placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+      color: var(--muted); font-size: 11px;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      border: 1px dashed var(--border);
+      margin: 16px;
+    }
+    .hero-photo-placeholder svg { opacity: 0.4; }
+
     .hero-scroll {
       position: absolute; right: 56px; bottom: 80px;
       display: flex; flex-direction: column; align-items: center; gap: 12px;
@@ -177,9 +233,9 @@
       transition: background 0.4s;
     }
     .hero-wave {
-      position: absolute; top: 50%; right: 0;
+      position: absolute; top: 50%; left: 50%;
       transform: translateY(-50%);
-      width: 45%; opacity: 0.05; pointer-events: none;
+      width: 20%; opacity: 0.03; pointer-events: none;
     }
     .wave-bar {
       display: inline-block; width: 3px; margin: 0 2px;
@@ -441,6 +497,11 @@
       .work-item { grid-template-columns: 48px 1fr auto; gap: 16px; }
       footer { flex-direction: column; gap: 12px; text-align: center; }
       .hero-wave, .hero-scroll { display: none; }
+      #hero { grid-template-columns: 1fr; padding: 120px 24px 60px; gap: 40px; }
+      .hero-right { justify-content: center; }
+      .hero-photo-wrap { max-width: 280px; }
+      .hero-btns { gap: 12px; }
+      .hero-btn-primary, .hero-btn-secondary { padding: 14px 24px; }
     }
   </style>
 </head>
@@ -470,12 +531,36 @@
   <!-- Hero -->
   <section id="hero">
     <div class="hero-wave" id="heroWave"></div>
-    <div class="hero-label">Music Producer · Sound Designer · Artist as <em style="font-style:italic;">Devilheart</em> · Available for Internship</div>
-    <h1 class="hero-name">Naphat<br><em>Sudjai</em></h1>
-    <p class="hero-tagline">
-      Crafting sonic landscapes from raw emotion.<br>
-      Based in Thanyaburi, Pathum Thani, Thailand — open to studios worldwide.
-    </p>
+
+    <!-- Left: Text + Buttons -->
+    <div class="hero-left">
+      <div class="hero-label">Music Producer · Sound Designer · Artist as <em style="font-style:italic;">Devilheart</em> · Available for Internship</div>
+      <h1 class="hero-name">Naphat<br><em>Sudjai</em></h1>
+      <p class="hero-tagline">
+        Crafting sonic landscapes from raw emotion.<br>
+        Based in Thanyaburi, Pathum Thani, Thailand — open to studios worldwide.
+      </p>
+      <div class="hero-btns">
+        <a href="#works" class="hero-btn-primary">View Portfolio</a>
+        <a href="#contact" class="hero-btn-secondary">Contact Me</a>
+      </div>
+    </div>
+
+    <!-- Right: Photo -->
+    <div class="hero-right">
+      <div class="hero-photo-wrap">
+        <!-- Replace src with your photo path e.g. src="images/photo.jpg" -->
+        <!-- <img src="images/photo.jpg" alt="Naphat Sudjai"> -->
+        <div class="hero-photo-placeholder">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 28c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Add Your Photo
+        </div>
+      </div>
+    </div>
+
     <div class="hero-scroll">
       <div class="hero-scroll-line"></div>
       <span>Scroll</span>
