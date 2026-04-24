@@ -287,18 +287,17 @@
       transition: background 0.4s;
     }
     .hero-wave {
-      position: absolute;
-      top: 56px;       /* sits just inside the top of the hero, below the nav */
-      left: 56px;      /* aligned with the hero's left padding */
-      width: 300px;    /* matches the rectangle area */
+      position: relative;
       display: flex;
       align-items: center;
-      height: 120px;   /* height of the rectangle */
-      opacity: 0.18;
+      width: 180px;
+      height: 36px;
+      margin-bottom: 20px;
+      opacity: 0.22;
       pointer-events: none;
     }
     .wave-bar {
-      display: inline-block; width: 3px; margin: 0 2px;
+      display: inline-block; width: 2px; margin: 0 1.5px;
       background: var(--fg); border-radius: 2px;
       flex-shrink: 0;
       animation: wavePulse 1.4s ease-in-out infinite alternate;
@@ -590,10 +589,10 @@
 
   <!-- Hero -->
   <section id="hero">
-    <div class="hero-wave" id="heroWave"></div>
 
     <!-- Left: Text + Buttons -->
     <div class="hero-left">
+      <div class="hero-wave" id="heroWave"></div>
       <div class="hero-label">Music Producer · Sound Designer · Artist as <em style="font-style:italic;">Devilheart</em> · Available for Internship</div>
       <h1 class="hero-name">Naphat<br><em>Sudjai</em></h1>
       <p class="hero-university">Bangkok University · School of Digital Media &amp; Cinematic Arts</p>
