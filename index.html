@@ -287,14 +287,20 @@
       transition: background 0.4s;
     }
     .hero-wave {
-      position: absolute; top: 50%; left: 50%;
-      transform: translateY(-50%);
-      width: 20%; opacity: 0.03; pointer-events: none;
+      position: absolute;
+      top: 56px;       /* sits just inside the top of the hero, below the nav */
+      left: 56px;      /* aligned with the hero's left padding */
+      width: 300px;    /* matches the rectangle area */
+      display: flex;
+      align-items: center;
+      height: 120px;   /* height of the rectangle */
+      opacity: 0.18;
+      pointer-events: none;
     }
     .wave-bar {
       display: inline-block; width: 3px; margin: 0 2px;
       background: var(--fg); border-radius: 2px;
-      vertical-align: middle;
+      flex-shrink: 0;
       animation: wavePulse 1.4s ease-in-out infinite alternate;
       transition: background 0.4s;
     }
