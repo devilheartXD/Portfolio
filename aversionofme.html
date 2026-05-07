@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>A Version of Me — Sound Post Production · Naphat Sudjai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    [data-theme="dark"] {
+      --bg:     #080808;
+      --bg-alt: #111111;
+      --fg:     #f2f2f2;
+      --accent: #d4d4d4;
+      --muted:  #888888;
+      --border: rgba(255,255,255,0.1);
+    }
+    [data-theme="light"] {
+      --bg:     #f5f5f5;
+      --bg-alt: #ebebeb;
+      --fg:     #0f0f0f;
+      --accent: #333333;
+      --muted:  #777777;
+      --border: rgba(0,0,0,0.1);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.8;
+      cursor: none;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    /* ── CURSOR ── */
+    .cursor {
+      width: 10px; height: 10px;
+      background: var(--fg);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, background 0.4s, border 0.3s;
+    }
+    .cursor.hovering {
+      width: 36px; height: 36px;
+      background: transparent;
+      border: 1px solid var(--fg);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 28px 56px;
+      background: var(--bg);
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+    nav.scrolled { border-bottom: 1px solid var(--border); }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--fg); text-decoration: none;
+      letter-spacing: 0.04em; transition: color 0.4s;
+    }
+    .nav-right { display: flex; align-items: center; gap: 24px; }
+    .back-btn {
+      display: flex; align-items: center; gap: 8px;
+      color: var(--muted); text-decoration: none;
+      font-size: 11px; letter-spacing: 0.15em;
+      text-transform: uppercase; transition: color 0.3s;
+    }
+    .back-btn:hover { color: var(--fg); }
+    .back-btn svg { transition: transform 0.3s; }
+    .back-btn:hover svg { transform: translateX(-4px); }
+
+    /* ── THEME TOGGLE ── */
+    .theme-toggle {
+      display: flex; align-items: center; gap: 8px;
+      background: none; border: 1px solid var(--border);
+      border-radius: 999px; padding: 6px 14px;
+      cursor: none; color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.3s, border-color 0.4s;
+    }
+    .theme-toggle:hover { color: var(--fg); border-color: var(--fg); }
+    .toggle-track {
+      width: 32px; height: 18px;
+      background: var(--border); border-radius: 999px;
+      position: relative; transition: background 0.4s;
+    }
+    [data-theme="light"] .toggle-track { background: var(--accent); }
+    .toggle-knob {
+      position: absolute; top: 3px; left: 3px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--fg);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.4s;
+    }
+    [data-theme="light"] .toggle-knob { transform: translateX(14px); }
+    .toggle-label-dark  { display: inline; }
+    .toggle-label-light { display: none; }
+    [data-theme="light"] .toggle-label-dark  { display: none; }
+    [data-theme="light"] .toggle-label-light { display: inline; }
+
+    /* ── PROJECT HERO ── */
+    .project-hero {
+      min-height: 65vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 160px 56px 80px;
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .project-label {
+      font-size: 11px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 24px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg-alt); border: 1px solid var(--border);
+      border-radius: 999px; padding: 4px 12px;
+      font-size: 10px; letter-spacing: 0.15em;
+      color: var(--muted);
+    }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #f0a500;
+      animation: blink 1.8s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+    .project-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 8vw, 7.5rem);
+      font-weight: 700; line-height: 0.95;
+      letter-spacing: -0.02em; color: var(--fg);
+      transition: color 0.4s;
+    }
+    .project-title em { font-style: italic; color: var(--muted); }
+    .project-meta {
+      display: flex; gap: 48px; margin-top: 48px;
+      padding-top: 40px; border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .meta-label {
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .meta-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--fg); transition: color 0.4s;
+    }
+
+    /* ── OVERVIEW ── */
+    .project-overview {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      padding: 80px 56px;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .overview-left { position: sticky; top: 120px; }
+    .section-eyebrow {
+      font-size: 10px; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .overview-left h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem; font-weight: 600;
+      color: var(--fg); line-height: 1.2;
+      transition: color 0.4s;
+    }
+    .overview-left h2 em { font-style: italic; color: var(--muted); }
+    .overview-right p {
+      color: var(--muted); font-size: 14px; line-height: 2;
+      margin-bottom: 20px;
+    }
+    .overview-right p:last-child { margin-bottom: 0; }
+
+    /* ── ROLE BREAKDOWN ── */
+    .role-section {
+      padding: 80px 56px;
+      border-bottom: 1px solid var(--border);
+    }
+    .role-header {
+      display: flex; justify-content: space-between;
+      align-items: baseline; margin-bottom: 48px;
+    }
+    .role-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem; font-weight: 600;
+      color: var(--fg); transition: color 0.4s;
+    }
+    .role-count {
+      font-size: 11px; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+    }
+    .role-card {
+      background: var(--bg-alt);
+      padding: 36px 40px;
+      transition: background 0.3s;
+    }
+    .role-card:hover { background: var(--border); }
+    .role-icon {
+      font-size: 22px; margin-bottom: 16px;
+    }
+    .role-card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 600;
+      color: var(--fg); margin-bottom: 12px;
+      transition: color 0.4s;
+    }
+    .role-card-desc {
+      font-size: 13px; color: var(--muted); line-height: 1.9;
+    }
+
+    /* ── DELIVERABLES ── */
+    .deliverables-section {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      padding: 80px 56px;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .deliverables-left { position: sticky; top: 120px; }
+    .deliverables-left h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem; font-weight: 600;
+      color: var(--fg); line-height: 1.2;
+      transition: color 0.4s;
+    }
+    .deliverable-list { list-style: none; }
+    .deliverable-list li {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px; color: var(--muted);
+      line-height: 1.7;
+    }
+    .deliverable-list li:first-child { border-top: 1px solid var(--border); }
+    .deliverable-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px; color: var(--muted);
+      letter-spacing: 0.1em; flex-shrink: 0;
+      width: 28px; padding-top: 2px;
+    }
+
+    /* ── VIDEO SECTION ── */
+    .video-section {
+      padding: 80px 56px;
+      border-bottom: 1px solid var(--border);
+    }
+    .video-section-header {
+      display: flex; justify-content: space-between;
+      align-items: baseline; margin-bottom: 40px;
+    }
+    .video-section-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem; font-weight: 600;
+      color: var(--fg); transition: color 0.4s;
+    }
+    /* ── VIDEO EMBED ── */
+    /* To embed: replace the .video-placeholder div below with:
+       <div class="video-wrap">
+         <iframe src="https://www.youtube.com/embed/VIDEO_ID"
+           frameborder="0" allowfullscreen></iframe>
+       </div>
+    */
+    .video-wrap {
+      position: relative; width: 100%; aspect-ratio: 16/9;
+      background: #000; border-radius: 2px; overflow: hidden;
+    }
+    .video-wrap iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; border: none;
+    }
+    .video-placeholder {
+      aspect-ratio: 16/9;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 20px;
+      position: relative;
+    }
+    .video-placeholder-inner {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 16px;
+      text-align: center;
+    }
+    .video-placeholder-icon {
+      width: 64px; height: 64px;
+      border: 1px solid var(--border); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+    }
+    .video-placeholder h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 600;
+      color: var(--fg); transition: color 0.4s;
+    }
+    .video-placeholder p {
+      font-size: 12px; color: var(--muted);
+      letter-spacing: 0.05em; max-width: 340px; line-height: 1.8;
+    }
+    .video-label {
+      position: absolute; top: 20px; left: 24px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .video-caption {
+      margin-top: 16px;
+      font-size: 12px; color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── TOOLS ── */
+    .tools-section {
+      padding: 80px 56px;
+    }
+    .tools-section h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem; font-weight: 600;
+      color: var(--fg); margin-bottom: 40px;
+      transition: color 0.4s;
+    }
+    .tools-list {
+      display: flex; flex-wrap: wrap; gap: 12px;
+    }
+    .tool-tag {
+      border: 1px solid var(--border);
+      padding: 10px 20px;
+      font-size: 12px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .tool-tag:hover { color: var(--fg); border-color: var(--fg); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 56px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      color: var(--muted); font-size: 11px; letter-spacing: 0.1em;
+      transition: border-color 0.4s;
+    }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0; transform: translateY(36px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .theme-toggle .toggle-label-dark,
+      .theme-toggle .toggle-label-light { display: none; }
+      .project-hero { padding: 140px 24px 60px; }
+      .project-meta { gap: 24px; }
+      .project-overview,
+      .deliverables-section { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px; }
+      .overview-left,
+      .deliverables-left { position: static; }
+      .role-section,
+      .video-section,
+      .tools-section { padding: 60px 24px; }
+      .role-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+
+  <!-- Nav -->
+  <nav id="mainNav">
+    <a href="index.html" class="nav-logo">NS.</a>
+    <div class="nav-right">
+      <a href="index.html#works" class="back-btn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back to Works
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <div class="toggle-track"><div class="toggle-knob"></div></div>
+        <span class="toggle-label-dark">Night</span>
+        <span class="toggle-label-light">Day</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Project Hero -->
+  <header class="project-hero">
+    <div class="project-label">
+      01 — Sound Post Production
+      <span class="status-badge">
+        <span class="status-dot"></span>
+        In Production
+      </span>
+    </div>
+    <h1 class="project-title">A Version<br><em>of Me</em></h1>
+    <div class="project-meta">
+      <div class="meta-item">
+        <div class="meta-label">Client</div>
+        <div class="meta-value">Retroframe</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Role</div>
+        <div class="meta-value">Sound Post Production</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Period</div>
+        <div class="meta-value">26 Apr – 1 May 2025</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Format</div>
+        <div class="meta-value">Short Film</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Output</div>
+        <div class="meta-value">Cinema Mix & Master</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Overview -->
+  <section class="project-overview">
+    <div class="overview-left reveal">
+      <div class="section-eyebrow">Overview</div>
+      <h2>Sound built<br>for the <em>big screen</em></h2>
+    </div>
+    <div class="overview-right reveal">
+      <p>
+        <strong>A Version of Me</strong> is a short film produced by Retroframe, for which I handled the complete sound post production pipeline from scratch — from raw location sound all the way through to the final cinema-ready mix and master.
+      </p>
+      <p>
+        The project required managing every layer of the audio: dialogue clarity, immersive sound design, Foley performance, original score composition, and a final mix balanced for theatrical playback. The score was written to serve the film's emotional arc, with themes crafted to support the narrative at each turning point.
+      </p>
+      <p>
+        This project is currently in final production stages. A draft cut of the sound post is complete and under review.
+      </p>
+    </div>
+  </section>
+
+  <!-- Role Breakdown -->
+  <section class="role-section">
+    <div class="role-header reveal">
+      <h2>What I Did</h2>
+      <span class="role-count">04 Disciplines</span>
+    </div>
+    <div class="role-grid">
+
+      <div class="role-card reveal">
+        <div class="role-icon">🎙</div>
+        <div class="role-card-title">Dialogue Editing</div>
+        <div class="role-card-desc">
+          Cleaned and edited all production dialogue for clarity and consistency. Handled noise reduction, breath control, and sync corrections to ensure intelligible, broadcast-ready speech.
+        </div>
+      </div>
+
+      <div class="role-card reveal">
+        <div class="role-icon">🔊</div>
+        <div class="role-card-title">SFX Design & Foley</div>
+        <div class="role-card-desc">
+          Designed the sound effects layer and recorded original Foley to replace and enhance on-set sound. Every footstep, texture, and ambient detail was crafted to serve the visual rhythm of the film.
+        </div>
+      </div>
+
+      <div class="role-card reveal">
+        <div class="role-icon">🎼</div>
+        <div class="role-card-title">Film Score Composition</div>
+        <div class="role-card-desc">
+          Composed and produced the original film score. Developed thematic motifs aligned with the characters and emotional beats, using cinematic orchestration and electronic texture.
+        </div>
+      </div>
+
+      <div class="role-card reveal">
+        <div class="role-icon">🎚</div>
+        <div class="role-card-title">Final Mix & Master</div>
+        <div class="role-card-desc">
+          Delivered the final mix balancing dialogue, Foley, SFX, ambience, and music across all stems. Mastered for cinema output with attention to loudness, dynamics, and theatrical playback standards.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Deliverables -->
+  <section class="deliverables-section">
+    <div class="deliverables-left reveal">
+      <div class="section-eyebrow">Deliverables</div>
+      <h2>Full pipeline,<br>start to finish</h2>
+    </div>
+    <div class="reveal">
+      <ul class="deliverable-list">
+        <li>
+          <span class="deliverable-num">01</span>
+          Managed the complete sound post production pipeline end-to-end
+        </li>
+        <li>
+          <span class="deliverable-num">02</span>
+          Dialogue editing — noise reduction, sync correction, breath control
+        </li>
+        <li>
+          <span class="deliverable-num">03</span>
+          SFX design — layered sound effects tailored to each scene
+        </li>
+        <li>
+          <span class="deliverable-num">04</span>
+          Foley recording & editing — footsteps, texture, and object sounds
+        </li>
+        <li>
+          <span class="deliverable-num">05</span>
+          Original film score — composed and produced from scratch
+        </li>
+        <li>
+          <span class="deliverable-num">06</span>
+          Final Mix & Master delivered for cinema output
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Draft Preview -->
+  <section class="video-section">
+    <div class="video-section-header reveal">
+      <h2>Draft Preview</h2>
+      <span class="status-badge">
+        <span class="status-dot"></span>
+        Draft 1 — Under Review
+      </span>
+    </div>
+
+    <div class="reveal">
+      <!-- ═══════════════════════════════════════════════════════════════
+           TO ADD VIDEO: Upload to YouTube (unlisted) or Vimeo, then
+           replace the .video-placeholder div below with:
+
+           <div class="video-wrap">
+             <iframe
+               src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+               allowfullscreen>
+             </iframe>
+           </div>
+
+           For Vimeo:
+           <div class="video-wrap">
+             <iframe src="https://player.vimeo.com/video/YOUR_VIDEO_ID"
+               allow="autoplay; fullscreen; picture-in-picture"
+               allowfullscreen>
+             </iframe>
+           </div>
+      ══════════════════════════════════════════════════════════════════ -->
+
+      <div class="video-placeholder">
+        <div class="video-label">
+          <span class="status-dot"></span>
+          Sound Post Draft 1 · In Review
+        </div>
+        <div class="video-placeholder-inner">
+          <div class="video-placeholder-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <polygon points="10,7 22,14 10,21" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+            </svg>
+          </div>
+          <h3>Draft footage coming soon</h3>
+          <p>The sound post draft is complete and currently under review. The video will be embedded here once cleared for showcase.</p>
+        </div>
+      </div>
+      <p class="video-caption">A Version of Me · Retroframe · Sound Post Production Draft 1 · 2025</p>
+    </div>
+  </section>
+
+  <!-- Tools -->
+  <section class="tools-section">
+    <h2 class="reveal">Tools Used</h2>
+    <div class="tools-list reveal">
+      <span class="tool-tag">Pro Tools</span>
+      <span class="tool-tag">Ableton Live</span>
+      <span class="tool-tag">Dialogue Editing</span>
+      <span class="tool-tag">Foley Recording</span>
+      <span class="tool-tag">SFX Design</span>
+      <span class="tool-tag">Film Score</span>
+      <span class="tool-tag">Mix & Master</span>
+      <span class="tool-tag">Cinema Output</span>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <span>© 2025 Naphat Sudjai — A Version of Me · Retroframe</span>
+    <a href="index.html#works" class="back-btn">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Back to Works
+    </a>
+  </footer>
+
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+    });
+
+    // Theme toggle
+    const html      = document.documentElement;
+    const toggleBtn = document.getElementById('themeToggle');
+    const saved     = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', saved);
+    toggleBtn.addEventListener('click', () => {
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+
+    // Nav scroll
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
