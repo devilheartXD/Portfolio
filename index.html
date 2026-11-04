@@ -314,13 +314,43 @@
     .about-right p strong { color: var(--fg); font-weight: 500; transition: color 0.4s; }
 
     /* ── WORKS ── */
-    .works-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 64px; }
+    .works-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; }
     .works-header h2 {
       font-family: 'Syne', sans-serif;
       font-size: clamp(2.4rem, 5vw, 4rem);
       font-weight: 600; line-height: 1.1; color: var(--fg); transition: color 0.4s;
     }
     .works-count { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
+    /* Tabs */
+    .works-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 0; overflow-x: auto; scrollbar-width: none; }
+    .works-tabs::-webkit-scrollbar { display: none; }
+    .works-tab-btn {
+      flex-shrink: 0; padding: 14px 24px; font-size: 11px; letter-spacing: 0.12em;
+      color: var(--muted); background: none; border: none; cursor: pointer;
+      position: relative; transition: color 0.3s;
+      font-family: 'Inter', sans-serif; text-transform: uppercase;
+    }
+    .works-tab-btn::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
+      height: 1px; background: var(--fg);
+      transform: scaleX(0); transition: transform 0.3s;
+    }
+    .works-tab-btn.active { color: var(--fg); }
+    .works-tab-btn.active::after { transform: scaleX(1); }
+    .works-tab-btn:hover { color: var(--fg); }
+    /* Sub-filter */
+    .works-subfilter { display: flex; gap: 8px; padding: 20px 0 32px; flex-wrap: wrap; }
+    .sub-btn {
+      padding: 6px 16px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+      border: 1px solid var(--border); background: none; color: var(--muted);
+      cursor: pointer; transition: all 0.25s; font-family: 'Inter', sans-serif;
+    }
+    .sub-btn.active, .sub-btn:hover { color: var(--fg); border-color: var(--fg); }
+    /* Tab panels */
+    .works-panel { display: none; }
+    .works-panel.active { display: block; }
+    /* Work items */
+    .works-list { }
     .work-item {
       display: grid; grid-template-columns: 80px 1fr auto;
       align-items: center; gap: 32px; padding: 28px 0;
@@ -338,6 +368,7 @@
     .work-item:hover .work-title { color: var(--muted); }
     .work-item:hover .work-arrow { transform: translate(4px,-4px); color: var(--fg); }
     .work-item:last-child { border-bottom: 1px solid var(--border); }
+    .work-item[data-hidden] { display: none; }
     .work-num { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
     .work-title {
       font-family: 'Syne', sans-serif; font-size: 1.2rem;
@@ -534,6 +565,9 @@
       .resume-entry { grid-template-columns: 1fr; gap: 6px; }
       .works-header { flex-direction: column; align-items: flex-start; gap: 12px; }
       .work-item { grid-template-columns: 48px 1fr auto; gap: 16px; }
+      .works-tab-btn { padding: 12px 16px; font-size: 10px; }
+      .works-subfilter { gap: 6px; }
+      .sub-btn { padding: 5px 12px; }
       footer { flex-direction: column; gap: 12px; text-align: center; }
       .hero-scroll { display: none; }
       #hero { grid-template-columns: 1fr; padding: 120px 24px 60px; gap: 40px; }
@@ -664,55 +698,99 @@
       </div>
       <div class="works-count">06 projects</div>
     </div>
-    <div class="works-list">
-      <a href="studio28.html" class="work-item reveal">
-        <span class="work-num">01</span>
-        <div class="work-info">
-          <div class="work-title">Studio 28</div>
-          <div class="work-meta">Assistant Engineer · Internship · Recording · Mix &amp; Master · Jul — Sep 2026</div>
-        </div>
-        <span class="work-arrow">↗</span>
-      </a>
-      <a href="aversionofme.html" class="work-item reveal">
-        <span class="work-num">02</span>
-        <div class="work-info">
-          <div class="work-title">A Version of Me</div>
-          <div class="work-meta">Sound Post Production · Film Score · Retroframe · 2025</div>
-        </div>
-        <span class="work-arrow">↗</span>
-      </a>
-      <a href="zero-past.html" class="work-item reveal">
-        <span class="work-num">03</span>
-        <div class="work-info">
-          <div class="work-title">Zero Past</div>
-          <div class="work-meta">Film Score · Composer · Retroframe · 2024</div>
-        </div>
-        <span class="work-arrow">↗</span>
-      </a>
-      <a href="visual-works.html" class="work-item reveal">
-        <span class="work-num">04</span>
-        <div class="work-info">
-          <div class="work-title">Devilheart — Visual Works</div>
-          <div class="work-meta">Music Video · Producer &amp; Director · 2023 — 2024</div>
-        </div>
-        <span class="work-arrow">↗</span>
-      </a>
-      <a href="the-albums.html" class="work-item reveal">
-        <span class="work-num">05</span>
-        <div class="work-info">
-          <div class="work-title">The Albums</div>
-          <div class="work-meta">Azmo Anthem · Story Book · EP: ME · 19 Tracks Total</div>
-        </div>
-        <span class="work-arrow">↗</span>
-      </a>
-      <a href="from-scratch.html" class="work-item reveal">
-        <span class="work-num">06</span>
-        <div class="work-info">
-          <div class="work-title">Devilheart — From Scratch</div>
-          <div class="work-meta">Solo Artist · Producer · Songwriter · Mix &amp; Master · 27 Tracks</div>
-        </div>
-        <span class="work-arrow">↗</span>
-      </a>
+
+    <!-- Tab buttons -->
+    <div class="works-tabs reveal">
+      <button class="works-tab-btn active" data-tab="post">Sound Post Production</button>
+      <button class="works-tab-btn" data-tab="composed">Composed Music</button>
+      <button class="works-tab-btn" data-tab="engineering">Engineering</button>
+      <button class="works-tab-btn" data-tab="intern">Internship</button>
+    </div>
+
+    <!-- Tab 1: Sound Post Production -->
+    <div class="works-panel active" id="tab-post">
+      <div class="works-list">
+        <a href="aversionofme.html" class="work-item reveal">
+          <span class="work-num">01</span>
+          <div class="work-info">
+            <div class="work-title">A Version of Me</div>
+            <div class="work-meta">Dialogue Editing · SFX Design · Foley · Film Score · Mix &amp; Master · Retroframe · 2025</div>
+          </div>
+          <span class="work-arrow">↗</span>
+        </a>
+        <a href="zero-past.html" class="work-item reveal">
+          <span class="work-num">02</span>
+          <div class="work-info">
+            <div class="work-title">Zero Past</div>
+            <div class="work-meta">Film Score · Original Composition · Retroframe · 2024</div>
+          </div>
+          <span class="work-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Tab 2: Composed Music -->
+    <div class="works-panel" id="tab-composed">
+      <div class="works-subfilter">
+        <button class="sub-btn active" data-filter="all">All</button>
+        <button class="sub-btn" data-filter="recorded">Recorded</button>
+        <button class="sub-btn" data-filter="original">Original Production</button>
+        <button class="sub-btn" data-filter="master">Mix &amp; Master</button>
+      </div>
+      <div class="works-list">
+        <a href="the-albums.html" class="work-item reveal" data-tags="recorded original master">
+          <span class="work-num">01</span>
+          <div class="work-info">
+            <div class="work-title">The Albums</div>
+            <div class="work-meta">Recorded · Original Production · Mix &amp; Master · Azmo Anthem · Story Book · EP: ME · 19 Tracks</div>
+          </div>
+          <span class="work-arrow">↗</span>
+        </a>
+        <a href="from-scratch.html" class="work-item reveal" data-tags="original">
+          <span class="work-num">02</span>
+          <div class="work-info">
+            <div class="work-title">Devilheart — From Scratch</div>
+            <div class="work-meta">Original Production · Solo Artist · Producer · Songwriter · 27 Tracks</div>
+          </div>
+          <span class="work-arrow">↗</span>
+        </a>
+        <a href="visual-works.html" class="work-item reveal" data-tags="original">
+          <span class="work-num">03</span>
+          <div class="work-info">
+            <div class="work-title">Devilheart — Visual Works</div>
+            <div class="work-meta">Original Music · Music Video · Producer &amp; Director · 2023 — 2024</div>
+          </div>
+          <span class="work-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Tab 3: Engineering -->
+    <div class="works-panel" id="tab-engineering">
+      <div class="works-list">
+        <a href="studio28.html" class="work-item reveal">
+          <span class="work-num">01</span>
+          <div class="work-info">
+            <div class="work-title">Studio 28</div>
+            <div class="work-meta">Assistant Engineer · Orchestral Miking · Grand Piano · Signal Chain · Session Editing · Mix Prep · Pro Tools</div>
+          </div>
+          <span class="work-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Tab 4: Internship -->
+    <div class="works-panel" id="tab-intern">
+      <div class="works-list">
+        <a href="studio28.html" class="work-item reveal">
+          <span class="work-num">01</span>
+          <div class="work-info">
+            <div class="work-title">Studio 28</div>
+            <div class="work-meta">Internship · Assistant Engineer · Jul — Sep 2026 · Hands-on live recording sessions with industry engineers</div>
+          </div>
+          <span class="work-arrow">↗</span>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -996,6 +1074,33 @@
       });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Works tabs
+    document.querySelectorAll('.works-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.works-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.works-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Composed sub-filter
+    document.querySelectorAll('.sub-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const parent = btn.closest('.works-panel');
+        parent.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        parent.querySelectorAll('.work-item').forEach(item => {
+          if (filter === 'all' || item.dataset.tags.includes(filter)) {
+            item.removeAttribute('data-hidden');
+          } else {
+            item.setAttribute('data-hidden', '1');
+          }
+        });
+      });
+    });
 
     // ── Hero Slideshow ──
     (function () {
