@@ -63,9 +63,19 @@
     /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 24px 56px; pointer-events: auto;
+      display: grid; grid-template-columns: auto 1fr auto; align-items: center;
+      padding: 24px 56px; pointer-events: auto; gap: 24px;
     }
+    .nav-center {
+      display: flex; align-items: center; justify-content: center; gap: 32px;
+    }
+    .nav-link {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(232,226,216,0.5); text-decoration: none;
+      transition: color .25s;
+    }
+    .nav-link:hover { color: rgba(232,226,216,0.9); }
     .nav-logo {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.1rem; font-style: italic;
@@ -391,14 +401,11 @@
       cursor: pointer; transition: all .2s;
     }
     .c-on.active { background: #22C55E; border-color: #22C55E; box-shadow: 0 0 5px #22C55E88; }
-    .c-vu {
-      width: 8px; height: 56px; background: #111;
-      border: 1px solid #2A2820; position: relative;
-      overflow: hidden; border-radius: 1px;
-    }
-    .c-vu-fill {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      background: linear-gradient(to top, #22C55E 0%, #22C55E 55%, #EAB308 70%, #EF4444 100%);
+    .c-db-lvl {
+      font-size: 7px; font-variant-numeric: tabular-nums; letter-spacing: .02em;
+      color: #22C55E; font-family: 'Space Grotesk', monospace;
+      text-align: center; height: 20px; line-height: 20px;
+      white-space: nowrap;
     }
     .c-fw {
       width: 18px; height: 80px; position: relative;
@@ -437,25 +444,18 @@
       font-size: 7px; letter-spacing: .18em; text-transform: uppercase;
       color: #C8A052; white-space: nowrap;
     }
-    .c-master-vu-bar {
-      flex: 1; height: 5px; background: #111;
-      border: 1px solid #2A2820; border-radius: 1px; overflow: hidden;
-    }
-    .c-master-vu-fill {
-      height: 100%;
-      background: linear-gradient(to right, #22C55E, #22C55E 55%, #EAB308 70%, #EF4444 100%);
-      transition: width .08s linear;
-    }
+    .c-master-vu-bar { display: none; }
+    .c-master-vu-fill { display: none; }
     .c-db-display {
-      font-size: 8px; font-variant-numeric: tabular-nums;
-      color: #5A5551; letter-spacing: .04em; white-space: nowrap;
-      min-width: 32px; text-align: right;
+      font-size: 9px; font-variant-numeric: tabular-nums;
+      color: #C8A052; letter-spacing: .04em; white-space: nowrap;
+      font-family: 'Space Grotesk', monospace;
     }
 
     /* ── RESPONSIVE ── */
     @media(max-width: 768px) {
-      nav { padding: 18px 24px; }
-      .nav-links { display: none; }
+      nav { padding: 18px 24px; grid-template-columns: auto 1fr auto; }
+      .nav-center { display: none; }
       section { padding: 80px 24px; }
       hr.divider { margin: 0 24px; }
       #about, #contact { grid-template-columns: 1fr; gap: 40px; }
@@ -470,7 +470,6 @@
       h1.hero-name { letter-spacing: 0.08em; }
       footer { flex-direction: column; gap: 12px; text-align: center; }
       .console-panel { padding: 12px 14px 10px; }
-      .c-vu { height: 44px; }
       .c-fw { height: 64px; }
     }
   </style>
@@ -482,6 +481,13 @@
 <!-- NAV -->
 <nav>
   <a href="#hero" class="nav-logo">NS.</a>
+  <div class="nav-center">
+    <a href="#about" class="nav-link">About</a>
+    <a href="#works" class="nav-link">Works</a>
+    <a href="#skills" class="nav-link">Skills</a>
+    <a href="#resume" class="nav-link">Resume</a>
+    <a href="#contact" class="nav-link">Contact</a>
+  </div>
   <div class="nav-right">
     <a href="#works" class="nav-cta">Portfolio</a>
     <a href="#contact" class="nav-cta nav-cta-outline">Contact</a>
@@ -712,6 +718,12 @@
         <path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <span>Download Resume</span>
+    </a>
+    <a href="assets/cv/Naphat_Sudjai_CV.pdf" download class="dl-btn" style="margin-top:10px;">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Download CV</span>
     </a>
   </div>
 
@@ -1001,10 +1013,8 @@ document.querySelectorAll('.sfbtn').forEach(btn => {
   ];
 
   const container = document.getElementById('consoleChs');
-  const masterVuEl = document.getElementById('masterVuFill');
   const dbDisplayEl = document.getElementById('consoleDbDisplay');
   const vuEls = [];
-  const baseLvl = [0.75, 0.65, 0.70, 0.55, 0.80, 0.40];
 
   function d2r(db) { return (6 - Math.max(-60, Math.min(6, db))) / 66; }
   function r2d(r) { return 6 - r * 66; }
@@ -1017,10 +1027,9 @@ document.querySelectorAll('.sfbtn').forEach(btn => {
     on.className = 'c-on' + (ch.on ? ' active' : '');
     on.addEventListener('click', () => { ch.on = !ch.on; on.classList.toggle('active', ch.on); });
 
-    const vu = document.createElement('div'); vu.className = 'c-vu';
-    const vuf = document.createElement('div'); vuf.className = 'c-vu-fill'; vuf.style.height = '0%';
-    vu.appendChild(vuf);
-    vuEls.push(vuf);
+    const dbLvl = document.createElement('div'); dbLvl.className = 'c-db-lvl';
+    dbLvl.textContent = ch.db >= 0 ? '+' + ch.db.toFixed(1) : ch.db.toFixed(1);
+    vuEls.push(dbLvl);
 
     const fw = document.createElement('div'); fw.className = 'c-fw';
     const fg = document.createElement('div'); fg.className = 'c-fw-groove';
@@ -1050,7 +1059,7 @@ document.querySelectorAll('.sfbtn').forEach(btn => {
     lbl.className = 'c-label';
     lbl.textContent = ch.label;
 
-    col.append(on, vu, fw, lbl);
+    col.append(on, dbLvl, fw, lbl);
     container.appendChild(col);
 
     if (i === CHANNELS.length - 2) {
@@ -1060,18 +1069,15 @@ document.querySelectorAll('.sfbtn').forEach(btn => {
   });
 
   function anim() {
-    let tot = 0;
     CHANNELS.forEach((ch, i) => {
       if (!vuEls[i]) return;
-      const lv = ch.on && !ch.isMaster
-        ? baseLvl[i] * Math.max(0, 1 + ch.db / 60) * (0.8 + Math.random() * 0.4)
-        : 0;
-      vuEls[i].style.height = Math.min(100, lv * 100) + '%';
-      if (!ch.isMaster) tot += lv;
+      if (ch.isMaster) return;
+      const jitter = ch.on ? (Math.random() * 0.4 - 0.2) : 0;
+      const disp = ch.on ? ch.db + jitter : -60;
+      vuEls[i].textContent = disp <= -60 ? '−∞' : (disp >= 0 ? '+' : '') + disp.toFixed(1);
+      vuEls[i].style.color = disp > -1 ? '#EF4444' : disp > -6 ? '#EAB308' : '#22C55E';
     });
-    const mv = Math.min(1, (tot / 6) * 1.4 * (0.9 + Math.random() * 0.2));
-    masterVuEl.style.width = (mv * 100) + '%';
-    const d = CHANNELS[CHANNELS.length - 1].db;
+    const d = CHANNELS[CHANNELS.length - 1].db + (Math.random() * 0.2 - 0.1);
     dbDisplayEl.textContent = d > -60 ? (d >= 0 ? '+' : '') + d.toFixed(1) + ' dB' : '−∞ dB';
     requestAnimationFrame(anim);
   }
