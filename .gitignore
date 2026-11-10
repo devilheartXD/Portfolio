@@ -1,0 +1,19 @@
+# Source/working folders — not for deployment
+PortFolio Folder/
+Update Portfolio/
+
+# macOS
+.DS_Store
+images/.DS_Store
+**/.DS_Store
+
+# Source images not yet processed
+images/Home Page/
+images/port image/
+
+# Large source audio/video
+*.wav
+*.aif
+*.aiff
+*.mov
+*.MOV
