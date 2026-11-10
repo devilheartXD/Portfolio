@@ -966,7 +966,12 @@ function drawDay() {
 }
 
 window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
+// Defer initial draw until layout is complete
+if (document.readyState === 'complete') {
+  requestAnimationFrame(resizeCanvas);
+} else {
+  window.addEventListener('load', () => requestAnimationFrame(resizeCanvas));
+}
 
 // ── HERO TABS (highlight + sync works section) ──
 document.querySelectorAll('.hero-tab').forEach(tab => {
@@ -1020,11 +1025,22 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
   });
-}, { threshold: 0.08 });
+}, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.reveal').forEach((el, i) => {
-  el.style.transitionDelay = (i % 4 * 0.1) + 's';
+  el.style.transitionDelay = (i % 4 * 0.08) + 's';
   observer.observe(el);
 });
+// Show elements already in viewport on load / hash navigation
+window.addEventListener('load', () => {
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.top < window.innerHeight + 40) el.classList.add('visible');
+  });
+});
+// Safety fallback
+setTimeout(() => {
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
+}, 800);
 </script>
 
 </body>
