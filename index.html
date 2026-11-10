@@ -6,1197 +6,1026 @@
   <title>Naphat Sudjai — Music Producer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    /* ── TOKENS: Obsidian & Gold ── */
+    :root {
+      --bg:      #F5F0E8;
+      --bg-alt:  #EDE7DC;
+      --fg:      #1A1510;
+      --gold:    #9A7030;
+      --mut:     #8A8278;
+      --bdr:     rgba(26,21,16,0.1);
+      --bdr-s:   rgba(26,21,16,0.06);
+    }
     [data-theme="dark"] {
-      --bg:        #080808;
-      --bg-alt:    #111111;
-      --fg:        #f2f2f2;
-      --accent:    #d4d4d4;
-      --muted:     #888888;
-      --border:    rgba(255,255,255,0.1);
-    }
-    [data-theme="light"] {
-      --bg:        #f5f5f5;
-      --bg-alt:    #ebebeb;
-      --fg:        #0f0f0f;
-      --accent:    #333333;
-      --muted:     #777777;
-      --border:    rgba(0,0,0,0.1);
+      --bg:      #0A0908;
+      --bg-alt:  #161310;
+      --fg:      #E8E2D8;
+      --gold:    #C8A052;
+      --mut:     #5A5551;
+      --bdr:     rgba(232,226,216,0.08);
+      --bdr-s:   rgba(232,226,216,0.04);
     }
 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
     body {
       background: var(--bg);
       color: var(--fg);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 400;
-      font-size: 15px;
-      line-height: 1.8;
+      font-family: 'Space Grotesk', system-serif, sans-serif;
+      font-size: 14px;
+      line-height: 1.75;
       cursor: none;
-      transition: background 0.4s ease, color 0.4s ease;
+      overflow-x: hidden;
+      transition: background 0.5s, color 0.5s;
     }
 
-    /* ── CURSOR ── */
+    /* ── CUSTOM CURSOR ── */
     .cursor {
-      width: 10px; height: 10px;
-      background: var(--fg);
+      width: 8px; height: 8px;
+      background: var(--gold);
       border-radius: 50%;
       position: fixed; top: 0; left: 0;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: width 0.3s, height 0.3s, background 0.4s, border 0.3s;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width .3s, height .3s, background .3s, border .3s;
     }
     .cursor.hovering {
-      width: 36px; height: 36px;
+      width: 32px; height: 32px;
       background: transparent;
-      border: 1px solid var(--fg);
+      border: 1px solid var(--gold);
     }
 
     /* ── NAV ── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 28px 56px;
-      background: var(--bg);
-      transition: background 0.4s ease, border-color 0.4s ease;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 56px;
     }
-    nav.scrolled { border-bottom: 1px solid var(--border); }
-
     .nav-logo {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--fg);
-      text-decoration: none;
-      letter-spacing: 0.04em;
-      transition: color 0.4s;
-    }
-    .nav-right { display: flex; align-items: center; gap: 36px; }
-    .nav-links { display: flex; gap: 36px; list-style: none; }
-    .nav-links a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-style: italic; font-weight: 400;
+      color: #E8E2D8; text-decoration: none; letter-spacing: 0.08em;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
       transition: color 0.3s;
     }
-    .nav-links a:hover { color: var(--fg); }
-
-    /* ── THEME TOGGLE ── */
+    .nav-right { display: flex; align-items: center; gap: 36px; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: rgba(232,226,216,0.55); text-decoration: none;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      transition: color 0.3s;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+    }
+    .nav-links a:hover { color: rgba(232,226,216,0.9); }
     .theme-toggle {
-      display: flex; align-items: center; gap: 8px;
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px 14px;
-      cursor: none;
-      color: var(--muted);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      transition: color 0.3s, border-color 0.4s;
+      background: rgba(10,9,8,0.4); backdrop-filter: blur(8px);
+      border: 1px solid rgba(232,226,216,0.2); border-radius: 999px;
+      padding: 6px 18px; cursor: none; color: rgba(232,226,216,0.7);
+      font-family: 'Space Grotesk', sans-serif; font-size: 10px;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      transition: color .3s, border-color .3s;
     }
-    .theme-toggle:hover { color: var(--fg); border-color: var(--fg); }
-    .toggle-track {
-      width: 32px; height: 18px;
-      background: var(--border);
-      border-radius: 999px;
-      position: relative;
-      transition: background 0.4s;
-    }
-    [data-theme="light"] .toggle-track { background: var(--accent); }
-    .toggle-knob {
-      position: absolute; top: 3px; left: 3px;
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      background: var(--fg);
-      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.4s;
-    }
-    [data-theme="light"] .toggle-knob { transform: translateX(14px); }
-    .toggle-label-dark  { display: inline; }
-    .toggle-label-light { display: none;   }
-    [data-theme="light"] .toggle-label-dark  { display: none;   }
-    [data-theme="light"] .toggle-label-light { display: inline; }
-
-    /* ── SECTIONS ── */
-    section { padding: 120px 56px; }
+    .theme-toggle:hover { color: var(--gold); border-color: rgba(200,160,82,0.4); }
 
     /* ── HERO ── */
     #hero {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: end;
-      padding: 120px 56px 80px;
-      position: relative; overflow: hidden;
-      gap: 60px;
-    }
-    .hero-left { display: flex; flex-direction: column; justify-content: flex-end; }
-    .hero-label {
-      font-size: 11px; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--muted);
-      margin-bottom: 24px;
-      opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards;
-    }
-    .hero-name {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(3.5rem, 8vw, 9rem);
-      font-weight: 700; line-height: 0.92;
-      letter-spacing: -0.02em; color: var(--fg);
-      opacity: 0; animation: fadeUp 1s ease 0.4s forwards;
-      transition: color 0.4s;
-    }
-    .hero-name em { font-style: italic; color: var(--muted); }
-    .hero-university {
-      margin-top: 20px; font-size: 11px;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--muted);
-      opacity: 0; animation: fadeUp 1s ease 0.6s forwards;
-    }
-    .hero-tagline {
-      margin-top: 24px; max-width: 400px;
-      color: var(--muted); font-size: 13px; line-height: 2;
-      opacity: 0; animation: fadeUp 1s ease 0.7s forwards;
-    }
-    .hero-btns {
-      display: flex; gap: 16px; margin-top: 40px; flex-wrap: wrap;
-      justify-content: flex-start;
-      opacity: 0; animation: fadeUp 1s ease 0.9s forwards;
-    }
-    .hero-btn-primary {
-      display: inline-flex; align-items: center; gap: 12px;
-      padding: 22px 52px;
-      background: var(--fg); color: var(--bg);
-      text-decoration: none; font-size: 13px;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      font-family: 'DM Sans', sans-serif;
-      transition: opacity 0.3s;
-    }
-    .hero-btn-primary:hover { opacity: 0.85; }
-    .hero-btn-secondary {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 22px 36px;
-      border: 1px solid var(--border); color: var(--muted);
-      text-decoration: none; font-size: 11px;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      font-family: 'DM Sans', sans-serif;
-      transition: color 0.3s, border-color 0.3s;
-    }
-    .hero-btn-secondary:hover { color: var(--fg); border-color: var(--fg); }
-
-    /* Hero slideshow */
-    .hero-right {
-      display: flex; align-items: center; justify-content: flex-end;
-      opacity: 0; animation: fadeIn 1s ease 0.6s forwards;
-      position: relative; /* needed for ::after overlay */
-    }
-    /* Gradient fade overlay — extends left into the column gap to blend seamlessly */
-    .hero-right::after {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0;
-      left: -80px;  /* bleeds 80px left into the gap toward the text */
-      right: 0;
-      z-index: 2;   /* above the images */
-      pointer-events: none;
-      background:
-        /* Left fade — blends the left edge and column gap into the background */
-        linear-gradient(to right,  var(--bg) 0%, transparent 45%),
-        /* Top fade */
-        linear-gradient(to bottom, var(--bg) 0%, transparent 25%),
-        /* Bottom fade */
-        linear-gradient(to top,    var(--bg) 0%, transparent 20%);
-      transition: background 0.4s;
-    }
-    .hero-slideshow {
-      width: 100%;
-      aspect-ratio: 16/9;
-      position: relative;
-      overflow: hidden; /* strictly contain the sliding images */
-      background: transparent;
-    }
-    .hero-slide-track {
-      display: flex;
-      width: 500%; /* 5 slides × 100% */
-      height: 100%;
-      transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .hero-slide {
-      width: 20%; /* 1/5 of track = 100% of container */
-      height: 100%;
-      flex-shrink: 0;
-      position: relative;
+      position: relative; width: 100%; height: 100vh; min-height: 600px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       overflow: hidden;
     }
-    .hero-slide img {
-      width: 100%; height: 100%;
-      object-fit: cover; display: block;
+    #heroCanvas {
+      position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0;
     }
-    /* Placeholder shown when no img src is set */
-    .hero-slide-placeholder {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 10px;
-      color: var(--muted); font-size: 10px;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      pointer-events: none;
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: radial-gradient(ellipse at 50% 70%, rgba(10,9,8,0) 0%, rgba(10,9,8,0.4) 100%);
     }
-    .hero-slide-placeholder svg { opacity: 0.35; }
-    /* Dot indicators — z-index 3 to sit above the gradient overlay */
-    .hero-slide-dots {
-      position: absolute; bottom: 14px; left: 50%;
-      transform: translateX(-50%);
-      display: flex; gap: 8px; z-index: 3;
+    .hero-content {
+      position: relative; z-index: 2;
+      text-align: center; padding: 0 24px;
+      display: flex; flex-direction: column; align-items: center;
+      animation: fadeUp 1.2s ease both;
     }
-    .hero-slide-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--muted); opacity: 0.4;
-      cursor: pointer;
-      transition: opacity 0.3s, background 0.3s, transform 0.3s;
-      border: none; padding: 0;
+    .hero-role {
+      font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(232,226,216,0.6); margin-bottom: 20px;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.6);
     }
-    .hero-slide-dot.active {
-      opacity: 1; background: var(--fg); transform: scale(1.3);
+    h1.hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 11vw, 10rem);
+      font-weight: 300; line-height: 0.9; letter-spacing: 0.16em;
+      color: #E8E2D8; text-transform: uppercase;
+      text-shadow: 0 4px 32px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.3);
+      text-wrap: balance;
     }
-
+    .hero-tabs {
+      display: flex; gap: 0; margin-top: 44px;
+      border-top: 1px solid rgba(232,226,216,0.12);
+      border-bottom: 1px solid rgba(232,226,216,0.12);
+    }
+    .hero-tab {
+      padding: 14px 28px; font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(232,226,216,0.45);
+      background: none; border: none; cursor: none;
+      position: relative; transition: color .3s;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .hero-tab::after {
+      content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+      height: 1px; background: #C8A052; transform: scaleX(0); transition: transform .35s;
+    }
+    .hero-tab.active { color: #E8E2D8; }
+    .hero-tab.active::after { transform: scaleX(1); }
+    .hero-tab:hover { color: rgba(232,226,216,0.8); }
     .hero-scroll {
-      position: absolute; right: 56px; bottom: 80px;
-      display: flex; flex-direction: column; align-items: center; gap: 12px;
-      opacity: 0; animation: fadeIn 1s ease 1.2s forwards;
+      position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+      z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 10px;
     }
     .hero-scroll span {
-      font-size: 10px; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--muted);
-      writing-mode: vertical-rl;
+      font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(232,226,216,0.35);
     }
     .hero-scroll-line {
-      width: 1px; height: 60px;
-      background: linear-gradient(to bottom, var(--fg), transparent);
+      width: 1px; height: 48px;
+      background: linear-gradient(to bottom, rgba(200,160,82,0.7), transparent);
       animation: pulse 2s ease-in-out infinite;
-      transition: background 0.4s;
-    }
-
-    /* ── DIVIDER ── */
-    .divider {
-      border: none; border-top: 1px solid var(--border);
-      margin: 0 56px; transition: border-color 0.4s;
-    }
-
-    /* ── SECTION LABEL ── */
-    .section-label {
-      font-size: 10px; letter-spacing: 0.25em;
-      text-transform: uppercase; color: var(--muted); margin-bottom: 20px;
     }
 
     /* ── ABOUT ── */
-    #about { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
-    .about-left .section-label { margin-bottom: 32px; }
-    .about-left h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 600; line-height: 1.1;
-      color: var(--fg); transition: color 0.4s;
+    #about {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+      align-items: start;
     }
-    .about-left h2 em { font-style: italic; color: var(--muted); }
-    .about-right { padding-top: 64px; }
-    .about-right p { color: var(--muted); font-size: 15px; line-height: 2; margin-bottom: 20px; }
-    .about-right p strong { color: var(--fg); font-weight: 500; transition: color 0.4s; }
+    .about-left .section-label { margin-bottom: 28px; }
+    .about-left h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5.5vw, 5rem);
+      font-weight: 300; line-height: 0.95; letter-spacing: -0.01em;
+    }
+    .about-left h2 em { font-style: italic; color: var(--mut); }
+    .about-right { padding-top: 60px; }
+    .about-right p { color: var(--mut); font-size: 14px; line-height: 2; margin-bottom: 20px; }
+    .about-right p strong { color: var(--fg); font-weight: 500; }
 
     /* ── WORKS ── */
-    .works-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; }
-    .works-header h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 600; line-height: 1.1; color: var(--fg); transition: color 0.4s;
+    .works-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 36px;
     }
-    .works-count { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
-    /* Tabs */
-    .works-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 0; overflow-x: auto; scrollbar-width: none; }
+    .works-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5.5vw, 5rem);
+      font-weight: 300; line-height: 0.95; letter-spacing: -0.01em;
+    }
+    .works-header h2 em { font-style: italic; color: var(--mut); }
+    .works-count { font-size: 11px; color: var(--mut); letter-spacing: 0.08em; }
+
+    /* Tab nav */
+    .works-tabs {
+      display: flex; gap: 0; border-bottom: 1px solid var(--bdr);
+      margin-bottom: 0; overflow-x: auto; scrollbar-width: none;
+    }
     .works-tabs::-webkit-scrollbar { display: none; }
     .works-tab-btn {
-      flex-shrink: 0; padding: 14px 24px; font-size: 11px; letter-spacing: 0.12em;
-      color: var(--muted); background: none; border: none; cursor: pointer;
-      position: relative; transition: color 0.3s;
-      font-family: 'Inter', sans-serif; text-transform: uppercase;
+      flex-shrink: 0; padding: 14px 24px; font-size: 10px; letter-spacing: 0.14em;
+      color: var(--mut); background: none; border: none; cursor: none;
+      position: relative; transition: color .3s;
+      font-family: 'Space Grotesk', sans-serif; text-transform: uppercase;
     }
     .works-tab-btn::after {
       content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
-      height: 1px; background: var(--fg);
-      transform: scaleX(0); transition: transform 0.3s;
+      height: 1px; background: var(--gold); transform: scaleX(0); transition: transform .3s;
     }
     .works-tab-btn.active { color: var(--fg); }
     .works-tab-btn.active::after { transform: scaleX(1); }
     .works-tab-btn:hover { color: var(--fg); }
+
     /* Sub-filter */
     .works-subfilter { display: flex; gap: 8px; padding: 20px 0 32px; flex-wrap: wrap; }
     .sub-btn {
       padding: 6px 16px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
-      border: 1px solid var(--border); background: none; color: var(--muted);
-      cursor: pointer; transition: all 0.25s; font-family: 'Inter', sans-serif;
+      border: 1px solid var(--bdr); background: none; color: var(--mut);
+      cursor: none; transition: all .25s; font-family: 'Space Grotesk', sans-serif;
     }
-    .sub-btn.active, .sub-btn:hover { color: var(--fg); border-color: var(--fg); }
+    .sub-btn.active, .sub-btn:hover { color: var(--fg); border-color: var(--gold); }
+
     /* Tab panels */
     .works-panel { display: none; }
     .works-panel.active { display: block; }
-    /* Work items */
-    .works-list { }
+
+    /* Work row — editorial list */
     .work-item {
-      display: grid; grid-template-columns: 80px 1fr auto;
-      align-items: center; gap: 32px; padding: 28px 0;
-      border-top: 1px solid var(--border);
-      text-decoration: none; color: var(--fg);
-      position: relative; transition: border-color 0.4s, color 0.4s;
+      display: grid; grid-template-columns: 60px 1fr auto;
+      align-items: center; gap: 32px; padding: 22px 0;
+      border-top: 1px solid var(--bdr);
+      text-decoration: none; color: var(--fg); position: relative;
+      transition: gap .3s;
     }
     .work-item::after {
       content: ''; position: absolute; left: 0; right: 0; bottom: 0;
-      height: 1px; background: var(--fg);
-      transform: scaleX(0); transform-origin: left;
-      transition: transform 0.4s, background 0.4s;
+      height: 1px; background: var(--gold);
+      transform: scaleX(0); transform-origin: left; transition: transform .4s;
     }
     .work-item:hover::after { transform: scaleX(1); }
-    .work-item:hover .work-title { color: var(--muted); }
-    .work-item:hover .work-arrow { transform: translate(4px,-4px); color: var(--fg); }
-    .work-item:last-child { border-bottom: 1px solid var(--border); }
+    .work-item:hover .work-title { color: var(--mut); }
+    .work-item:hover .work-arrow { transform: translate(4px,-4px); color: var(--gold); }
+    .work-item:last-child { border-bottom: 1px solid var(--bdr); }
     .work-item[data-hidden] { display: none; }
-    .work-num { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
-    .work-title {
-      font-family: 'Syne', sans-serif; font-size: 1.2rem;
-      font-weight: 600; margin-bottom: 4px;
-      color: var(--fg); transition: color 0.3s;
+    .work-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1rem; color: var(--mut);
     }
-    .work-meta { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
-    .work-arrow { font-size: 18px; color: var(--muted); transition: transform 0.3s, color 0.3s; }
+    .work-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem; font-weight: 400; margin-bottom: 4px;
+      transition: color .3s;
+    }
+    .work-meta { font-size: 10px; color: var(--mut); letter-spacing: 0.05em; line-height: 1.8; }
+    .work-arrow { font-size: 20px; color: var(--mut); transition: transform .3s, color .3s; }
 
     /* ── SKILLS ── */
     #skills {
       background: var(--bg-alt);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      transition: background 0.4s, border-color 0.4s;
+      border-top: 1px solid var(--bdr);
+      border-bottom: 1px solid var(--bdr);
     }
-    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 48px; margin-top: 60px; }
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      gap: 48px; margin-top: 60px;
+    }
     .skill-group h3 {
-      font-size: 10px; letter-spacing: 0.2em;
-      text-transform: uppercase; color: var(--muted);
-      margin-bottom: 20px; padding-bottom: 12px;
-      border-bottom: 1px solid var(--border); transition: border-color 0.4s;
+      font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--bdr);
     }
-    .skill-group ul { list-style: none; }
-    .skill-group ul li {
-      font-size: 14px; color: var(--muted); padding: 6px 0;
-      display: flex; align-items: center; gap: 10px; transition: color 0.3s;
+    .skill-list { list-style: none; }
+    .skill-list li {
+      font-size: 13px; color: var(--mut); padding: 7px 0;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--bdr-s); transition: color .3s;
     }
-    .skill-group ul li::before {
-      content: ''; display: inline-block; width: 4px; height: 4px;
-      background: var(--border); border-radius: 50%; flex-shrink: 0; transition: background 0.3s;
-    }
-    .skill-group ul li:hover { color: var(--fg); }
-    .skill-group ul li:hover::before { background: var(--fg); }
+    .skill-list li:last-child { border-bottom: none; }
+    .skill-list li:hover { color: var(--fg); }
+    .skill-bar { width: 60px; height: 2px; background: var(--bdr); border-radius: 1px; overflow: hidden; flex-shrink: 0; }
+    .skill-bar-fill { height: 100%; background: var(--gold); border-radius: 1px; }
 
     /* ── RESUME ── */
-    #resume {
-      display: grid; grid-template-columns: 1fr 2fr; gap: 80px; align-items: start;
-    }
-    .resume-left { position: sticky; top: 120px; }
+    #resume { display: grid; grid-template-columns: 1fr 2fr; gap: 80px; align-items: start; }
+    .resume-left { position: sticky; top: 100px; }
     .resume-left h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 600; line-height: 1.1;
-      color: var(--fg); margin-bottom: 24px; transition: color 0.4s;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5.5vw, 5rem);
+      font-weight: 300; line-height: 0.95; margin-bottom: 24px;
     }
-    .resume-left h2 em { font-style: italic; color: var(--muted); }
-    .resume-left p { color: var(--muted); font-size: 14px; line-height: 1.9; margin-bottom: 32px; }
-
+    .resume-left h2 em { font-style: italic; color: var(--mut); }
+    .resume-left p { color: var(--mut); font-size: 13px; line-height: 1.9; margin-bottom: 32px; }
     .download-btn {
       display: inline-flex; align-items: center; gap: 10px;
-      padding: 14px 28px;
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      text-decoration: none;
-      font-size: 11px; letter-spacing: 0.18em;
-      text-transform: uppercase;
-      position: relative; overflow: hidden;
-      transition: color 0.4s, border-color 0.4s;
+      padding: 14px 28px; border: 1px solid var(--gold); color: var(--gold);
+      text-decoration: none; font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; position: relative; overflow: hidden;
+      transition: color .4s, border-color .4s;
     }
     .download-btn::before {
-      content: ''; position: absolute; inset: 0;
-      background: var(--fg); transform: scaleX(0);
-      transform-origin: left; transition: transform 0.4s; z-index: 0;
+      content: ''; position: absolute; inset: 0; background: var(--gold);
+      transform: scaleX(0); transform-origin: left; transition: transform .4s; z-index: 0;
     }
     .download-btn span { position: relative; z-index: 1; }
-    .download-btn svg { position: relative; z-index: 1; transition: transform 0.3s; }
-    .download-btn:hover { color: var(--bg); border-color: var(--fg); }
+    .download-btn svg { position: relative; z-index: 1; transition: transform .3s; }
+    .download-btn:hover { color: var(--bg); }
     .download-btn:hover::before { transform: scaleX(1); }
     .download-btn:hover svg { transform: translateY(3px); }
 
-    /* Resume entries */
-    .resume-right {}
     .resume-block { margin-bottom: 56px; }
     .resume-block:last-child { margin-bottom: 0; }
     .resume-block-title {
-      font-size: 10px; letter-spacing: 0.25em;
-      text-transform: uppercase; color: var(--muted);
-      margin-bottom: 24px; padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-      transition: border-color 0.4s;
+      font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 24px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--bdr);
     }
-
     .resume-entry {
       display: grid; grid-template-columns: 140px 1fr;
-      gap: 24px; padding: 20px 0;
-      border-bottom: 1px solid var(--border);
-      transition: border-color 0.4s;
+      gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--bdr);
     }
     .resume-entry:last-child { border-bottom: none; }
-    .resume-year {
-      font-size: 12px; color: var(--muted);
-      letter-spacing: 0.05em; padding-top: 3px;
-    }
+    .resume-year { font-size: 11px; color: var(--mut); letter-spacing: 0.05em; padding-top: 3px; }
     .resume-detail h4 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem; font-weight: 600;
-      color: var(--fg); margin-bottom: 4px; transition: color 0.4s;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-weight: 400; margin-bottom: 4px;
     }
-    .resume-detail p {
-      font-size: 13px; color: var(--muted); line-height: 1.7;
-    }
+    .resume-detail p { font-size: 12px; color: var(--mut); line-height: 1.8; }
     .resume-tag {
       display: inline-block; margin-top: 8px; margin-right: 6px;
-      padding: 3px 10px;
-      border: 1px solid var(--border);
-      font-size: 10px; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--muted);
-      border-radius: 999px;
-      transition: border-color 0.4s, color 0.3s;
+      padding: 3px 10px; border: 1px solid var(--bdr);
+      font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mut);
+      border-radius: 999px; transition: border-color .3s, color .3s;
     }
-    .resume-tag:hover { color: var(--fg); border-color: var(--fg); }
+    .resume-tag:hover { color: var(--gold); border-color: var(--gold); }
 
     /* ── CONTACT ── */
     #contact { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
     .contact-left h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 600; line-height: 1.1;
-      margin-bottom: 24px; color: var(--fg); transition: color 0.4s;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5.5vw, 5rem);
+      font-weight: 300; line-height: 0.95; margin-bottom: 24px;
     }
-    .contact-left h2 em { color: var(--muted); font-style: italic; }
-    .contact-left p { color: var(--muted); font-size: 15px; line-height: 2; max-width: 320px; }
+    .contact-left h2 em { font-style: italic; color: var(--mut); }
+    .contact-left p { color: var(--mut); font-size: 14px; line-height: 2; max-width: 320px; }
     .contact-right { padding-top: 16px; }
     .contact-links { list-style: none; }
     .contact-links a {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 0; border-top: 1px solid var(--border);
-      text-decoration: none; color: var(--muted);
-      font-size: 14px; letter-spacing: 0.04em;
-      transition: color 0.3s, padding-left 0.3s, border-color 0.4s;
+      padding: 18px 0; border-top: 1px solid var(--bdr);
+      text-decoration: none; color: var(--mut); font-size: 14px;
+      letter-spacing: 0.04em; transition: color .3s, padding-left .3s;
     }
-    .contact-links li:last-child a { border-bottom: 1px solid var(--border); }
-    .contact-links a:hover { color: var(--fg); padding-left: 8px; }
+    .contact-links li:last-child a { border-bottom: 1px solid var(--bdr); }
+    .contact-links a:hover { color: var(--gold); padding-left: 8px; }
     .contact-links a span { font-size: 18px; }
-
     .email-btn {
-      display: inline-block; margin-top: 40px; padding: 16px 40px;
-      border: 1px solid var(--accent); color: var(--accent);
-      text-decoration: none; font-size: 11px;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      position: relative; overflow: hidden;
-      transition: color 0.4s, border-color 0.4s;
+      display: inline-block; margin-top: 40px; padding: 15px 40px;
+      border: 1px solid var(--gold); color: var(--gold);
+      text-decoration: none; font-size: 10px; letter-spacing: 0.2em;
+      text-transform: uppercase; position: relative; overflow: hidden;
+      transition: color .4s;
     }
     .email-btn::before {
-      content: ''; position: absolute; inset: 0;
-      background: var(--fg); transform: scaleX(0);
-      transform-origin: left; transition: transform 0.4s; z-index: 0;
+      content: ''; position: absolute; inset: 0; background: var(--gold);
+      transform: scaleX(0); transform-origin: left; transition: transform .4s; z-index: 0;
     }
     .email-btn .btn-text { position: relative; z-index: 1; }
-    .email-btn:hover { color: var(--bg); border-color: var(--fg); }
+    .email-btn:hover { color: var(--bg); }
     .email-btn:hover::before { transform: scaleX(1); }
+
+    /* ── SECTIONS shared ── */
+    section { padding: 120px 56px; }
+    .section-label {
+      font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-label::before { content:''; display:block; width:24px; height:1px; background:var(--gold); flex-shrink:0; }
+    .divider { border: none; border-top: 1px solid var(--bdr); margin: 0 56px; }
 
     /* ── FOOTER ── */
     footer {
-      padding: 32px 56px;
-      border-top: 1px solid var(--border);
+      padding: 32px 56px; border-top: 1px solid var(--bdr);
       display: flex; justify-content: space-between; align-items: center;
-      color: var(--muted); font-size: 11px; letter-spacing: 0.1em;
-      transition: border-color 0.4s;
+      color: var(--mut); font-size: 11px; letter-spacing: 0.08em;
     }
 
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; } to { opacity: 1; }
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
-    }
-
-    /* ── SCROLL REVEAL ── */
-    .reveal {
-      opacity: 0; transform: translateY(36px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 768px) {
-      nav { padding: 20px 24px; }
-      .nav-links { display: none; }
-      .theme-toggle .toggle-label-dark,
-      .theme-toggle .toggle-label-light { display: none; }
-      section { padding: 80px 24px; }
-      .divider { margin: 0 24px; }
-      #about, #contact, #resume { grid-template-columns: 1fr; gap: 40px; }
-      .about-right { padding-top: 0; }
-      .contact-right { padding-top: 0; }
-      .resume-left { position: static; }
-      .resume-entry { grid-template-columns: 1fr; gap: 6px; }
-      .works-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .work-item { grid-template-columns: 48px 1fr auto; gap: 16px; }
-      .works-tab-btn { padding: 12px 16px; font-size: 10px; }
-      .works-subfilter { gap: 6px; }
-      .sub-btn { padding: 5px 12px; }
-      footer { flex-direction: column; gap: 12px; text-align: center; }
-      .hero-scroll { display: none; }
-      #hero { grid-template-columns: 1fr; padding: 120px 24px 60px; gap: 40px; }
-      .hero-right { justify-content: center; }
-      .hero-slideshow { border-radius: 0; }
-      .hero-btns { gap: 12px; }
-      .hero-btn-primary, .hero-btn-secondary { padding: 14px 24px; }
-    }
-  
     /* ── FASTWORK FLOAT ── */
     .fw-float {
       position: fixed; bottom: 28px; right: 28px; z-index: 500;
       display: flex; align-items: center; gap: 10px;
-      text-decoration: none;
-      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      text-decoration: none; transition: transform .3s cubic-bezier(.34,1.56,.64,1);
     }
     .fw-float:hover { transform: scale(1.08); }
     .fw-float-label {
-      background: var(--bg); border: 1px solid var(--border);
-      color: var(--muted); font-family: "DM Sans", sans-serif;
+      background: var(--bg); border: 1px solid var(--bdr);
+      color: var(--mut); font-family: 'Space Grotesk', sans-serif;
       font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
       padding: 7px 14px; border-radius: 999px;
       opacity: 0; transform: translateX(8px);
-      transition: opacity 0.25s, transform 0.25s, background 0.4s, border-color 0.4s, color 0.4s;
+      transition: opacity .25s, transform .25s;
       pointer-events: none; white-space: nowrap;
     }
     .fw-float:hover .fw-float-label { opacity: 1; transform: translateX(0); }
     .fw-float-btn {
       width: 52px; height: 52px; border-radius: 50%;
-      background: var(--fg); display: flex; align-items: center; justify-content: center;
-      transition: background 0.4s;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      background: var(--gold); display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3); transition: background .4s;
     }
     .fw-float-btn svg { width: 22px; height: 22px; }
 
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity .8s ease, transform .8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes pulse  { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px){
+      nav { padding:18px 24px; }
+      .nav-links { display:none; }
+      section { padding:80px 24px; }
+      .divider { margin:0 24px; }
+      #about,#contact,#resume { grid-template-columns:1fr; gap:40px; }
+      .about-right { padding-top:0; }
+      .resume-left { position:static; }
+      .resume-entry { grid-template-columns:1fr; gap:6px; }
+      .works-header { flex-direction:column; align-items:flex-start; gap:12px; }
+      .work-item { grid-template-columns:40px 1fr auto; gap:16px; }
+      .works-tab-btn { padding:12px 16px; font-size:9px; }
+      footer { flex-direction:column; gap:12px; text-align:center; }
+      h1.hero-name { letter-spacing:0.08em; }
+      .hero-tabs { flex-wrap:wrap; justify-content:center; }
+      .hero-tab { padding:10px 16px; font-size:9px; }
+    }
   </style>
 </head>
 <body>
 
-  <div class="cursor" id="cursor"></div>
+<div class="cursor" id="cursor"></div>
 
-  <!-- Nav -->
-  <nav id="mainNav">
-    <a href="#hero" class="nav-logo">NS.</a>
-    <div class="nav-right">
-      <ul class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#works">Works</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#resume">Resume</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-        <div class="toggle-track"><div class="toggle-knob"></div></div>
-        <span class="toggle-label-dark">Night</span>
-        <span class="toggle-label-light">Day</span>
-      </button>
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#hero" class="nav-logo">NS.</a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#works">Works</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#resume">Resume</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle">Day</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-role">Music Producer · Sound Designer · Artist as Devilheart</p>
+    <h1 class="hero-name">Naphat<br>Sudjai</h1>
+    <div class="hero-tabs">
+      <button class="hero-tab active" data-tab="post">Sound Post</button>
+      <button class="hero-tab" data-tab="composed">Composed Music</button>
+      <button class="hero-tab" data-tab="engineering">Engineering</button>
+      <button class="hero-tab" data-tab="intern">Internship</button>
     </div>
-  </nav>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
 
-  <!-- Hero -->
-  <section id="hero">
+<hr class="divider">
 
-    <!-- Left: Text + Buttons -->
-    <div class="hero-left">
-      <div class="hero-label">Music Producer · Sound Designer · Artist as <em style="font-style:italic;">Devilheart</em> · Available for Internship</div>
-      <h1 class="hero-name">Naphat<br><em>Sudjai</em></h1>
-      <p class="hero-university">Bangkok University · School of Digital Media &amp; Cinematic Arts</p>
-      <p class="hero-tagline">
-        Crafting sonic landscapes from raw emotion.<br>
-        Based in Thanyaburi, Pathum Thani, Thailand — open to studios worldwide.
-      </p>
-      <div class="hero-btns">
-        <a href="#works" class="hero-btn-primary">View Portfolio</a>
-        <a href="#contact" class="hero-btn-secondary">Contact Me</a>
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-left reveal">
+    <div class="section-label">01 — About</div>
+    <h2>Sound is my<br><em>language</em></h2>
+  </div>
+  <div class="about-right reveal">
+    <p>I'm <strong>Naphat Sudjai</strong>, a music producer and audio engineer with a deep passion for building immersive sonic experiences. My journey in audio started out of pure passion — making tracks for fun with friends in a small room — but quickly evolved into a serious career path.</p>
+    <p>Today, I work across multiple dimensions of sound. From beat construction and full-track arrangement to <strong>film scoring</strong> and complete <strong>audio post-production</strong>, I bring a meticulous ear and creative instinct to every session. My strongest expertise lies in <strong>Mix &amp; Mastering</strong> across vocals, instrumentation, and cinematic audio.</p>
+    <p>My work primarily spans <strong>Hip-Hop, Trap, R&amp;B, and Cinematic</strong> music — always searching for that specific frequency that makes people feel something. My main tools of choice are <strong>Ableton Live</strong> and <strong>Pro Tools</strong>.</p>
+    <p>As a recording artist, I go by <strong>Devilheart</strong> — a creative alias where I take full ownership of every element: writing, composing, arranging, mixing, mastering, and directing the visuals. Every release under Devilheart is entirely self-made, from the first note to the final frame.</p>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- WORKS -->
+<section id="works">
+  <div class="works-header reveal">
+    <div>
+      <div class="section-label">02 — Works</div>
+      <h2>Selected<br><em style="font-style:italic;color:var(--mut);">Projects</em></h2>
+    </div>
+    <div class="works-count">07 projects</div>
+  </div>
+
+  <div class="works-tabs reveal">
+    <button class="works-tab-btn active" data-tab="post">Sound Post Production</button>
+    <button class="works-tab-btn" data-tab="composed">Composed Music</button>
+    <button class="works-tab-btn" data-tab="engineering">Engineering</button>
+    <button class="works-tab-btn" data-tab="intern">Internship</button>
+  </div>
+
+  <!-- Tab 1: Sound Post -->
+  <div class="works-panel active" id="tab-post">
+    <a href="kantana.html" class="work-item reveal">
+      <span class="work-num">01</span>
+      <div class="work-info">
+        <div class="work-title">Kantana Group</div>
+        <div class="work-meta">Dialogue Editing · SFX · Foley · BG AMB · Cue Sheet · Original Sound Post · Sep — Nov 2026</div>
       </div>
-    </div>
-
-    <!-- Right: Image Slideshow (16:9, 5 slides, auto-advances every 10s) -->
-    <div class="hero-right">
-      <div class="hero-slideshow" id="heroSlideshow">
-
-        <div class="hero-slide-track" id="heroSlideTrack">
-
-          <!-- ═══ SLIDE 1 ═══ TheRetroFrame -->
-          <div class="hero-slide">
-            <img src="images/slide1.jpg" alt="TheRetroFrame">
-          </div>
-
-          <!-- ═══ SLIDE 2 ═══ Miking For Guitar Recording -->
-          <div class="hero-slide">
-            <img src="images/slide2.jpg" alt="Miking For Guitar Recording">
-          </div>
-
-          <!-- ═══ SLIDE 3 ═══ -->
-          <div class="hero-slide">
-            <img src="images/slide3.jpg" alt="Slide 3">
-          </div>
-
-          <!-- ═══ SLIDE 4 ═══ -->
-          <div class="hero-slide">
-            <img src="images/slide4.jpg" alt="Slide 4">
-          </div>
-
-          <!-- ═══ SLIDE 5 ═══ -->
-          <div class="hero-slide">
-            <img src="images/slide5.jpg" alt="Slide 5">
-          </div>
-
-        </div><!-- /hero-slide-track -->
-
-        <!-- Navigation dots -->
-        <div class="hero-slide-dots" id="heroSlideDots">
-          <button class="hero-slide-dot active" data-index="0" aria-label="Slide 1"></button>
-          <button class="hero-slide-dot" data-index="1" aria-label="Slide 2"></button>
-          <button class="hero-slide-dot" data-index="2" aria-label="Slide 3"></button>
-          <button class="hero-slide-dot" data-index="3" aria-label="Slide 4"></button>
-          <button class="hero-slide-dot" data-index="4" aria-label="Slide 5"></button>
-        </div>
-
-      </div><!-- /hero-slideshow -->
-    </div>
-
-    <div class="hero-scroll">
-      <div class="hero-scroll-line"></div>
-      <span>Scroll</span>
-    </div>
-  </section>
-
-  <hr class="divider">
-
-  <!-- About -->
-  <section id="about">
-    <div class="about-left reveal">
-      <div class="section-label">01 — About</div>
-      <h2>Sound is my<br><em>language</em></h2>
-    </div>
-    <div class="about-right reveal">
-      <p>I'm <strong>Naphat Sudjai</strong>, a music producer and audio engineer with a deep passion for building immersive sonic experiences. My journey in audio started out of pure passion — making tracks for fun with friends in a small room — but quickly evolved into a serious career path during my time at university.</p>
-      <p>Today, I work across multiple dimensions of sound. From beat construction and full-track arrangement to <strong>film scoring</strong> and complete <strong>audio post-production</strong>, I bring a meticulous ear and creative instinct to every session. My strongest expertise lies in <strong>Mix &amp; Mastering</strong> across vocals, instrumentation, and cinematic audio.</p>
-      <p>My work primarily spans <strong>Hip-Hop, Trap, R&amp;B, and Cinematic</strong> music — always searching for that specific frequency that makes people feel something. My main tools of choice are <strong>Ableton Live</strong> and <strong>Pro Tools</strong>. Beyond audio, I constantly push myself into photography, video editing, music video production, web development, coding, and AI tools.</p>
-      <p>As a recording artist, I go by <strong>Devilheart</strong> — a creative alias where I take full ownership of every element: writing, composing, arranging, mixing, mastering, and directing the visuals myself. Every release under Devilheart is entirely self-made, from the first note to the final frame.</p>
-      <p>Currently seeking an <strong>internship at a music &amp; record studio</strong>, eager to work alongside industry professionals, contribute to real-world productions, and push my craft to the next level.</p>
-    </div>
-  </section>
-
-  <hr class="divider">
-
-  <!-- Works -->
-  <section id="works">
-    <div class="works-header reveal">
-      <div>
-        <div class="section-label">02 — Works</div>
-        <h2>Selected<br>Projects</h2>
+      <span class="work-arrow">↗</span>
+    </a>
+    <a href="aversionofme.html" class="work-item reveal">
+      <span class="work-num">02</span>
+      <div class="work-info">
+        <div class="work-title">A Version of Me</div>
+        <div class="work-meta">Dialogue Editing · SFX Design · Foley · Film Score · Mix &amp; Master · Retroframe · 2025</div>
       </div>
-      <div class="works-count">07 projects</div>
+      <span class="work-arrow">↗</span>
+    </a>
+    <a href="zero-past.html" class="work-item reveal">
+      <span class="work-num">03</span>
+      <div class="work-info">
+        <div class="work-title">Zero Past</div>
+        <div class="work-meta">Film Score · Original Composition · Retroframe · 2024</div>
+      </div>
+      <span class="work-arrow">↗</span>
+    </a>
+  </div>
+
+  <!-- Tab 2: Composed Music -->
+  <div class="works-panel" id="tab-composed">
+    <div class="works-subfilter">
+      <button class="sub-btn active" data-filter="all">All</button>
+      <button class="sub-btn" data-filter="recorded">Recorded</button>
+      <button class="sub-btn" data-filter="original">Original Production</button>
+      <button class="sub-btn" data-filter="master">Mix &amp; Master</button>
     </div>
-
-    <!-- Tab buttons -->
-    <div class="works-tabs reveal">
-      <button class="works-tab-btn active" data-tab="post">Sound Post Production</button>
-      <button class="works-tab-btn" data-tab="composed">Composed Music</button>
-      <button class="works-tab-btn" data-tab="engineering">Engineering</button>
-      <button class="works-tab-btn" data-tab="intern">Internship</button>
-    </div>
-
-    <!-- Tab 1: Sound Post Production -->
-    <div class="works-panel active" id="tab-post">
-      <div class="works-list">
-        <a href="kantana.html" class="work-item reveal">
-          <span class="work-num">01</span>
-          <div class="work-info">
-            <div class="work-title">Kantana Group</div>
-            <div class="work-meta">Dialogue Editing · SFX · Foley · BG AMB · Cue Sheet · Original Sound Post · Sep — Nov 2026</div>
-          </div>
-          <span class="work-arrow">↗</span>
-        </a>
-        <a href="aversionofme.html" class="work-item reveal">
-          <span class="work-num">02</span>
-          <div class="work-info">
-            <div class="work-title">A Version of Me</div>
-            <div class="work-meta">Dialogue Editing · SFX Design · Foley · Film Score · Mix &amp; Master · Retroframe · 2025</div>
-          </div>
-          <span class="work-arrow">↗</span>
-        </a>
-        <a href="zero-past.html" class="work-item reveal">
-          <span class="work-num">03</span>
-          <div class="work-info">
-            <div class="work-title">Zero Past</div>
-            <div class="work-meta">Film Score · Original Composition · Retroframe · 2024</div>
-          </div>
-          <span class="work-arrow">↗</span>
-        </a>
+    <a href="the-albums.html" class="work-item reveal" data-tags="recorded original master">
+      <span class="work-num">01</span>
+      <div class="work-info">
+        <div class="work-title">The Albums</div>
+        <div class="work-meta">Recorded · Original Production · Mix &amp; Master · Azmo Anthem · Story Book · EP: ME · 19 Tracks</div>
       </div>
-    </div>
-
-    <!-- Tab 2: Composed Music -->
-    <div class="works-panel" id="tab-composed">
-      <div class="works-subfilter">
-        <button class="sub-btn active" data-filter="all">All</button>
-        <button class="sub-btn" data-filter="recorded">Recorded</button>
-        <button class="sub-btn" data-filter="original">Original Production</button>
-        <button class="sub-btn" data-filter="master">Mix &amp; Master</button>
+      <span class="work-arrow">↗</span>
+    </a>
+    <a href="from-scratch.html" class="work-item reveal" data-tags="original">
+      <span class="work-num">02</span>
+      <div class="work-info">
+        <div class="work-title">Devilheart — From Scratch</div>
+        <div class="work-meta">Original Production · Solo Artist · Producer · Songwriter · 27 Tracks</div>
       </div>
-      <div class="works-list">
-        <a href="the-albums.html" class="work-item reveal" data-tags="recorded original master">
-          <span class="work-num">01</span>
-          <div class="work-info">
-            <div class="work-title">The Albums</div>
-            <div class="work-meta">Recorded · Original Production · Mix &amp; Master · Azmo Anthem · Story Book · EP: ME · 19 Tracks</div>
-          </div>
-          <span class="work-arrow">↗</span>
-        </a>
-        <a href="from-scratch.html" class="work-item reveal" data-tags="original">
-          <span class="work-num">02</span>
-          <div class="work-info">
-            <div class="work-title">Devilheart — From Scratch</div>
-            <div class="work-meta">Original Production · Solo Artist · Producer · Songwriter · 27 Tracks</div>
-          </div>
-          <span class="work-arrow">↗</span>
-        </a>
-        <a href="visual-works.html" class="work-item reveal" data-tags="original">
-          <span class="work-num">03</span>
-          <div class="work-info">
-            <div class="work-title">Devilheart — Visual Works</div>
-            <div class="work-meta">Original Music · Music Video · Producer &amp; Director · 2023 — 2024</div>
-          </div>
-          <span class="work-arrow">↗</span>
-        </a>
+      <span class="work-arrow">↗</span>
+    </a>
+    <a href="visual-works.html" class="work-item reveal" data-tags="original">
+      <span class="work-num">03</span>
+      <div class="work-info">
+        <div class="work-title">Devilheart — Visual Works</div>
+        <div class="work-meta">Original Music · Music Video · Producer &amp; Director · 2023 — 2024</div>
       </div>
-    </div>
+      <span class="work-arrow">↗</span>
+    </a>
+  </div>
 
-    <!-- Tab 3: Engineering -->
-    <div class="works-panel" id="tab-engineering">
-      <div class="works-list">
-        <a href="studio28.html" class="work-item reveal">
-          <span class="work-num">01</span>
-          <div class="work-info">
-            <div class="work-title">Studio 28</div>
-            <div class="work-meta">Assistant Engineer · Orchestral Miking · Grand Piano · Signal Chain · Session Editing · Mix Prep · Pro Tools</div>
-          </div>
-          <span class="work-arrow">↗</span>
-        </a>
+  <!-- Tab 3: Engineering -->
+  <div class="works-panel" id="tab-engineering">
+    <a href="studio28.html" class="work-item reveal">
+      <span class="work-num">01</span>
+      <div class="work-info">
+        <div class="work-title">Studio 28</div>
+        <div class="work-meta">Assistant Engineer · Orchestral Miking · Grand Piano · Signal Chain · Session Editing · Mix Prep · Pro Tools</div>
       </div>
-    </div>
+      <span class="work-arrow">↗</span>
+    </a>
+  </div>
 
-    <!-- Tab 4: Internship -->
-    <div class="works-panel" id="tab-intern">
-      <div class="works-list">
-        <a href="kantana.html" class="work-item reveal">
-          <span class="work-num">01</span>
-          <div class="work-info">
-            <div class="work-title">Kantana Group</div>
-            <div class="work-meta">Internship · Editor · Original Sound Post · Sep — Nov 2026 · Broadcast drama, reality TV &amp; documentary</div>
-          </div>
-          <span class="work-arrow">↗</span>
-        </a>
-        <a href="studio28.html" class="work-item reveal">
-          <span class="work-num">02</span>
-          <div class="work-info">
-            <div class="work-title">Studio 28</div>
-            <div class="work-meta">Internship · Assistant Engineer · Jul — Sep 2026 · Hands-on live recording sessions with industry engineers</div>
-          </div>
-          <span class="work-arrow">↗</span>
-        </a>
+  <!-- Tab 4: Internship -->
+  <div class="works-panel" id="tab-intern">
+    <a href="kantana.html" class="work-item reveal">
+      <span class="work-num">01</span>
+      <div class="work-info">
+        <div class="work-title">Kantana Group</div>
+        <div class="work-meta">Internship · Editor · Original Sound Post · Sep — Nov 2026 · Broadcast drama, reality TV &amp; documentary</div>
       </div>
-    </div>
-  </section>
-
-  <hr class="divider">
-
-  <!-- Skills -->
-  <section id="skills">
-    <div class="reveal">
-      <div class="section-label">03 — Skills</div>
-      <h2 style="font-family:'Syne',sans-serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:600;line-height:1.1;color:var(--fg);transition:color 0.4s;">Skills &amp; Tools</h2>
-    </div>
-    <div class="skills-grid">
-      <div class="skill-group reveal">
-        <h3>Production</h3>
-        <ul>
-          <li>Beat Making</li>
-          <li>Arrangement</li>
-          <li>Film Score / Composition</li>
-          <li>Vocal &amp; Voice-Over Recording</li>
-          <li>Sound Design</li>
-        </ul>
+      <span class="work-arrow">↗</span>
+    </a>
+    <a href="studio28.html" class="work-item reveal">
+      <span class="work-num">02</span>
+      <div class="work-info">
+        <div class="work-title">Studio 28</div>
+        <div class="work-meta">Internship · Assistant Engineer · Jul — Sep 2026 · Hands-on live recording sessions with industry engineers</div>
       </div>
-      <div class="skill-group reveal">
-        <h3>Film Sound</h3>
-        <ul>
-          <li>Film Sound Post Production</li>
-          <li>Dialogue Editing</li>
-          <li>Foley Recording &amp; Editing</li>
-          <li>SFX Design</li>
-          <li>Ambience</li>
-        </ul>
-      </div>
-      <div class="skill-group reveal">
-        <h3>Engineering</h3>
-        <ul>
-          <li>Mix &amp; Master — Music</li>
-          <li>Mix &amp; Master — Film</li>
-          <li>ADR</li>
-          <li>Signal Flow</li>
-          <li>Studio Setup</li>
-        </ul>
-      </div>
-      <div class="skill-group reveal">
-        <h3>Software</h3>
-        <ul>
-          <li>Ableton Live [Expert]</li>
-          <li>Pro Tools [Intermediate]</li>
-          <li>Video Editing</li>
-          <li>Web Development &amp; Coding</li>
-          <li>AI Tools</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+      <span class="work-arrow">↗</span>
+    </a>
+  </div>
+</section>
 
-  <hr class="divider">
+<hr class="divider">
 
-  <!-- Resume -->
-  <section id="resume">
-    <div class="resume-left reveal">
-      <div class="section-label">04 — Resume</div>
-      <h2>Experience &amp;<br><em>Education</em></h2>
-      <p>A snapshot of my journey in audio — from studies to real film productions.</p>
-      <!-- Replace href with your actual PDF path when ready -->
-      <a href="Naphat_Sudjai_Resume.pdf" download class="download-btn">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <span>Download Resume</span>
-      </a>
-    </div>
-
-    <div class="resume-right reveal">
-
-      <!-- Education -->
-      <div class="resume-block">
-        <div class="resume-block-title">Education</div>
-
-        <div class="resume-entry">
-          <div class="resume-year">2023 — Present</div>
-          <div class="resume-detail">
-            <h4>Bangkok University</h4>
-            <p>Digital Media &amp; Cinematic Arts, Pathum Thani, Thailand</p>
-            <span class="resume-tag">Film Score</span>
-            <span class="resume-tag">Sound Design</span>
-            <span class="resume-tag">Cinematic Arts</span>
-          </div>
-        </div>
-
-        <div class="resume-entry">
-          <div class="resume-year">2017 — 2023</div>
-          <div class="resume-detail">
-            <h4>Banglamung School</h4>
-            <p>Thailand</p>
-          </div>
-        </div>
-
-        <div class="resume-entry">
-          <div class="resume-year">2008 — 2017</div>
-          <div class="resume-detail">
-            <h4>Sawangboriboon Wittaya</h4>
-            <p>Thailand</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Experience -->
-      <div class="resume-block">
-        <div class="resume-block-title">Experience</div>
-
-        <div class="resume-entry">
-          <div class="resume-year">Jul — Sep 2026</div>
-          <div class="resume-detail">
-            <h4>Assistant Engineer · Internship</h4>
-            <p>Studio 28 · Recording &amp; Mix/Master Studio<br>Assisted lead engineer Ong on orchestral and grand piano recording sessions — handled microphone placement, signal chain setup, and gain staging. Supported mix engineer Henry Watkin with session editing and mix prep for the full production pipeline.</p>
-            <span class="resume-tag">Orchestral Miking</span>
-            <span class="resume-tag">Grand Piano</span>
-            <span class="resume-tag">Signal Chain</span>
-            <span class="resume-tag">Session Editing</span>
-            <span class="resume-tag">Mix Prep</span>
-            <span class="resume-tag">Pro Tools</span>
-          </div>
-        </div>
-
-        <div class="resume-entry">
-          <div class="resume-year">Apr — May 2026</div>
-          <div class="resume-detail">
-            <h4>Sound Post Production</h4>
-            <p>Retroframe · Film — "A Version of Me"<br>Managed the complete sound post production pipeline. Handled Dialogue editing, SFX design, Foley recording &amp; editing. Composed and produced the original film score. Delivered final Mix &amp; Master for cinema output.</p>
-            <span class="resume-tag">Dialogue Editing</span>
-            <span class="resume-tag">Foley</span>
-            <span class="resume-tag">Film Score</span>
-            <span class="resume-tag">Mix &amp; Master</span>
-          </div>
-        </div>
-
-        <div class="resume-entry">
-          <div class="resume-year">Nov 2025</div>
-          <div class="resume-detail">
-            <h4>Composer / Film Score</h4>
-            <p>Retroframe · Film — "Zero Past"<br>Composed and produced original score for the short film. Crafted thematic music to support narrative and emotional arc.</p>
-            <span class="resume-tag">Composition</span>
-            <span class="resume-tag">Film Score</span>
-            <span class="resume-tag">Ableton Live</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Training & Coursework -->
-      <div class="resume-block">
-        <div class="resume-block-title">Training &amp; Coursework</div>
-
-        <div class="resume-entry">
-          <div class="resume-year">Recording</div>
-          <div class="resume-detail">
-            <h4>Recording Class</h4>
-            <p>— Audio recording training covering mixing and mastering.<br>
-               — Studio equipment setup: signal chains and microphone placement.<br>
-               — Pro Tools proficiency: recording, mixing, and mastering.<br>
-               — Microphone techniques for guitar, drums, and vocals.<br>
-               — Assisted in a voice-acting / dubbing recording session.</p>
-          </div>
-        </div>
-
-        <div class="resume-entry">
-          <div class="resume-year">Orchestration</div>
-          <div class="resume-detail">
-            <h4>Basic Orchestration</h4>
-            <p>— Orchestral instrument arrangement covering strings, brass, woodwinds, harp, keyboard, and percussion.<br>
-               — Applied orchestration techniques for pop, rock, electronic, film scoring, and game music.<br>
-               — Studied position, range, and instrument doubling principles as compositional foundations.<br>
-               — Orchestration analysis and demonstration across 16 sessions using Logic Pro.<br>
-               — Produced a fully edited orchestration project incorporating all instrument families.</p>
-          </div>
-        </div>
-
-        <div class="resume-entry">
-          <div class="resume-year">Cinematic</div>
-          <div class="resume-detail">
-            <h4>Cinematic Sound &amp; Music</h4>
-            <p>— Analyzed the role of sound and music as narrative elements in film through spotting sessions and hit-point identification.<br>
-               — Applied harmony, melody, leitmotif, and modal psychology to create character and scene themes.<br>
-               — Practiced synchronization techniques including tempo mapping, Mickey Mousing, and frame-accurate scoring.<br>
-               — Designed soundscapes using Foley, ambiance, SFX, and layered DAW editing for dialogue clarity and depth.<br>
-               — Completed a full scene scoring project: composition, sound design, and introductory mix for picture.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Software & Languages -->
-      <div class="resume-block">
-        <div class="resume-block-title">Software &amp; Languages</div>
-
-        <div class="resume-entry">
-          <div class="resume-year">Software</div>
-          <div class="resume-detail">
-            <h4>Digital Audio Workstations</h4>
-            <p><strong>Ableton Live</strong> [Expert] — Music production · Film score · Mix &amp; Mastering<br><strong>Pro Tools</strong> [Intermediate] — Film mix &amp; master · Foley SFX · Dialogue · ADR</p>
-          </div>
-        </div>
-
-        <div class="resume-entry">
-          <div class="resume-year">Languages</div>
-          <div class="resume-detail">
-            <h4>Thai &amp; English</h4>
-            <p>Native Thai speaker · Conversational English</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <hr class="divider">
-
-  <!-- Contact -->
-  <section id="contact">
-    <div class="contact-left reveal">
-      <div class="section-label">05 — Contact</div>
-      <h2>Let's make<br>something<br><em>great</em></h2>
-      <p>Open to internships, collaborations, and studio sessions. Let's connect and create something memorable.</p>
-      <a href="mailto:naphatsudjai.work@gmail.com" class="email-btn"><span class="btn-text">Send a message</span></a>
-    </div>
-    <div class="contact-right reveal">
-      <ul class="contact-links">
-        <li><a href="https://www.instagram.com/ihatedevilheart/" target="_blank" rel="noopener">Instagram <span>↗</span></a></li>
-        <li><a href="https://www.youtube.com/@ihatedevilheart" target="_blank" rel="noopener">YouTube <span>↗</span></a></li>
-        <li><a href="https://www.tiktok.com/@devilheart_official" target="_blank" rel="noopener">TikTok <span>↗</span></a></li>
-        <li><a href="https://open.spotify.com/artist/0TXHF723AcTCl1cNp4dCoO" target="_blank" rel="noopener">Spotify <span>↗</span></a></li>
-        <li><a href="https://fastwork.com/user/naphatt" target="_blank" rel="noopener">Fastwork <span>↗</span></a></li>
+<!-- SKILLS -->
+<section id="skills">
+  <div class="reveal">
+    <div class="section-label">03 — Skills</div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,5.5vw,5rem);font-weight:300;line-height:0.95;margin-bottom:0;">Skills &amp; <em style="font-style:italic;color:var(--mut);">Tools</em></h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-group reveal">
+      <h3>Production</h3>
+      <ul class="skill-list">
+        <li>Beat Making &amp; Arrangement<div class="skill-bar"><div class="skill-bar-fill" style="width:92%"></div></div></li>
+        <li>Film Score / Composition<div class="skill-bar"><div class="skill-bar-fill" style="width:85%"></div></div></li>
+        <li>Sound Design<div class="skill-bar"><div class="skill-bar-fill" style="width:88%"></div></div></li>
+        <li>Vocal &amp; Voice-Over Recording<div class="skill-bar"><div class="skill-bar-fill" style="width:80%"></div></div></li>
       </ul>
     </div>
-  </section>
+    <div class="skill-group reveal">
+      <h3>Film Sound</h3>
+      <ul class="skill-list">
+        <li>Film Sound Post Production<div class="skill-bar"><div class="skill-bar-fill" style="width:85%"></div></div></li>
+        <li>Dialogue Editing<div class="skill-bar"><div class="skill-bar-fill" style="width:82%"></div></div></li>
+        <li>Foley Recording &amp; Editing<div class="skill-bar"><div class="skill-bar-fill" style="width:80%"></div></div></li>
+        <li>SFX Design<div class="skill-bar"><div class="skill-bar-fill" style="width:78%"></div></div></li>
+      </ul>
+    </div>
+    <div class="skill-group reveal">
+      <h3>Engineering</h3>
+      <ul class="skill-list">
+        <li>Mix &amp; Master — Music<div class="skill-bar"><div class="skill-bar-fill" style="width:90%"></div></div></li>
+        <li>Mix &amp; Master — Film<div class="skill-bar"><div class="skill-bar-fill" style="width:80%"></div></div></li>
+        <li>ADR<div class="skill-bar"><div class="skill-bar-fill" style="width:72%"></div></div></li>
+        <li>Signal Flow &amp; Studio Setup<div class="skill-bar"><div class="skill-bar-fill" style="width:85%"></div></div></li>
+      </ul>
+    </div>
+    <div class="skill-group reveal">
+      <h3>Software</h3>
+      <ul class="skill-list">
+        <li>Ableton Live [Expert]<div class="skill-bar"><div class="skill-bar-fill" style="width:95%"></div></div></li>
+        <li>Pro Tools [Intermediate]<div class="skill-bar"><div class="skill-bar-fill" style="width:72%"></div></div></li>
+        <li>Video Editing<div class="skill-bar"><div class="skill-bar-fill" style="width:65%"></div></div></li>
+        <li>Web Dev &amp; AI Tools<div class="skill-bar"><div class="skill-bar-fill" style="width:70%"></div></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-  <footer>
-    <span>© 2025 Naphat Sudjai — Music Producer &amp; Sound Designer</span>
-    <span>Thanyaburi, Pathum Thani, Thailand</span>
-  </footer>
+<hr class="divider">
 
-  <script>
-    // Cursor
-    const cursor = document.getElementById('cursor');
-    document.addEventListener('mousemove', e => {
-      cursor.style.left = e.clientX + 'px';
-      cursor.style.top  = e.clientY + 'px';
-    });
-    document.querySelectorAll('a, button').forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
-    });
-
-    // Theme toggle
-    const html      = document.documentElement;
-    const toggleBtn = document.getElementById('themeToggle');
-    const saved     = localStorage.getItem('theme') || 'dark';
-    html.setAttribute('data-theme', saved);
-    toggleBtn.addEventListener('click', () => {
-      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-    });
-
-    // Nav scroll
-    const nav = document.getElementById('mainNav');
-    window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 20);
-    });
-
-    // Scroll reveal with stagger
-    document.querySelectorAll('section').forEach(sec => {
-      sec.querySelectorAll('.reveal').forEach((el, i) => {
-        el.style.transitionDelay = `${i * 0.1}s`;
-      });
-    });
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    // Works tabs
-    document.querySelectorAll('.works-tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.works-tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.works-panel').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-      });
-    });
-
-    // Composed sub-filter
-    document.querySelectorAll('.sub-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const parent = btn.closest('.works-panel');
-        parent.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const filter = btn.dataset.filter;
-        parent.querySelectorAll('.work-item').forEach(item => {
-          if (filter === 'all' || item.dataset.tags.includes(filter)) {
-            item.removeAttribute('data-hidden');
-          } else {
-            item.setAttribute('data-hidden', '1');
-          }
-        });
-      });
-    });
-
-    // ── Hero Slideshow ──
-    (function () {
-      const track  = document.getElementById('heroSlideTrack');
-      const dots   = document.querySelectorAll('#heroSlideDots .hero-slide-dot');
-      const total  = 5;
-      let current  = 0;
-      let timer;
-
-      function goTo(index) {
-        current = (index + total) % total;
-        // Each slide is 20% of the track width (track = 500% of container)
-        // To show slide N we shift the track by -(N * 20%)
-        track.style.transform = `translateX(-${current * 20}%)`;
-        dots.forEach((d, i) => d.classList.toggle('active', i === current));
-      }
-
-      function next() { goTo(current + 1); }
-
-      function startTimer() {
-        clearInterval(timer);
-        timer = setInterval(next, 10000); // advance every 10 seconds
-      }
-
-      // Dot click — jump to slide & restart timer
-      dots.forEach(dot => {
-        dot.addEventListener('click', () => {
-          goTo(parseInt(dot.dataset.index, 10));
-          startTimer();
-        });
-      });
-
-      // Pause on hover, resume on leave
-      const slideshow = document.getElementById('heroSlideshow');
-      slideshow.addEventListener('mouseenter', () => clearInterval(timer));
-      slideshow.addEventListener('mouseleave', startTimer);
-
-      // Kick off
-      goTo(0);
-      startTimer();
-    })();
-  </script>
-  <!-- Fastwork Float -->
-  <a href="https://fastwork.com/user/naphatt" target="_blank" rel="noopener" class="fw-float" aria-label="Hire me on Fastwork">
-    <span class="fw-float-label">Hire me on Fastwork</span>
-    <div class="fw-float-btn">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="2" y="7" width="20" height="14" rx="2" stroke="var(--bg)" stroke-width="1.6"/>
-        <path d="M8 7V5a4 4 0 0 1 8 0v2" stroke="var(--bg)" stroke-width="1.6" stroke-linecap="round"/>
-        <path d="M2 13h20" stroke="var(--bg)" stroke-width="1.4"/>
-        <circle cx="12" cy="13" r="2" fill="var(--bg)"/>
+<!-- RESUME -->
+<section id="resume">
+  <div class="resume-left reveal">
+    <div class="section-label">04 — Resume</div>
+    <h2>Experience &amp;<br><em>Education</em></h2>
+    <p>A snapshot of my journey in audio — from studies to real film productions.</p>
+    <a href="Naphat_Sudjai_Resume.pdf" download class="download-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
+      <span>Download Resume</span>
+    </a>
+  </div>
+
+  <div class="resume-right reveal">
+    <div class="resume-block">
+      <div class="resume-block-title">Education</div>
+      <div class="resume-entry">
+        <div class="resume-year">2023 — Present</div>
+        <div class="resume-detail">
+          <h4>Bangkok University</h4>
+          <p>Digital Media &amp; Cinematic Arts, Pathum Thani, Thailand</p>
+          <span class="resume-tag">Film Score</span>
+          <span class="resume-tag">Sound Design</span>
+          <span class="resume-tag">Cinematic Arts</span>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-year">2017 — 2023</div>
+        <div class="resume-detail"><h4>Banglamung School</h4><p>Thailand</p></div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-year">2008 — 2017</div>
+        <div class="resume-detail"><h4>Sawangboriboon Wittaya</h4><p>Thailand</p></div>
+      </div>
     </div>
-  </a>
+
+    <div class="resume-block">
+      <div class="resume-block-title">Experience</div>
+      <div class="resume-entry">
+        <div class="resume-year">Sep — Nov 2026</div>
+        <div class="resume-detail">
+          <h4>Editor · Original Sound Post · Internship</h4>
+          <p>Kantana Group · Original Sound Post<br>Dialogue &amp; SFX editing under mixer ทวีป สุวคนธ์. Foley &amp; Cue Sheet editing under เบรด. Productions: The Face Thailand SS7, เพลิงพระนาง SS1&amp;2.</p>
+          <span class="resume-tag">Dialogue Editing</span>
+          <span class="resume-tag">Foley</span>
+          <span class="resume-tag">SFX</span>
+          <span class="resume-tag">Cue Sheet</span>
+          <span class="resume-tag">Pro Tools</span>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-year">Jul — Sep 2026</div>
+        <div class="resume-detail">
+          <h4>Assistant Engineer · Internship</h4>
+          <p>Studio 28 · Recording &amp; Mix/Master Studio<br>Assisted with orchestral and grand piano recording. Handled mic placement, signal chain, and gain staging. Supported mix prep for Ink Waruntorn Synthphony Concert.</p>
+          <span class="resume-tag">Orchestral Miking</span>
+          <span class="resume-tag">Grand Piano</span>
+          <span class="resume-tag">Signal Chain</span>
+          <span class="resume-tag">Mix Prep</span>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-year">Apr — May 2026</div>
+        <div class="resume-detail">
+          <h4>Sound Post Production</h4>
+          <p>Retroframe · Film — "A Version of Me"<br>Complete sound post pipeline: Dialogue editing, SFX design, Foley, original film score, final Mix &amp; Master for cinema output.</p>
+          <span class="resume-tag">Dialogue Editing</span>
+          <span class="resume-tag">Foley</span>
+          <span class="resume-tag">Film Score</span>
+          <span class="resume-tag">Mix &amp; Master</span>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-year">Nov 2025</div>
+        <div class="resume-detail">
+          <h4>Composer / Film Score</h4>
+          <p>Retroframe · Film — "Zero Past"<br>Original score for short film. Thematic music supporting narrative and emotional arc.</p>
+          <span class="resume-tag">Composition</span>
+          <span class="resume-tag">Film Score</span>
+          <span class="resume-tag">Ableton Live</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="resume-block">
+      <div class="resume-block-title">Software &amp; Languages</div>
+      <div class="resume-entry">
+        <div class="resume-year">DAW</div>
+        <div class="resume-detail">
+          <h4>Digital Audio Workstations</h4>
+          <p><strong>Ableton Live</strong> [Expert] — Music production · Film score · Mix &amp; Mastering<br><strong>Pro Tools</strong> [Intermediate] — Film mix &amp; master · Foley SFX · Dialogue · ADR</p>
+        </div>
+      </div>
+      <div class="resume-entry">
+        <div class="resume-year">Languages</div>
+        <div class="resume-detail">
+          <h4>Thai &amp; English</h4>
+          <p>Native Thai speaker · Conversational English</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-left reveal">
+    <div class="section-label">05 — Contact</div>
+    <h2>Let's make<br>something<br><em>great</em></h2>
+    <p>Open to internships, collaborations, and studio sessions. Let's connect and create something memorable.</p>
+    <a href="mailto:naphatsudjai.work@gmail.com" class="email-btn"><span class="btn-text">Send a message</span></a>
+  </div>
+  <div class="contact-right reveal">
+    <ul class="contact-links">
+      <li><a href="https://www.instagram.com/ihatedevilheart/" target="_blank" rel="noopener">Instagram <span>↗</span></a></li>
+      <li><a href="https://www.youtube.com/@ihatedevilheart" target="_blank" rel="noopener">YouTube <span>↗</span></a></li>
+      <li><a href="https://www.tiktok.com/@devilheart_official" target="_blank" rel="noopener">TikTok <span>↗</span></a></li>
+      <li><a href="https://open.spotify.com/artist/0TXHF723AcTCl1cNp4dCoO" target="_blank" rel="noopener">Spotify <span>↗</span></a></li>
+      <li><a href="https://fastwork.com/user/naphatt" target="_blank" rel="noopener">Fastwork <span>↗</span></a></li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Naphat Sudjai — Music Producer &amp; Sound Designer</span>
+  <span>Thanyaburi, Pathum Thani, Thailand</span>
+</footer>
+
+<!-- Fastwork Float -->
+<a href="https://fastwork.com/user/naphatt" target="_blank" rel="noopener" class="fw-float" aria-label="Hire me on Fastwork">
+  <span class="fw-float-label">Hire me on Fastwork</span>
+  <div class="fw-float-btn">
+    <svg viewBox="0 0 24 24" fill="none">
+      <rect x="2" y="7" width="20" height="14" rx="2" stroke="#0A0908" stroke-width="1.6"/>
+      <path d="M8 7V5a4 4 0 0 1 8 0v2" stroke="#0A0908" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M2 13h20" stroke="#0A0908" stroke-width="1.4"/>
+      <circle cx="12" cy="13" r="2" fill="#0A0908"/>
+    </svg>
+  </div>
+</a>
+
+<script>
+// ── CURSOR ──
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+});
+
+// ── THEME ──
+const html = document.documentElement;
+const toggleBtn = document.getElementById('themeToggle');
+let isDark = true;
+function applyTheme(dark) {
+  isDark = dark;
+  html.setAttribute('data-theme', dark ? 'dark' : 'light');
+  toggleBtn.textContent = dark ? 'Day' : 'Night';
+  try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch {}
+  drawHero();
+}
+const saved = (() => { try { return localStorage.getItem('theme'); } catch { return null; }})();
+applyTheme(saved ? saved === 'dark' : true);
+toggleBtn.addEventListener('click', () => applyTheme(!isDark));
+
+// ── HERO CANVAS ──
+const canvas = document.getElementById('heroCanvas');
+const ctx = canvas.getContext('2d');
+let CW, CH;
+
+function resizeCanvas() {
+  CW = canvas.offsetWidth; CH = canvas.offsetHeight;
+  canvas.width = CW; canvas.height = CH;
+  drawHero();
+}
+
+function seededRNG(seed) {
+  let s = seed;
+  return () => { s = (s * 1664525 + 1013904223) & 0xffffffff; return (s >>> 0) / 0xffffffff; };
+}
+
+function drawHero() {
+  if (!CW || !CH) return;
+  ctx.clearRect(0, 0, CW, CH);
+  isDark ? drawNight() : drawDay();
+}
+
+function drawNight() {
+  // Sky
+  const sky = ctx.createLinearGradient(0, 0, 0, CH);
+  sky.addColorStop(0,    '#020509');
+  sky.addColorStop(0.3,  '#040A14');
+  sky.addColorStop(0.55, '#060C10');
+  sky.addColorStop(0.68, '#120E06');
+  sky.addColorStop(0.76, '#1E1204');
+  sky.addColorStop(0.84, '#0E0804');
+  sky.addColorStop(1,    '#050403');
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, CW, CH);
+
+  // Stars
+  const rng = seededRNG(7);
+  for (let i = 0; i < 350; i++) {
+    const x = rng() * CW, y = rng() * CH * 0.60;
+    const r = rng() * 1.3, a = rng() * 0.75 + 0.15;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(210,224,255,${a})`; ctx.fill();
+  }
+  // Bright stars
+  const rng2 = seededRNG(99);
+  for (let i = 0; i < 12; i++) {
+    const x = rng2() * CW, y = rng2() * CH * 0.5;
+    ctx.beginPath(); ctx.arc(x, y, 1.8, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(230,240,255,0.95)'; ctx.fill();
+  }
+
+  // Horizon golden glow
+  const hz = ctx.createRadialGradient(CW * 0.6, CH * 0.76, 0, CW * 0.6, CH * 0.76, CW * 0.5);
+  hz.addColorStop(0,   'rgba(200,130,30,0.30)');
+  hz.addColorStop(0.4, 'rgba(160,90,20,0.12)');
+  hz.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.fillStyle = hz; ctx.fillRect(0, 0, CW, CH);
+
+  // Far mountains
+  ctx.beginPath();
+  ctx.moveTo(0, CH * 0.82);
+  ctx.bezierCurveTo(CW*.08, CH*.68, CW*.16, CH*.62, CW*.24, CH*.70);
+  ctx.bezierCurveTo(CW*.30, CH*.76, CW*.35, CH*.61, CW*.42, CH*.58);
+  ctx.bezierCurveTo(CW*.48, CH*.55, CW*.52, CH*.62, CW*.58, CH*.59);
+  ctx.bezierCurveTo(CW*.64, CH*.56, CW*.70, CH*.66, CW*.76, CH*.63);
+  ctx.bezierCurveTo(CW*.82, CH*.60, CW*.88, CH*.70, CW*.94, CH*.67);
+  ctx.bezierCurveTo(CW*.97, CH*.65, CW, CH*.70, CW, CH*.74);
+  ctx.lineTo(CW, CH); ctx.lineTo(0, CH); ctx.closePath();
+  ctx.fillStyle = 'rgba(6,8,16,0.72)'; ctx.fill();
+
+  // Near mountains
+  ctx.beginPath();
+  ctx.moveTo(0, CH * 0.90);
+  ctx.bezierCurveTo(CW*.06, CH*.80, CW*.13, CH*.73, CW*.21, CH*.77);
+  ctx.bezierCurveTo(CW*.27, CH*.81, CW*.32, CH*.68, CW*.40, CH*.66);
+  ctx.bezierCurveTo(CW*.46, CH*.64, CW*.50, CH*.73, CW*.57, CH*.70);
+  ctx.bezierCurveTo(CW*.62, CH*.68, CW*.67, CH*.73, CW*.74, CH*.71);
+  ctx.bezierCurveTo(CW*.80, CH*.69, CW*.86, CH*.79, CW*.92, CH*.76);
+  ctx.bezierCurveTo(CW*.97, CH*.74, CW, CH*.80, CW, CH*.84);
+  ctx.lineTo(CW, CH); ctx.lineTo(0, CH); ctx.closePath();
+  ctx.fillStyle = '#030406'; ctx.fill();
+
+  // Dark ground strip
+  ctx.fillStyle = '#020304';
+  ctx.fillRect(0, CH * 0.93, CW, CH * 0.07);
+}
+
+function drawDay() {
+  // Sky
+  const sky = ctx.createLinearGradient(0, 0, 0, CH);
+  sky.addColorStop(0,    '#6A90B8');
+  sky.addColorStop(0.28, '#90A8C8');
+  sky.addColorStop(0.52, '#B8C8D8');
+  sky.addColorStop(0.65, '#D4C4A0');
+  sky.addColorStop(0.73, '#E8C080');
+  sky.addColorStop(0.82, '#D4A050');
+  sky.addColorStop(0.90, '#B07830');
+  sky.addColorStop(1,    '#5A3010');
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, CW, CH);
+
+  // Sun glow
+  const sg = ctx.createRadialGradient(CW*.64, CH*.73, 0, CW*.64, CH*.73, CW*.45);
+  sg.addColorStop(0,   'rgba(255,220,100,0.6)');
+  sg.addColorStop(0.3, 'rgba(255,180,60,0.22)');
+  sg.addColorStop(0.7, 'rgba(220,130,30,0.07)');
+  sg.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.fillStyle = sg; ctx.fillRect(0, 0, CW, CH);
+
+  // Mist
+  const mist = ctx.createLinearGradient(0, CH*.58, 0, CH*.80);
+  mist.addColorStop(0, 'rgba(230,220,200,0)');
+  mist.addColorStop(.5,'rgba(230,220,200,0.20)');
+  mist.addColorStop(1, 'rgba(200,190,170,0)');
+  ctx.fillStyle = mist; ctx.fillRect(0, CH*.58, CW, CH*.22);
+
+  // Far mountains (blue-grey misty)
+  ctx.beginPath();
+  ctx.moveTo(0, CH*.80);
+  ctx.bezierCurveTo(CW*.08, CH*.68, CW*.16, CH*.61, CW*.24, CH*.69);
+  ctx.bezierCurveTo(CW*.30, CH*.75, CW*.35, CH*.60, CW*.42, CH*.57);
+  ctx.bezierCurveTo(CW*.48, CH*.54, CW*.52, CH*.61, CW*.58, CH*.58);
+  ctx.bezierCurveTo(CW*.64, CH*.55, CW*.70, CH*.65, CW*.76, CH*.62);
+  ctx.bezierCurveTo(CW*.82, CH*.59, CW*.88, CH*.70, CW*.94, CH*.67);
+  ctx.bezierCurveTo(CW*.97, CH*.65, CW, CH*.71, CW, CH*.75);
+  ctx.lineTo(CW, CH); ctx.lineTo(0, CH); ctx.closePath();
+  ctx.fillStyle = 'rgba(60,80,105,0.40)'; ctx.fill();
+
+  // Mid mountains
+  ctx.beginPath();
+  ctx.moveTo(0, CH*.88);
+  ctx.bezierCurveTo(CW*.06, CH*.78, CW*.13, CH*.71, CW*.21, CH*.75);
+  ctx.bezierCurveTo(CW*.27, CH*.79, CW*.32, CH*.67, CW*.40, CH*.65);
+  ctx.bezierCurveTo(CW*.46, CH*.63, CW*.50, CH*.72, CW*.57, CH*.69);
+  ctx.bezierCurveTo(CW*.62, CH*.67, CW*.67, CH*.72, CW*.74, CH*.70);
+  ctx.bezierCurveTo(CW*.80, CH*.68, CW*.86, CH*.78, CW*.92, CH*.75);
+  ctx.bezierCurveTo(CW*.97, CH*.73, CW, CH*.79, CW, CH*.83);
+  ctx.lineTo(CW, CH); ctx.lineTo(0, CH); ctx.closePath();
+  ctx.fillStyle = 'rgba(40,55,65,0.65)'; ctx.fill();
+
+  // Dark foreground
+  ctx.fillStyle = '#18100A';
+  ctx.fillRect(0, CH * 0.93, CW, CH * 0.07);
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+// ── HERO TABS (highlight + sync works section) ──
+document.querySelectorAll('.hero-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.hero-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    // Sync works tabs
+    const target = tab.dataset.tab;
+    document.querySelectorAll('.works-tab-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.tab === target);
+    });
+    document.querySelectorAll('.works-panel').forEach(p => p.classList.remove('active'));
+    const panel = document.getElementById('tab-' + target);
+    if (panel) panel.classList.add('active');
+  });
+});
+
+// ── WORKS TABS ──
+document.querySelectorAll('.works-tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.works-tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.works-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    // Sync hero tabs
+    document.querySelectorAll('.hero-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.tab === btn.dataset.tab);
+    });
+  });
+});
+
+// ── COMPOSED SUB-FILTER ──
+document.querySelectorAll('.sub-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const parent = btn.closest('.works-panel');
+    parent.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    parent.querySelectorAll('.work-item').forEach(item => {
+      if (filter === 'all' || (item.dataset.tags && item.dataset.tags.includes(filter))) {
+        item.removeAttribute('data-hidden');
+      } else {
+        item.setAttribute('data-hidden', '1');
+      }
+    });
+  });
+});
+
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach((el, i) => {
+  el.style.transitionDelay = (i % 4 * 0.1) + 's';
+  observer.observe(el);
+});
+</script>
+
 </body>
 </html>
