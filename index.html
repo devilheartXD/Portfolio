@@ -75,33 +75,24 @@
     }
     [data-theme="light"] .nav-logo { color: var(--fg); text-shadow: none; }
     .nav-logo:hover { opacity: 0.7; }
-    .nav-right { display: flex; align-items: center; gap: 36px; }
-    .nav-links { display: flex; gap: 32px; list-style: none; }
-    .nav-links a {
-      color: rgba(232,226,216,0.55);
-      text-decoration: none; font-size: 10px;
-      letter-spacing: 0.18em; text-transform: uppercase;
-      transition: color .3s;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-cta {
+      display: inline-block;
+      background: rgba(200,160,82,0.9);
+      color: #0A0908; text-decoration: none;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 8px 22px; border-radius: 999px;
+      transition: background .3s, opacity .3s;
+      font-weight: 500;
     }
-    [data-theme="light"] .nav-links a { color: var(--mut); text-shadow: none; }
-    .nav-links a:hover { color: rgba(232,226,216,0.9); }
-    [data-theme="light"] .nav-links a:hover { color: var(--fg); }
-    .theme-toggle {
-      background: rgba(10,9,8,0.55);
-      border: 1px solid rgba(232,226,216,0.2); border-radius: 999px;
-      padding: 7px 20px; cursor: pointer; color: rgba(232,226,216,0.7);
-      font-family: 'Space Grotesk', sans-serif; font-size: 10px;
-      letter-spacing: 0.16em; text-transform: uppercase;
-      transition: color .3s, border-color .3s, background .3s;
-      pointer-events: auto; position: relative; z-index: 1;
+    .nav-cta:hover { background: #C8A052; opacity: 0.9; }
+    .nav-cta-outline {
+      background: transparent;
+      border: 1px solid rgba(232,226,216,0.35);
+      color: rgba(232,226,216,0.8);
     }
-    [data-theme="light"] .theme-toggle {
-      background: rgba(240,235,228,0.9);
-      border-color: rgba(26,21,16,0.15);
-      color: var(--mut);
-    }
-    .theme-toggle:hover { color: var(--gold); border-color: rgba(200,160,82,0.4); }
+    .nav-cta-outline:hover { background: rgba(232,226,216,0.08); opacity: 1; }
 
     /* ── HERO ── */
     #hero {
@@ -134,25 +125,6 @@
       color: #E8E2D8;
       text-shadow: 0 4px 32px rgba(0,0,0,0.5);
     }
-    .hero-tabs {
-      display: flex; margin-top: 44px;
-      border-top: 1px solid rgba(232,226,216,0.12);
-      border-bottom: 1px solid rgba(232,226,216,0.12);
-    }
-    .hero-tab {
-      padding: 14px 28px; font-size: 10px; letter-spacing: 0.16em;
-      text-transform: uppercase; color: rgba(232,226,216,0.4);
-      background: none; border: none; cursor: none;
-      position: relative; transition: color .3s;
-      font-family: 'Space Grotesk', sans-serif;
-    }
-    .hero-tab::after {
-      content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
-      height: 1px; background: #C8A052; transform: scaleX(0);
-      transition: transform .35s;
-    }
-    .hero-tab.active { color: #E8E2D8; }
-    .hero-tab.active::after { transform: scaleX(1); }
     .hero-scroll {
       position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
       z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 10px;
@@ -496,8 +468,6 @@
       .work-title { font-size: 1.3rem; }
       .wtab { padding: 12px 16px; font-size: 9px; }
       h1.hero-name { letter-spacing: 0.08em; }
-      .hero-tabs { flex-wrap: wrap; justify-content: center; }
-      .hero-tab { padding: 10px 16px; font-size: 9px; }
       footer { flex-direction: column; gap: 12px; text-align: center; }
       .console-panel { padding: 12px 14px 10px; }
       .c-vu { height: 44px; }
@@ -513,14 +483,8 @@
 <nav>
   <a href="#hero" class="nav-logo">NS.</a>
   <div class="nav-right">
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#works">Works</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#resume">Resume</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <button class="theme-toggle" id="themeToggle" onclick="window._toggleTheme && window._toggleTheme()">Day</button>
+    <a href="#works" class="nav-cta">Portfolio</a>
+    <a href="#contact" class="nav-cta nav-cta-outline">Contact</a>
   </div>
 </nav>
 
@@ -552,12 +516,6 @@
       </div>
     </div>
 
-    <div class="hero-tabs" style="margin-top:28px;">
-      <button class="hero-tab active" data-tab="post">Sound Post</button>
-      <button class="hero-tab" data-tab="composed">Composed Music</button>
-      <button class="hero-tab" data-tab="engineering">Engineering</button>
-      <button class="hero-tab" data-tab="intern">Internship</button>
-    </div>
   </div>
   <div class="hero-scroll">
     <div class="hero-scroll-line"></div>
@@ -896,7 +854,7 @@
 <!-- (Mixer is embedded in hero) -->
 
 <script>
-// ── CANVAS DIMENSIONS (declared early to avoid TDZ errors in applyTheme→drawHero) ──
+// ── CANVAS DIMENSIONS ──
 let CW = 0, CH = 0;
 
 // ── CURSOR ──
@@ -909,27 +867,6 @@ document.querySelectorAll('a, button').forEach(el => {
   el.addEventListener('mouseenter', () => cursor.classList.add('hov'));
   el.addEventListener('mouseleave', () => cursor.classList.remove('hov'));
 });
-
-// ── THEME ──
-const html = document.documentElement;
-const themeBtn = document.getElementById('themeToggle');
-let isDark = true;
-
-function applyTheme(dark) {
-  isDark = dark;
-  html.setAttribute('data-theme', dark ? 'dark' : 'light');
-  themeBtn.textContent = dark ? 'Day' : 'Night';
-  try { localStorage.setItem('ns-theme', dark ? 'dark' : 'light'); } catch {}
-  drawHero();
-}
-
-try {
-  const saved = localStorage.getItem('ns-theme');
-  applyTheme(saved ? saved === 'dark' : true);
-} catch { applyTheme(true); }
-
-themeBtn.addEventListener('click', () => applyTheme(!isDark));
-window._toggleTheme = () => applyTheme(!isDark);
 
 // ── HERO CANVAS ──
 const canvas = document.getElementById('heroCanvas');
@@ -955,7 +892,7 @@ function seededRNG(seed) {
 function drawHero() {
   if (!CW || !CH) return;
   ctx.clearRect(0, 0, CW, CH);
-  isDark ? drawNight() : drawDay();
+  drawNight();
 }
 
 function drawNight() {
@@ -1014,55 +951,6 @@ function drawNight() {
   ctx.fillRect(0, CH*0.93, CW, CH*0.07);
 }
 
-function drawDay() {
-  const sky = ctx.createLinearGradient(0, 0, 0, CH);
-  sky.addColorStop(0,    '#6A90B8');
-  sky.addColorStop(0.28, '#90A8C8');
-  sky.addColorStop(0.52, '#B8C8D8');
-  sky.addColorStop(0.65, '#D4C4A0');
-  sky.addColorStop(0.73, '#E8C080');
-  sky.addColorStop(0.82, '#D4A050');
-  sky.addColorStop(0.90, '#B07830');
-  sky.addColorStop(1,    '#5A3010');
-  ctx.fillStyle = sky; ctx.fillRect(0, 0, CW, CH);
-
-  const sg = ctx.createRadialGradient(CW*.64, CH*.73, 0, CW*.64, CH*.73, CW*.45);
-  sg.addColorStop(0,   'rgba(255,220,100,0.6)');
-  sg.addColorStop(0.3, 'rgba(255,180,60,0.22)');
-  sg.addColorStop(0.7, 'rgba(220,130,30,0.07)');
-  sg.addColorStop(1,   'rgba(0,0,0,0)');
-  ctx.fillStyle = sg; ctx.fillRect(0, 0, CW, CH);
-
-  const mist = ctx.createLinearGradient(0, CH*.58, 0, CH*.80);
-  mist.addColorStop(0,  'rgba(230,220,200,0)');
-  mist.addColorStop(.5, 'rgba(230,220,200,0.20)');
-  mist.addColorStop(1,  'rgba(200,190,170,0)');
-  ctx.fillStyle = mist; ctx.fillRect(0, CH*.58, CW, CH*.22);
-
-  ctx.beginPath();
-  ctx.moveTo(0, CH*.80);
-  ctx.bezierCurveTo(CW*.08,CH*.68,CW*.16,CH*.61,CW*.24,CH*.69);
-  ctx.bezierCurveTo(CW*.30,CH*.75,CW*.35,CH*.60,CW*.42,CH*.57);
-  ctx.bezierCurveTo(CW*.48,CH*.54,CW*.52,CH*.61,CW*.58,CH*.58);
-  ctx.bezierCurveTo(CW*.64,CH*.55,CW*.70,CH*.65,CW*.76,CH*.62);
-  ctx.bezierCurveTo(CW*.82,CH*.59,CW*.88,CH*.70,CW*.94,CH*.67);
-  ctx.lineTo(CW,CH); ctx.lineTo(0,CH); ctx.closePath();
-  ctx.fillStyle = 'rgba(60,80,105,0.40)'; ctx.fill();
-
-  ctx.beginPath();
-  ctx.moveTo(0, CH*.88);
-  ctx.bezierCurveTo(CW*.06,CH*.78,CW*.13,CH*.71,CW*.21,CH*.75);
-  ctx.bezierCurveTo(CW*.27,CH*.79,CW*.32,CH*.67,CW*.40,CH*.65);
-  ctx.bezierCurveTo(CW*.46,CH*.63,CW*.50,CH*.72,CW*.57,CH*.69);
-  ctx.bezierCurveTo(CW*.62,CH*.67,CW*.67,CH*.72,CW*.74,CH*.70);
-  ctx.bezierCurveTo(CW*.80,CH*.68,CW*.86,CH*.78,CW*.92,CH*.75);
-  ctx.lineTo(CW,CH); ctx.lineTo(0,CH); ctx.closePath();
-  ctx.fillStyle = 'rgba(40,55,65,0.65)'; ctx.fill();
-
-  ctx.fillStyle = '#18100A';
-  ctx.fillRect(0, CH*0.93, CW, CH*0.07);
-}
-
 // Draw canvas after page is fully rendered
 window.addEventListener('load', () => {
   requestAnimationFrame(resizeCanvas);
@@ -1073,19 +961,6 @@ window.addEventListener('resize', () => {
 // Immediate attempt (may be 0,0 but drawHero guards that)
 resizeCanvas();
 
-// ── HERO TABS ──
-document.querySelectorAll('.hero-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.hero-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    const target = tab.dataset.tab;
-    document.querySelectorAll('.wtab').forEach(b => b.classList.toggle('active', b.dataset.tab === target));
-    document.querySelectorAll('.wpanel').forEach(p => p.classList.remove('active'));
-    const panel = document.getElementById('tab-' + target);
-    if (panel) panel.classList.add('active');
-  });
-});
-
 // ── WORKS TABS ──
 document.querySelectorAll('.wtab').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -1093,7 +968,6 @@ document.querySelectorAll('.wtab').forEach(btn => {
     document.querySelectorAll('.wpanel').forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-    document.querySelectorAll('.hero-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === btn.dataset.tab));
   });
 });
 
