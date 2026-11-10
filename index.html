@@ -61,7 +61,7 @@
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 200;
       display: flex; justify-content: space-between; align-items: center;
-      padding: 24px 56px;
+      padding: 24px 56px; pointer-events: auto;
     }
     .nav-logo {
       font-family: 'Cormorant Garamond', serif;
@@ -85,15 +85,16 @@
     .nav-links a:hover { color: rgba(232,226,216,0.9); }
     [data-theme="light"] .nav-links a:hover { color: var(--fg); }
     .theme-toggle {
-      background: rgba(10,9,8,0.4); backdrop-filter: blur(8px);
+      background: rgba(10,9,8,0.55);
       border: 1px solid rgba(232,226,216,0.2); border-radius: 999px;
-      padding: 6px 18px; cursor: none; color: rgba(232,226,216,0.7);
+      padding: 7px 20px; cursor: pointer; color: rgba(232,226,216,0.7);
       font-family: 'Space Grotesk', sans-serif; font-size: 10px;
       letter-spacing: 0.16em; text-transform: uppercase;
       transition: color .3s, border-color .3s, background .3s;
+      pointer-events: auto; position: relative; z-index: 1;
     }
     [data-theme="light"] .theme-toggle {
-      background: rgba(240,235,228,0.8);
+      background: rgba(240,235,228,0.9);
       border-color: rgba(26,21,16,0.15);
       color: var(--mut);
     }
@@ -376,75 +377,105 @@
     }
     .fw-btn svg { width: 22px; height: 22px; }
 
-    /* ── HERO MIXER ── */
+    /* ── CONSOLE MIXER ── */
     .hero-mixer {
       margin-top: 36px;
-      display: flex; flex-direction: column; align-items: center; gap: 12px;
-    }
-    .hmx-top {
-      display: flex; align-items: center; gap: 12px;
-    }
-    .hmx-play {
-      width: 24px; height: 24px; border-radius: 50%;
-      background: rgba(200,160,82,0.9); border: none; cursor: none;
-      color: #0A0908; font-size: 9px;
-      display: flex; align-items: center; justify-content: center;
-      transition: transform .2s, background .2s; flex-shrink: 0;
-    }
-    .hmx-play:hover { transform: scale(1.1); background: #C8A052; }
-    .hmx-title {
-      font-size: 8px; letter-spacing: 0.28em; text-transform: uppercase;
-      color: rgba(200,160,82,0.8);
-    }
-    .hmx-status { font-size: 9px; color: rgba(232,226,216,0.35); letter-spacing: 0.06em; }
-
-    .hmx-channels {
-      display: flex; align-items: flex-end;
-      border: 1px solid rgba(200,160,82,0.15);
-      background: rgba(10,9,8,0.55);
-      backdrop-filter: blur(12px);
-      padding: 16px 20px 12px;
-      gap: 0;
-      overflow-x: auto; scrollbar-width: none;
-      max-width: 90vw;
-    }
-    .hmx-channels::-webkit-scrollbar { display: none; }
-    [data-theme="light"] .hmx-channels { background: rgba(240,235,228,0.75); }
-
-    .hmx-ch {
       display: flex; flex-direction: column; align-items: center;
-      gap: 6px; padding: 0 10px; min-width: 48px;
-      border-right: 1px solid rgba(232,226,216,0.07);
     }
-    .hmx-ch:first-child { padding-left: 4px; }
-    .hmx-ch:last-child { border-right: none; }
-    .hmx-ch.hmx-master { border-left: 1px solid rgba(200,160,82,0.2); padding-left: 14px; }
-
-    .hmx-vu { width: 8px; height: 48px; background: rgba(255,255,255,0.06); border-radius: 1px; overflow: hidden; position: relative; }
-    .hmx-vu-fill {
-      position: absolute; bottom: 0; left: 0; right: 0; height: 0; border-radius: 1px;
-      background: linear-gradient(to top, #C8A052 0%, #E0C060 55%, #F09040 82%, #FF5050 100%);
+    .console-panel {
+      background: #0A0908;
+      border: 1px solid rgba(232,226,216,0.08);
+      padding: 16px 18px 12px;
+      user-select: none;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,0,0,0.3);
+      max-width: 92vw; overflow-x: auto;
     }
-    .hmx-fw { position: relative; width: 24px; height: 72px; cursor: none; touch-action: none; user-select: none; }
-    .hmx-track { position: absolute; left: 50%; transform: translateX(-50%); width: 2px; height: 100%; background: rgba(255,255,255,0.1); border-radius: 1px; }
-    .hmx-knob {
+    .console-top {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px; padding-bottom: 10px;
+      border-bottom: 1px solid rgba(232,226,216,0.07);
+      gap: 16px;
+    }
+    .console-brand {
+      font-size: 7px; letter-spacing: .24em; text-transform: uppercase;
+      color: #C8A052; font-weight: 600; white-space: nowrap;
+    }
+    .console-led-row { display: flex; gap: 5px; align-items: center; }
+    .c-led { width: 5px; height: 5px; border-radius: 50%; background: #1A1816; flex-shrink: 0; }
+    .c-led.g { background: #22C55E; box-shadow: 0 0 5px #22C55E88; }
+    .c-led.y { background: #EAB308; box-shadow: 0 0 5px #EAB30888; }
+    .console-model { font-size: 7px; letter-spacing: .08em; color: #5A5551; white-space: nowrap; }
+    .console-chs { display: flex; gap: 6px; align-items: flex-end; }
+    .c-ch {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 5px; flex: 1; min-width: 32px;
+    }
+    .c-on {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #1A1816; border: 1px solid #2A2820;
+      cursor: pointer; transition: all .2s;
+    }
+    .c-on.active { background: #22C55E; border-color: #22C55E; box-shadow: 0 0 5px #22C55E88; }
+    .c-vu {
+      width: 8px; height: 56px; background: #111;
+      border: 1px solid #2A2820; position: relative;
+      overflow: hidden; border-radius: 1px;
+    }
+    .c-vu-fill {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, #22C55E 0%, #22C55E 55%, #EAB308 70%, #EF4444 100%);
+    }
+    .c-fw {
+      width: 18px; height: 80px; position: relative;
+      cursor: grab; touch-action: none;
+    }
+    .c-fw-groove {
       position: absolute; left: 50%; transform: translateX(-50%);
-      width: 24px; height: 8px; background: rgba(232,226,216,0.9);
-      border-radius: 1px; cursor: none;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+      width: 2px; top: 8px; bottom: 8px; background: #2A2820; border-radius: 1px;
     }
-    .hmx-knob::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 10px; height: 1px; background: rgba(0,0,0,0.3); }
-    .hmx-master .hmx-knob { background: rgba(200,160,82,0.95); }
-    .hmx-mute {
-      width: 24px; height: 14px; border-radius: 1px;
-      border: 1px solid rgba(232,226,216,0.12); background: none; cursor: none;
-      color: rgba(232,226,216,0.3); font-size: 6px; letter-spacing: 0.1em;
-      text-transform: uppercase; font-family: 'Space Grotesk', sans-serif;
-      transition: all .2s;
+    .c-fw-cap {
+      width: 18px; height: 18px; position: absolute; left: 0; transform: translateY(-50%);
+      background: #2A2820; border: 1px solid #3A3830; border-radius: 2px;
+      cursor: grab; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2.5px;
+      transition: border-color .2s;
     }
-    .hmx-mute.muted { background: rgba(200,160,82,0.15); border-color: rgba(200,160,82,0.5); color: rgba(200,160,82,0.8); }
-    .hmx-label { font-size: 6px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(232,226,216,0.4); }
-    .hmx-master .hmx-label { color: rgba(200,160,82,0.7); }
+    .c-fw-cap::before, .c-fw-cap::after { content: ''; display: block; width: 9px; height: 1px; background: #4A4840; }
+    .c-fw-cap:active { cursor: grabbing; }
+    .c-fw-cap:hover { border-color: #C8A052; }
+    .c-ch.c-master .c-fw-cap { background: #2A2010; border-color: rgba(200,160,82,0.4); }
+    .c-divider {
+      width: 1px; height: 80px; background: rgba(232,226,216,0.07);
+      align-self: center; flex-shrink: 0;
+    }
+    .c-label {
+      font-size: 7px; letter-spacing: .08em; text-transform: uppercase;
+      color: #5A5551; text-align: center; font-weight: 500;
+    }
+    .c-master .c-label { color: #C8A052; letter-spacing: .14em; font-weight: 600; }
+    .console-bottom {
+      margin-top: 12px; padding-top: 10px;
+      border-top: 1px solid rgba(232,226,216,0.07);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .console-out-lbl {
+      font-size: 7px; letter-spacing: .18em; text-transform: uppercase;
+      color: #C8A052; white-space: nowrap;
+    }
+    .c-master-vu-bar {
+      flex: 1; height: 5px; background: #111;
+      border: 1px solid #2A2820; border-radius: 1px; overflow: hidden;
+    }
+    .c-master-vu-fill {
+      height: 100%;
+      background: linear-gradient(to right, #22C55E, #22C55E 55%, #EAB308 70%, #EF4444 100%);
+      transition: width .08s linear;
+    }
+    .c-db-display {
+      font-size: 8px; font-variant-numeric: tabular-nums;
+      color: #5A5551; letter-spacing: .04em; white-space: nowrap;
+      min-width: 32px; text-align: right;
+    }
 
     /* ── RESPONSIVE ── */
     @media(max-width: 768px) {
@@ -465,8 +496,9 @@
       .hero-tabs { flex-wrap: wrap; justify-content: center; }
       .hero-tab { padding: 10px 16px; font-size: 9px; }
       footer { flex-direction: column; gap: 12px; text-align: center; }
-      .mixer-panel { padding: 16px 20px 20px; }
-      .mx-ch { min-width: 48px; padding: 0 10px; }
+      .console-panel { padding: 12px 14px 10px; }
+      .c-vu { height: 44px; }
+      .c-fw { height: 64px; }
     }
   </style>
 </head>
@@ -496,14 +528,25 @@
   <div class="hero-content">
     <p class="hero-role">Music Producer · Sound Designer · Artist as Devilheart</p>
     <h1 class="hero-name">Naphat<br>Sudjai</h1>
-    <!-- Mixer inline -->
+    <!-- Console Mixer -->
     <div class="hero-mixer">
-      <div class="hmx-top">
-        <button class="hmx-play" id="hmxPlay">▶</button>
-        <span class="hmx-title">Console Mixer</span>
-        <span class="hmx-status" id="hmxStatus">· No stems</span>
+      <div class="console-panel">
+        <div class="console-top">
+          <span class="console-brand">Devilheart Studio</span>
+          <div class="console-led-row">
+            <div class="c-led g"></div>
+            <div class="c-led y"></div>
+            <div class="c-led"></div>
+            <span class="console-model">44.1kHz / 32-bit</span>
+          </div>
+        </div>
+        <div class="console-chs" id="consoleChs"></div>
+        <div class="console-bottom">
+          <span class="console-out-lbl">Master Out</span>
+          <div class="c-master-vu-bar"><div class="c-master-vu-fill" id="masterVuFill"></div></div>
+          <span class="c-db-display" id="consoleDbDisplay">−∞ dB</span>
+        </div>
       </div>
-      <div class="hmx-channels" id="hmxChannels"></div>
     </div>
 
     <div class="hero-tabs" style="margin-top:28px;">
@@ -850,6 +893,9 @@
 <!-- (Mixer is embedded in hero) -->
 
 <script>
+// ── CANVAS DIMENSIONS (declared early to avoid TDZ errors in applyTheme→drawHero) ──
+let CW = 0, CH = 0;
+
 // ── CURSOR ──
 const cursor = document.getElementById('cursor');
 document.addEventListener('mousemove', e => {
@@ -885,7 +931,6 @@ window._toggleTheme = () => applyTheme(!isDark);
 // ── HERO CANVAS ──
 const canvas = document.getElementById('heroCanvas');
 const ctx = canvas.getContext('2d');
-let CW = 0, CH = 0;
 
 function resizeCanvas() {
   const rect = canvas.getBoundingClientRect();
@@ -1066,134 +1111,94 @@ document.querySelectorAll('.sfbtn').forEach(btn => {
   });
 });
 
-// ── CONSOLE MIXER (embedded in hero) ──
+// ── CONSOLE MIXER ──
 (function() {
-  const FH = 72, DB_MIN = -60, DB_MAX = 6;
-  const dBtoLin = db => db <= DB_MIN ? 0 : Math.pow(10, db / 20);
-  const dbToTop = db => (1 - (db - DB_MIN) / (DB_MAX - DB_MIN)) * (FH - 8);
-
-  const CH = [
-    { id:'beat',   label:'BEAT',   file:'audio/stems/beat.mp3',  db:0,   muted:false },
-    { id:'bass',   label:'BASS',   file:'audio/stems/bass.mp3',  db:-2,  muted:false },
-    { id:'synth',  label:'SYNTH',  file:'audio/stems/synth.mp3', db:-3,  muted:false },
-    { id:'keys',   label:'KEYS',   file:'audio/stems/keys.mp3',  db:-4,  muted:false },
-    { id:'vox',    label:'VOX',    file:'audio/stems/vox.mp3',   db:0,   muted:false },
-    { id:'fx',     label:'FX',     file:'audio/stems/fx.mp3',    db:-6,  muted:false },
-    { id:'master', label:'MASTER', file:null,                     db:-1,  muted:false, isMaster:true },
+  const CHANNELS = [
+    {label:'KICK',   db:0,   on:true},
+    {label:'SNARE',  db:-2,  on:true},
+    {label:'BASS',   db:-4,  on:true},
+    {label:'GTR',    db:-6,  on:true},
+    {label:'VOX',    db:0,   on:true},
+    {label:'FX',     db:-12, on:true},
+    {label:'MASTER', db:-1,  on:true, isMaster:true}
   ];
 
-  let actx = null, masterGain = null, playing = false, loaded = false;
-  const stems = {};
+  const container = document.getElementById('consoleChs');
+  const masterVuEl = document.getElementById('masterVuFill');
+  const dbDisplayEl = document.getElementById('consoleDbDisplay');
+  const vuEls = [];
+  const baseLvl = [0.75, 0.65, 0.70, 0.55, 0.80, 0.40];
 
-  // Build UI
-  const wrap = document.getElementById('hmxChannels');
-  CH.forEach(ch => {
-    const top = dbToTop(ch.db);
-    const d = document.createElement('div');
-    d.className = 'hmx-ch' + (ch.isMaster ? ' hmx-master' : '');
-    d.innerHTML = `
-      <div class="hmx-vu"><div class="hmx-vu-fill" id="hvu-${ch.id}"></div></div>
-      <div class="hmx-fw" id="hfw-${ch.id}" style="height:${FH}px">
-        <div class="hmx-track"></div>
-        <div class="hmx-knob" id="hfk-${ch.id}" style="top:${top}px"></div>
-      </div>
-      <button class="hmx-mute" id="hmu-${ch.id}">MU</button>
-      <div class="hmx-label">${ch.label}</div>`;
-    wrap.appendChild(d);
-    bindFader(ch);
-    document.getElementById('hmu-' + ch.id).addEventListener('click', () => {
-      ch.muted = !ch.muted;
-      const b = document.getElementById('hmu-' + ch.id);
-      b.classList.toggle('muted', ch.muted);
-      b.textContent = ch.muted ? 'ON' : 'MU';
-      applyGain(ch);
+  function d2r(db) { return (6 - Math.max(-60, Math.min(6, db))) / 66; }
+  function r2d(r) { return 6 - r * 66; }
+
+  CHANNELS.forEach((ch, i) => {
+    const col = document.createElement('div');
+    col.className = 'c-ch' + (ch.isMaster ? ' c-master' : '');
+
+    const on = document.createElement('div');
+    on.className = 'c-on' + (ch.on ? ' active' : '');
+    on.addEventListener('click', () => { ch.on = !ch.on; on.classList.toggle('active', ch.on); });
+
+    const vu = document.createElement('div'); vu.className = 'c-vu';
+    const vuf = document.createElement('div'); vuf.className = 'c-vu-fill'; vuf.style.height = '0%';
+    vu.appendChild(vuf);
+    vuEls.push(vuf);
+
+    const fw = document.createElement('div'); fw.className = 'c-fw';
+    const fg = document.createElement('div'); fg.className = 'c-fw-groove';
+    const cap = document.createElement('div'); cap.className = 'c-fw-cap';
+    fw.append(fg, cap);
+
+    const mn = 8, mx = 62;
+    cap.style.top = (mn + d2r(ch.db) * (mx - mn)) + 'px';
+
+    let drag = false, sy = 0, st = 0;
+    cap.addEventListener('mousedown', e => { drag = true; sy = e.clientY; st = parseFloat(cap.style.top); e.preventDefault(); });
+    cap.addEventListener('touchstart', e => { drag = true; sy = e.touches[0].clientY; st = parseFloat(cap.style.top); e.preventDefault(); }, {passive: false});
+    document.addEventListener('mousemove', e => {
+      if (!drag) return;
+      const nt = Math.max(mn, Math.min(mx, st + e.clientY - sy));
+      cap.style.top = nt + 'px'; ch.db = r2d((nt - mn) / (mx - mn));
     });
+    document.addEventListener('touchmove', e => {
+      if (!drag) return;
+      const nt = Math.max(mn, Math.min(mx, st + e.touches[0].clientY - sy));
+      cap.style.top = nt + 'px'; ch.db = r2d((nt - mn) / (mx - mn));
+    }, {passive: false});
+    document.addEventListener('mouseup', () => drag = false);
+    document.addEventListener('touchend', () => drag = false);
+
+    const lbl = document.createElement('div');
+    lbl.className = 'c-label';
+    lbl.textContent = ch.label;
+
+    col.append(on, vu, fw, lbl);
+    container.appendChild(col);
+
+    if (i === CHANNELS.length - 2) {
+      const d = document.createElement('div'); d.className = 'c-divider';
+      container.appendChild(d);
+    }
   });
 
-  function bindFader(ch) {
-    const knob = document.getElementById('hfk-' + ch.id);
-    let drag = false, sY = 0, sTop = 0;
-    const getT = () => parseFloat(knob.style.top) || 0;
-    const move = y => {
-      const t = Math.max(0, Math.min(FH - 8, sTop + (y - sY)));
-      knob.style.top = t + 'px';
-      ch.db = DB_MIN + (1 - t / (FH - 8)) * (DB_MAX - DB_MIN);
-      applyGain(ch);
-    };
-    knob.addEventListener('mousedown', e => { drag=true; sY=e.clientY; sTop=getT(); e.preventDefault(); });
-    document.addEventListener('mousemove', e => { if(drag) move(e.clientY); });
-    document.addEventListener('mouseup', () => { drag=false; });
-    knob.addEventListener('touchstart', e => { drag=true; sY=e.touches[0].clientY; sTop=getT(); e.preventDefault(); }, {passive:false});
-    document.addEventListener('touchmove', e => { if(drag) move(e.touches[0].clientY); }, {passive:false});
-    document.addEventListener('touchend', () => { drag=false; });
-  }
-
-  function applyGain(ch) {
-    if (!actx) return;
-    const node = ch.isMaster ? masterGain : (stems[ch.id] && stems[ch.id].gain);
-    if (node) node.gain.setTargetAtTime(ch.muted ? 0 : dBtoLin(ch.db), actx.currentTime, 0.01);
-  }
-
-  // VU animation
-  const vuSim = {}; CH.forEach(ch => { vuSim[ch.id] = 0; });
-  (function vu() {
-    CH.forEach(ch => {
-      const f = document.getElementById('hvu-' + ch.id); if (!f) return;
-      let lv = 0;
-      if (playing) {
-        if (loaded && stems[ch.id]?.analyser) {
-          const d = new Uint8Array(stems[ch.id].analyser.frequencyBinCount);
-          stems[ch.id].analyser.getByteFrequencyData(d);
-          lv = d.reduce((a,b)=>a+b,0)/d.length/255;
-        } else {
-          vuSim[ch.id] += (Math.random()-.42)*.1;
-          vuSim[ch.id] = Math.max(0, Math.min(.85, vuSim[ch.id]));
-          lv = ch.muted ? 0 : vuSim[ch.id];
-        }
-      } else { vuSim[ch.id] *= .88; lv = vuSim[ch.id]*.25; }
-      f.style.height = (lv*100)+'%';
+  function anim() {
+    let tot = 0;
+    CHANNELS.forEach((ch, i) => {
+      if (!vuEls[i]) return;
+      const lv = ch.on && !ch.isMaster
+        ? baseLvl[i] * Math.max(0, 1 + ch.db / 60) * (0.8 + Math.random() * 0.4)
+        : 0;
+      vuEls[i].style.height = Math.min(100, lv * 100) + '%';
+      if (!ch.isMaster) tot += lv;
     });
-    requestAnimationFrame(vu);
-  })();
-
-  async function loadStems() {
-    actx = new (window.AudioContext || window.webkitAudioContext)();
-    masterGain = actx.createGain();
-    masterGain.gain.value = dBtoLin(CH.find(c=>c.isMaster).db);
-    masterGain.connect(actx.destination);
-    let n = 0;
-    for (const ch of CH) {
-      if (ch.isMaster) continue;
-      try {
-        const res = await fetch(ch.file); if (!res.ok) throw 0;
-        const buf = await actx.decodeAudioData(await res.arrayBuffer());
-        const gain = actx.createGain(); gain.gain.value = dBtoLin(ch.db);
-        const analyser = actx.createAnalyser(); analyser.fftSize = 64;
-        gain.connect(analyser); gain.connect(masterGain);
-        stems[ch.id] = { buffer: buf, gain, analyser, src: null }; n++;
-      } catch { stems[ch.id] = null; }
-    }
-    loaded = n > 0;
-    document.getElementById('hmxStatus').textContent = loaded ? `· ${n} stems` : '· No stems';
+    const mv = Math.min(1, (tot / 6) * 1.4 * (0.9 + Math.random() * 0.2));
+    masterVuEl.style.width = (mv * 100) + '%';
+    const d = CHANNELS[CHANNELS.length - 1].db;
+    dbDisplayEl.textContent = d > -60 ? (d >= 0 ? '+' : '') + d.toFixed(1) + ' dB' : '−∞ dB';
+    requestAnimationFrame(anim);
   }
-
-  async function togglePlay() {
-    if (!actx) { document.getElementById('hmxStatus').textContent = '· Loading…'; await loadStems(); }
-    if (actx.state === 'suspended') await actx.resume();
-    if (playing) {
-      CH.forEach(ch => { const s=stems[ch.id]; if(s?.src){try{s.src.stop()}catch{}s.src=null;} });
-      playing = false; document.getElementById('hmxPlay').textContent = '▶';
-    } else {
-      if (loaded) CH.forEach(ch => {
-        const s = stems[ch.id]; if (!s?.buffer) return;
-        s.src = actx.createBufferSource(); s.src.buffer=s.buffer; s.src.loop=true;
-        s.src.connect(s.gain); s.src.start(0);
-      });
-      playing = true; document.getElementById('hmxPlay').textContent = '⏹';
-    }
-  }
-
-  document.getElementById('hmxPlay').addEventListener('click', togglePlay);
+  anim();
 })();
 </script>
 </body>
