@@ -63,19 +63,18 @@
     /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      display: grid; grid-template-columns: auto 1fr auto; align-items: center;
-      padding: 24px 56px; pointer-events: auto; gap: 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 56px; pointer-events: auto;
     }
-    .nav-center {
-      display: flex; align-items: center; justify-content: center; gap: 32px;
-    }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
     .nav-link {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
-      color: rgba(232,226,216,0.5); text-decoration: none;
+      color: rgba(232,226,216,0.45); text-decoration: none;
       transition: color .25s;
     }
     .nav-link:hover { color: rgba(232,226,216,0.9); }
+    .nav-sep { width: 1px; height: 14px; background: rgba(232,226,216,0.15); }
     .nav-logo {
       font-family: 'Cormorant Garamond', serif;
       font-size: 1.1rem; font-style: italic;
@@ -362,100 +361,163 @@
     }
     .fw-btn svg { width: 22px; height: 22px; }
 
-    /* ── CONSOLE MIXER ── */
-    .hero-mixer {
-      margin-top: 36px;
-      display: flex; flex-direction: column; align-items: center;
-    }
-    .console-panel {
-      background: #0A0908;
-      border: 1px solid rgba(232,226,216,0.08);
-      padding: 16px 18px 12px;
+    /* ── SSL 4000 CONSOLE ── */
+    .hero-mixer { margin-top: 36px; display: flex; flex-direction: column; align-items: center; }
+    .ssl-panel {
+      background: #141412;
+      border: 1px solid #2A2825;
       user-select: none;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,0,0,0.3);
+      box-shadow:
+        0 32px 100px rgba(0,0,0,0.85),
+        0 0 0 1px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.03);
       max-width: 92vw; overflow-x: auto;
+      border-radius: 3px;
     }
-    .console-top {
+    /* Header strip */
+    .ssl-hdr {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 12px; padding-bottom: 10px;
-      border-bottom: 1px solid rgba(232,226,216,0.07);
-      gap: 16px;
+      padding: 8px 14px 7px;
+      background: #0D0C0A;
+      border-bottom: 2px solid #1E1D1B;
     }
-    .console-brand {
-      font-size: 7px; letter-spacing: .24em; text-transform: uppercase;
-      color: #C8A052; font-weight: 600; white-space: nowrap;
+    .ssl-hdr-l { display: flex; flex-direction: column; gap: 2px; }
+    .ssl-brand { font-size: 8px; letter-spacing: .32em; text-transform: uppercase; color: #C8A052; font-weight: 700; }
+    .ssl-spec { font-size: 6px; letter-spacing: .1em; color: #3A3835; text-transform: uppercase; }
+    .ssl-hdr-r { display: flex; gap: 5px; align-items: center; }
+    .ssl-led { width: 6px; height: 6px; border-radius: 50%; background: #1A1816; flex-shrink: 0; }
+    .ssl-led.g { background: #22C55E; box-shadow: 0 0 6px #22C55E99; }
+    .ssl-led.y { background: #EAB308; box-shadow: 0 0 6px #EAB30899; }
+    .ssl-srate { font-size: 6px; letter-spacing: .1em; color: #3A3835; text-transform: uppercase; }
+    /* Channel strip container */
+    .ssl-strips {
+      display: flex; gap: 0; padding: 10px 10px 8px;
     }
-    .console-led-row { display: flex; gap: 5px; align-items: center; }
-    .c-led { width: 5px; height: 5px; border-radius: 50%; background: #1A1816; flex-shrink: 0; }
-    .c-led.g { background: #22C55E; box-shadow: 0 0 5px #22C55E88; }
-    .c-led.y { background: #EAB308; box-shadow: 0 0 5px #EAB30888; }
-    .console-model { font-size: 7px; letter-spacing: .08em; color: #5A5551; white-space: nowrap; }
-    .console-chs { display: flex; gap: 6px; align-items: flex-end; }
-    .c-ch {
+    /* Section label above channels */
+    .ssl-sec-lbl {
+      font-size: 5px; letter-spacing: .2em; text-transform: uppercase;
+      color: #3A3835; text-align: center; margin-bottom: 5px;
+    }
+    /* Individual channel */
+    .ssl-ch {
       display: flex; flex-direction: column; align-items: center;
-      gap: 5px; flex: 1; min-width: 32px;
+      gap: 5px; min-width: 42px; padding: 6px 4px;
+      border-right: 1px solid #1E1D1B;
+      background: #161614;
     }
-    .c-on {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: #1A1816; border: 1px solid #2A2820;
-      cursor: pointer; transition: all .2s;
+    .ssl-ch:last-child { border-right: none; }
+    .ssl-ch.ssl-master {
+      min-width: 52px;
+      background: #161410;
+      border-left: 2px solid #2A2820;
+      border-right: none;
     }
-    .c-on.active { background: #22C55E; border-color: #22C55E; box-shadow: 0 0 5px #22C55E88; }
-    .c-db-lvl {
+    /* ON / mute button */
+    .ssl-on {
+      width: 24px; height: 9px; border-radius: 1px;
+      background: #C8373A; border: 1px solid #A02830;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5px; letter-spacing: .12em; color: rgba(255,255,255,0.85);
+      font-weight: 700; text-transform: uppercase;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08);
+      transition: background .15s, box-shadow .15s;
+    }
+    .ssl-on.off {
+      background: #232320; border-color: #2E2E2A; color: #3A3835;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+    }
+    /* Section divider bar */
+    .ssl-sec-bar {
+      width: 100%; height: 1px; background: #252320; margin: 2px 0;
+    }
+    /* EQ section */
+    .ssl-eq { display: flex; flex-direction: column; gap: 4px; width: 100%; padding: 0 2px; }
+    .ssl-eq-row {
+      display: flex; align-items: center; gap: 4px;
+    }
+    .ssl-knob {
+      width: 15px; height: 15px; border-radius: 50%; flex-shrink: 0;
+      background: radial-gradient(circle at 38% 32%, #3C3A36, #161614);
+      border: 1px solid #3A3835;
+      position: relative;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.04);
+      cursor: pointer;
+    }
+    .ssl-knob::after {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      width: 1.5px; height: 5px; background: #C8A052;
+      border-radius: 1px;
+      transform: translate(-50%, -100%) rotate(var(--krot, 0deg));
+      transform-origin: 50% 100%;
+    }
+    .ssl-eq-lbl {
+      font-size: 5.5px; letter-spacing: .05em; text-transform: uppercase;
+      color: #3A3835; min-width: 16px;
+    }
+    /* dB level per channel */
+    .ssl-db-ch {
       font-size: 7px; font-variant-numeric: tabular-nums; letter-spacing: .02em;
       color: #22C55E; font-family: 'Space Grotesk', monospace;
-      text-align: center; height: 20px; line-height: 20px;
-      white-space: nowrap;
+      text-align: center; height: 11px; line-height: 11px; white-space: nowrap;
     }
-    .c-fw {
-      width: 18px; height: 80px; position: relative;
-      cursor: grab; touch-action: none;
-    }
+    /* Pan row */
+    .ssl-pan-row { display: flex; align-items: center; gap: 4px; }
+    /* Fader (keep c-fw classes for JS) */
+    .c-fw { width: 20px; height: 76px; position: relative; cursor: grab; touch-action: none; }
     .c-fw-groove {
       position: absolute; left: 50%; transform: translateX(-50%);
-      width: 2px; top: 8px; bottom: 8px; background: #2A2820; border-radius: 1px;
+      width: 2px; top: 8px; bottom: 8px; background: #252320; border-radius: 1px;
     }
     .c-fw-cap {
-      width: 18px; height: 18px; position: absolute; left: 0; transform: translateY(-50%);
-      background: #2A2820; border: 1px solid #3A3830; border-radius: 2px;
+      width: 20px; height: 22px; position: absolute; left: 0; transform: translateY(-50%);
+      background: linear-gradient(to bottom, #3A3835, #252320);
+      border: 1px solid #454340; border-radius: 2px;
       cursor: grab; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 2.5px;
-      transition: border-color .2s;
+      align-items: center; justify-content: center; gap: 3px;
+      transition: border-color .15s;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
     }
-    .c-fw-cap::before, .c-fw-cap::after { content: ''; display: block; width: 9px; height: 1px; background: #4A4840; }
+    .c-fw-cap::before, .c-fw-cap::after { content: ''; display: block; width: 11px; height: 1px; background: #555350; }
     .c-fw-cap:active { cursor: grabbing; }
     .c-fw-cap:hover { border-color: #C8A052; }
-    .c-ch.c-master .c-fw-cap { background: #2A2010; border-color: rgba(200,160,82,0.4); }
-    .c-divider {
-      width: 1px; height: 80px; background: rgba(232,226,216,0.07);
-      align-self: center; flex-shrink: 0;
+    .ssl-master .c-fw-cap { background: linear-gradient(to bottom, #2E2810, #1E1808); border-color: rgba(200,160,82,0.35); }
+    /* Divider between regular chs and master */
+    .ssl-divider {
+      width: 2px; align-self: stretch; background: #252320; flex-shrink: 0;
     }
-    .c-label {
-      font-size: 7px; letter-spacing: .08em; text-transform: uppercase;
-      color: #5A5551; text-align: center; font-weight: 500;
+    /* Channel label */
+    .ssl-lbl {
+      font-size: 7px; letter-spacing: .1em; text-transform: uppercase;
+      color: #4A4845; text-align: center; font-weight: 600;
     }
-    .c-master .c-label { color: #C8A052; letter-spacing: .14em; font-weight: 600; }
-    .console-bottom {
-      margin-top: 12px; padding-top: 10px;
-      border-top: 1px solid rgba(232,226,216,0.07);
+    .ssl-master .ssl-lbl { color: #C8A052; letter-spacing: .16em; }
+    /* Footer */
+    .ssl-ftr {
       display: flex; align-items: center; gap: 10px;
+      padding: 7px 14px 8px;
+      background: #0D0C0A;
+      border-top: 2px solid #1E1D1B;
     }
-    .console-out-lbl {
-      font-size: 7px; letter-spacing: .18em; text-transform: uppercase;
+    .ssl-ftr-lbl {
+      font-size: 6.5px; letter-spacing: .22em; text-transform: uppercase;
       color: #C8A052; white-space: nowrap;
     }
-    .c-master-vu-bar { display: none; }
-    .c-master-vu-fill { display: none; }
-    .c-db-display {
-      font-size: 9px; font-variant-numeric: tabular-nums;
+    .ssl-db-out {
+      font-size: 10px; font-variant-numeric: tabular-nums;
       color: #C8A052; letter-spacing: .04em; white-space: nowrap;
       font-family: 'Space Grotesk', monospace;
     }
+    .c-master-vu-bar { display: none; }
+    .c-master-vu-fill { display: none; }
+    .c-db-display { display: none; }
 
     /* ── RESPONSIVE ── */
     @media(max-width: 768px) {
-      nav { padding: 18px 24px; grid-template-columns: auto 1fr auto; }
-      .nav-center { display: none; }
+      nav { padding: 18px 24px; }
+      .nav-link { display: none; }
+      .nav-sep { display: none; }
       section { padding: 80px 24px; }
       hr.divider { margin: 0 24px; }
       #about, #contact { grid-template-columns: 1fr; gap: 40px; }
@@ -481,14 +543,13 @@
 <!-- NAV -->
 <nav>
   <a href="#hero" class="nav-logo">NS.</a>
-  <div class="nav-center">
+  <div class="nav-right">
     <a href="#about" class="nav-link">About</a>
     <a href="#works" class="nav-link">Works</a>
     <a href="#skills" class="nav-link">Skills</a>
     <a href="#resume" class="nav-link">Resume</a>
     <a href="#contact" class="nav-link">Contact</a>
-  </div>
-  <div class="nav-right">
+    <div class="nav-sep"></div>
     <a href="#works" class="nav-cta">Portfolio</a>
     <a href="#contact" class="nav-cta nav-cta-outline">Contact</a>
   </div>
@@ -501,23 +562,26 @@
   <div class="hero-content">
     <p class="hero-role">Music Producer · Sound Designer · Artist as Devilheart</p>
     <h1 class="hero-name">Naphat<br>Sudjai</h1>
-    <!-- Console Mixer -->
+    <!-- SSL 4000 Console -->
     <div class="hero-mixer">
-      <div class="console-panel">
-        <div class="console-top">
-          <span class="console-brand">Devilheart Studio</span>
-          <div class="console-led-row">
-            <div class="c-led g"></div>
-            <div class="c-led y"></div>
-            <div class="c-led"></div>
-            <span class="console-model">44.1kHz / 32-bit</span>
+      <div class="ssl-panel">
+        <div class="ssl-hdr">
+          <div class="ssl-hdr-l">
+            <span class="ssl-brand">SSL 4000 E · Devilheart Studio</span>
+            <span class="ssl-spec">G+ Series · Analogue Console</span>
+          </div>
+          <div class="ssl-hdr-r">
+            <div class="ssl-led g"></div>
+            <div class="ssl-led y"></div>
+            <div class="ssl-led"></div>
+            <span class="ssl-srate">44.1kHz / 32-bit</span>
           </div>
         </div>
-        <div class="console-chs" id="consoleChs"></div>
-        <div class="console-bottom">
-          <span class="console-out-lbl">Master Out</span>
+        <div class="ssl-strips" id="consoleChs"></div>
+        <div class="ssl-ftr">
+          <span class="ssl-ftr-lbl">Master Out</span>
+          <span class="ssl-db-out" id="consoleDbDisplay">−∞ dB</span>
           <div class="c-master-vu-bar"><div class="c-master-vu-fill" id="masterVuFill"></div></div>
-          <span class="c-db-display" id="consoleDbDisplay">−∞ dB</span>
         </div>
       </div>
     </div>
@@ -1000,20 +1064,21 @@ document.querySelectorAll('.sfbtn').forEach(btn => {
   });
 });
 
-// ── CONSOLE MIXER ──
+// ── SSL 4000 CONSOLE ──
 (function() {
   const CHANNELS = [
-    {label:'KICK',   db:0,   on:true},
-    {label:'SNARE',  db:-2,  on:true},
-    {label:'BASS',   db:-4,  on:true},
-    {label:'GTR',    db:-6,  on:true},
-    {label:'VOX',    db:0,   on:true},
-    {label:'FX',     db:-12, on:true},
-    {label:'MASTER', db:-1,  on:true, isMaster:true}
+    {label:'KICK',  db:0,   on:true,  eq:[15,-10,5,-8]},
+    {label:'SNARE', db:-2,  on:true,  eq:[-5,12,-8,3]},
+    {label:'BASS',  db:-4,  on:true,  eq:[8,-15,10,-5]},
+    {label:'GTR',   db:-6,  on:true,  eq:[-12,8,15,-10]},
+    {label:'VOX',   db:0,   on:true,  eq:[10,-8,-5,12]},
+    {label:'FX',    db:-12, on:true,  eq:[-20,15,-12,8]},
+    {label:'MASTER',db:-1,  on:true,  isMaster:true}
   ];
+  const EQ_BANDS = ['HF','HMF','LMF','LF'];
 
   const container = document.getElementById('consoleChs');
-  const dbDisplayEl = document.getElementById('consoleDbDisplay');
+  const dbOutEl = document.getElementById('consoleDbDisplay');
   const vuEls = [];
 
   function d2r(db) { return (6 - Math.max(-60, Math.min(6, db))) / 66; }
@@ -1021,22 +1086,69 @@ document.querySelectorAll('.sfbtn').forEach(btn => {
 
   CHANNELS.forEach((ch, i) => {
     const col = document.createElement('div');
-    col.className = 'c-ch' + (ch.isMaster ? ' c-master' : '');
+    col.className = 'ssl-ch' + (ch.isMaster ? ' ssl-master' : '');
 
-    const on = document.createElement('div');
-    on.className = 'c-on' + (ch.on ? ' active' : '');
-    on.addEventListener('click', () => { ch.on = !ch.on; on.classList.toggle('active', ch.on); });
+    // ON button
+    const onBtn = document.createElement('div');
+    onBtn.className = 'ssl-on' + (ch.on ? '' : ' off');
+    onBtn.textContent = 'ON';
+    onBtn.addEventListener('click', () => { ch.on = !ch.on; onBtn.classList.toggle('off', !ch.on); });
 
-    const dbLvl = document.createElement('div'); dbLvl.className = 'c-db-lvl';
-    dbLvl.textContent = ch.db >= 0 ? '+' + ch.db.toFixed(1) : ch.db.toFixed(1);
-    vuEls.push(dbLvl);
+    // Section bar
+    const bar1 = document.createElement('div'); bar1.className = 'ssl-sec-bar';
+
+    // EQ section
+    let dbLvl = null;
+    if (!ch.isMaster) {
+      const eq = document.createElement('div'); eq.className = 'ssl-eq';
+      EQ_BANDS.forEach((band, bi) => {
+        const row = document.createElement('div'); row.className = 'ssl-eq-row';
+        const knob = document.createElement('div'); knob.className = 'ssl-knob';
+        const angle = ch.eq ? ch.eq[bi] : (bi * 25 - 30);
+        knob.style.setProperty('--krot', angle + 'deg');
+        const lbl = document.createElement('span'); lbl.className = 'ssl-eq-lbl';
+        lbl.textContent = band;
+        row.append(knob, lbl);
+        eq.appendChild(row);
+      });
+      col.appendChild(onBtn);
+      col.appendChild(bar1);
+      col.appendChild(eq);
+
+      // dB level
+      dbLvl = document.createElement('div'); dbLvl.className = 'ssl-db-ch';
+      dbLvl.textContent = ch.db >= 0 ? '+' + ch.db.toFixed(1) : ch.db.toFixed(1);
+      col.appendChild(dbLvl);
+      vuEls.push(dbLvl);
+
+      // Pan row
+      const panRow = document.createElement('div'); panRow.className = 'ssl-pan-row';
+      const panKnob = document.createElement('div'); panKnob.className = 'ssl-knob';
+      panKnob.style.setProperty('--krot', (i * 8 - 24) + 'deg');
+      const panLbl = document.createElement('span'); panLbl.className = 'ssl-eq-lbl';
+      panLbl.textContent = 'PAN';
+      panRow.append(panKnob, panLbl);
+      col.appendChild(panRow);
+    } else {
+      // Master: just the on button
+      col.appendChild(onBtn);
+      col.appendChild(bar1);
+      vuEls.push(null);
+      // spacer to align fader
+      const sp = document.createElement('div');
+      sp.style.cssText = 'flex:1;min-height:60px;';
+      col.appendChild(sp);
+    }
+
+    // Fader
+    const bar2 = document.createElement('div'); bar2.className = 'ssl-sec-bar';
+    col.appendChild(bar2);
 
     const fw = document.createElement('div'); fw.className = 'c-fw';
     const fg = document.createElement('div'); fg.className = 'c-fw-groove';
     const cap = document.createElement('div'); cap.className = 'c-fw-cap';
     fw.append(fg, cap);
-
-    const mn = 8, mx = 62;
+    const mn = 8, mx = 68;
     cap.style.top = (mn + d2r(ch.db) * (mx - mn)) + 'px';
 
     let drag = false, sy = 0, st = 0;
@@ -1054,31 +1166,33 @@ document.querySelectorAll('.sfbtn').forEach(btn => {
     }, {passive: false});
     document.addEventListener('mouseup', () => drag = false);
     document.addEventListener('touchend', () => drag = false);
+    col.appendChild(fw);
 
-    const lbl = document.createElement('div');
-    lbl.className = 'c-label';
+    // Label
+    const lbl = document.createElement('div'); lbl.className = 'ssl-lbl';
     lbl.textContent = ch.label;
-
-    col.append(on, dbLvl, fw, lbl);
-    container.appendChild(col);
+    col.appendChild(lbl);
 
     if (i === CHANNELS.length - 2) {
-      const d = document.createElement('div'); d.className = 'c-divider';
-      container.appendChild(d);
+      container.appendChild(col);
+      const div = document.createElement('div'); div.className = 'ssl-divider';
+      container.appendChild(div);
+    } else {
+      container.appendChild(col);
     }
   });
 
   function anim() {
     CHANNELS.forEach((ch, i) => {
-      if (!vuEls[i]) return;
-      if (ch.isMaster) return;
-      const jitter = ch.on ? (Math.random() * 0.4 - 0.2) : 0;
-      const disp = ch.on ? ch.db + jitter : -60;
-      vuEls[i].textContent = disp <= -60 ? '−∞' : (disp >= 0 ? '+' : '') + disp.toFixed(1);
-      vuEls[i].style.color = disp > -1 ? '#EF4444' : disp > -6 ? '#EAB308' : '#22C55E';
+      const el = vuEls[i];
+      if (!el) return;
+      const jitter = ch.on ? (Math.random() * 0.3 - 0.15) : 0;
+      const v = ch.on ? ch.db + jitter : -60;
+      el.textContent = v <= -60 ? '−∞' : (v >= 0 ? '+' : '') + v.toFixed(1);
+      el.style.color = v > -1 ? '#EF4444' : v > -6 ? '#EAB308' : '#22C55E';
     });
-    const d = CHANNELS[CHANNELS.length - 1].db + (Math.random() * 0.2 - 0.1);
-    dbDisplayEl.textContent = d > -60 ? (d >= 0 ? '+' : '') + d.toFixed(1) + ' dB' : '−∞ dB';
+    const d = CHANNELS[CHANNELS.length - 1].db + (Math.random() * 0.15 - 0.075);
+    if (dbOutEl) dbOutEl.textContent = d > -60 ? (d >= 0 ? '+' : '') + d.toFixed(1) + ' dB' : '−∞ dB';
     requestAnimationFrame(anim);
   }
   anim();
